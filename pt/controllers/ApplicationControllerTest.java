@@ -19,9 +19,7 @@ public class ApplicationControllerTest extends WithSunriseApplication {
 
     @Test
     public void homeIsAlive() {
-        final Result index = app.injector().instanceOf(ApplicationController.class).index().get(1000);
+        final Result index = app.injector().instanceOf(ApplicationController.class).index().get(100);
         assertThat(index.status()).isEqualTo(200);
-
     }
-
 }

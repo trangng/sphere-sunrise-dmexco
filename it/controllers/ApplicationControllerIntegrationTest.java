@@ -22,7 +22,7 @@ public class ApplicationControllerIntegrationTest extends WithPlayJavaSphereClie
         final int count = result.size();
         assertThat(count).isGreaterThan(3);
         //this is a project specific assertion as example
-        assertThat(toEnglishNames(result)).contains("dresses");
+        assertThat(toEnglishNames(result)).contains("Tank tops");
     }
 
     private List<String> toEnglishNames(final PagedQueryResult<Category> queryResult) {
