@@ -1,9 +1,9 @@
 ![SPHERE.IO icon](https://admin.sphere.io/assets/images/sphere_logo_rgb_long.png)
 
-sphere-sunrise :sunrise:
+sphere-sunrise-dmexco :sunrise:
 ==============
 
-[![Build Status](https://travis-ci.org/sphereio/sphere-sunrise.png?branch=master)](https://travis-ci.org/sphereio/sphere-sunrise) [![Stories in Ready](https://badge.waffle.io/sphereio/sphere-sunrise.png?label=ready&title=Ready)](https://waffle.io/sphereio/sphere-sunrise)
+[![Build Status](https://travis-ci.org/sphereio/sphere-sunrise-dmexco.png?branch=master)](https://travis-ci.org/sphereio/sphere-sunrise-dmexco)
 
 The next generation shop template.
 
@@ -12,7 +12,6 @@ The next generation shop template.
 _Unfortunately we do not currently have any finished template that uses our last version of the [SPHERE JVM SDK](https://github.com/sphereio/sphere-jvm-sdk). If you are looking for a more complete project you can check our [Fedora](https://github.com/commercetools/sphere-fedora) template, but be aware that this project uses the older version [SPHERE Play SDK](https://github.com/commercetools/sphere-play-sdk)._
 
 * Demo: https://sunrise.sphere.io
-* [Javadoc](https://sphereio.github.io/sphere-sunrise/javadoc/index.html)
 
 ## Preconditions
 
@@ -48,7 +47,7 @@ export SPHERE_SUNRISE_IT_CLIENT_ID="your-client-id"
 
 For an easy and fast deployment of your application we recommend [heroku](https://www.heroku.com):
 
-<a href="https://heroku.com/deploy?template=https://github.com/sphereio/sphere-sunrise"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
+<a href="https://heroku.com/deploy?template=https://github.com/sphereio/sphere-sunrise-dmexco"><img src="https://www.herokucdn.com/deploy/button.png" alt="Deploy"></a>
 
 ## Docker
 
@@ -62,6 +61,7 @@ $ docker run -it --rm -p 9000:9000 sphereio/sunrise
 
 ## Related projects
 
+* https://github.com/sphereio/sphere-sunrise
 * https://github.com/sphereio/sphere-sunrise-data
 * https://github.com/sphereio/sphere-sunrise-scenarios
 * https://github.com/sphereio/sphere-sunrise-design
