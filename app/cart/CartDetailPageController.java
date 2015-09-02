@@ -1,7 +1,9 @@
 package cart;
 
+import common.cms.CmsPage;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
+import common.pages.SunrisePageData;
 import play.libs.F;
 import play.mvc.Result;
 
@@ -15,6 +17,11 @@ public class CartDetailPageController extends SunriseController {
     }
 
     public F.Promise<Result> show(final String language) {
-        return F.Promise.pure(ok("present"));
+        final F.Promise<CmsPage> commonCmsPagePromise = getCommonCmsPage();
+        return commonCmsPagePromise.map(commonCmsPage -> {
+            final CartDetailPageContent content = new CartDetailPageContent();
+            final SunrisePageData pageData = SunrisePageData.of(commonCmsPage, context(), content);
+            return ok(templateService().renderToHtml("cart", pageData));
+        });
     }
 }
