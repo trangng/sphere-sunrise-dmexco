@@ -21,7 +21,5 @@ public class ApplicationControllerTest extends WithSunriseApplication {
     public void homeIsAlive() {
         final Result index = app.injector().instanceOf(ApplicationController.class).index().get(100);
         assertThat(index.status()).isEqualTo(200);
-        assertThat(contentAsString(index)).contains("Sunrise Home");
-
     }
 }
