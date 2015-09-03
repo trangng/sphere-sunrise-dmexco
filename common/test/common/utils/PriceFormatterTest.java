@@ -38,6 +38,12 @@ public class PriceFormatterTest {
         assertThat(formattedPrice).isEqualTo("￥ 76,543,210.90");
     }
 
+    @Test
+    public void localeWithoutCountry() throws Exception {
+        final String formattedPrice = PriceFormatter.of(ENGLISH).format(money(49, USD));
+        assertThat(formattedPrice).isEqualTo("USD 49.-");
+    }
+
     private Money money(final double value, final String currency) {
         return Money.of(BigDecimal.valueOf(value), currency);
     }
