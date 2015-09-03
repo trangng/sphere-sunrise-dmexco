@@ -2,6 +2,7 @@ package common.pages;
 
 import common.contexts.ProjectContext;
 import common.contexts.UserContext;
+import common.utils.Session;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import play.i18n.Messages;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static play.mvc.Controller.session;
 
 public class SunrisePageDataFactory {
     private final Messages messages;
@@ -50,8 +50,8 @@ public class SunrisePageDataFactory {
     }
 
     private MiniCartData getMiniCartData() {
-        final String url = "";
-        final int numItems = Optional.ofNullable(session("CART_ITEM_COUNT")).map(Integer::parseInt).orElse(0);
+        final String url = String.format("/%s/cart", userContext.locale().toLanguageTag());
+        final int numItems = Session.readInt("CART_ITEM_COUNT").orElse(0);
         return new MiniCartData(url, numItems);
     }
 
