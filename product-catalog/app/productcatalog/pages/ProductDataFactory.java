@@ -46,14 +46,18 @@ public class ProductDataFactory {
 
     public ProductData create(final ProductProjection product, final ProductVariant variant) {
         final Optional<Price> priceOpt = priceFinder.findPrice(variant.getPrices());
-        final String name = product.getName().find(userContext.locales()).orElse("");
-        final String sku = Optional.ofNullable(variant.getSku()).orElse("");
-        final String slug = product.getSlug().find(userContext.locales()).orElse("");
-        final String url = reverseRouter.product(userContext.locale().toLanguageTag(), slug, sku).url();
-        final String description = Optional.ofNullable(product.getDescription()).flatMap(d -> d.find(userContext.locales())).orElse("");
-        final String price = getPriceCurrent(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
-        final String priceOld = getPriceOld(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
-        return new ProductData(name, sku, url, description, price, priceOld, getImages(variant), getColors(product), getSizes(product), getDetails(variant));
+
+        return new ProductData(
+                product.getName().find(locales).orElse(""),
+                Optional.ofNullable(variant.getSku()).orElse(""),
+                Optional.ofNullable(product.getDescription()).flatMap(description -> description.find(locales)).orElse(""),
+                getPriceCurrent(priceOpt).map(price -> priceFormatter.format(price.getValue())).orElse(""),
+                getPriceOld(priceOpt).map(price -> priceFormatter.format(price.getValue())).orElse(""),
+                getImages(variant),
+                getColors(product),
+                getSizes(product),
+                getDetails(variant)
+        );
     }
 
     private List<ImageData> getImages(final ProductVariant productVariant) {
