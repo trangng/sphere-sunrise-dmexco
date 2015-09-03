@@ -19,6 +19,6 @@ GET        /assets/*file                                    controllers.WebJarAs
 
 GET        /:language/cart                                  @cart.CartDetailPageController.show(language: String)
 
-GET        /:language/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(language: String, productSlug: String, sku: String)
+GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 
-GET        /:language/:categorySlug/                        @productcatalog.controllers.ProductOverviewPageController.show(language: String, categorySlug: String, page: Int ?= 1)
+GET        /:locale/:categorySlug/                        @productcatalog.controllers.ProductOverviewPageController.show(locale: String, categorySlug: String, page: Int ?= 1)

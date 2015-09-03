@@ -47,8 +47,8 @@ public class ProductOverviewPageController extends SunriseController {
         this.pageSize = configuration.getInt("pop.pageSize");
     }
 
-    public F.Promise<Result> show(final String language, final String categorySlug, final int page) {
-        final UserContext userContext = userContext(language);
+    public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
+        final UserContext userContext = userContext(locale);
         final Optional<Category> category = categories().findBySlug(userContext.locale(), categorySlug);
         if (category.isPresent()) {
             final List<Category> childrenCategories = categories().findChildren(category.get());
@@ -82,9 +82,10 @@ public class ProductOverviewPageController extends SunriseController {
                                                       final PagedSearchResult<ProductProjection> searchResult,
                                                       final List<Facet<ProductProjection>> boundFacets) {
         final String additionalTitle = "";
+        final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
-        return new ProductOverviewPageContent(additionalTitle, productListData, filterListData);
+        return new ProductOverviewPageContent(additionalTitle, staticData, productListData, filterListData);
     }
 
     /* Maybe move to some common controller class */
@@ -153,8 +154,11 @@ public class ProductOverviewPageController extends SunriseController {
     /* This will probably be moved to some kind of factory classes */
 
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {
-        final ProductThumbnailDataFactory thumbnailDataFactory = ProductThumbnailDataFactory.of(userContext);
-        return new ProductListData(productList.stream().map(thumbnailDataFactory::create).collect(toList()));
+        final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
+        final List<ProductData> productDataList = productList.stream()
+                .map(product -> productDataFactory.create(product, product.getMasterVariant()))
+                .collect(toList());
+        return new ProductListData(productDataList);
     }
 
     private <T> FilterListData getFilterListData(final PagedSearchResult<T> searchResult, final List<Facet<T>> boundFacets) {
