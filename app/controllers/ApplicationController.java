@@ -1,34 +1,29 @@
 package controllers;
 
-import common.cms.CmsPage;
-import common.controllers.ControllerDependency;
-import common.controllers.SunriseController;
-import common.pages.SunrisePageData;
+import play.inject.Injector;
 import play.libs.F;
+import play.mvc.Controller;
 import play.mvc.Result;
-import productcatalog.pages.HomePageContent;
+import setupwidget.controllers.SetupController;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Controller for main web pages like index, imprint and contact.
+ * Front controller for the {@link HomeController} to enable a widget to set the SPHERE.IO credentials.
  */
 @Singleton
-public final class ApplicationController extends SunriseController {
+public class ApplicationController extends Controller {
+    private final Injector injector;
+    private final SetupController setupController;
 
     @Inject
-    public ApplicationController(final ControllerDependency controllerDependency) {
-        super(controllerDependency);
+    public ApplicationController(final Injector injector, final SetupController setupController) {
+        this.injector = injector;
+        this.setupController = setupController;
     }
 
     public F.Promise<Result> index() {
-        return getCmsPage("home").map(this::getResult);
-    }
-
-    private Result getResult(final CmsPage cms) {
-        final HomePageContent content = new HomePageContent();
-        final SunrisePageData pageData = SunrisePageData.of(cms, context(), content);
-        return ok(templateService().renderToHtml("home", pageData));
+        return setupController.handleOrFallback(() -> injector.instanceOf(HomeController.class).index());
     }
 }
