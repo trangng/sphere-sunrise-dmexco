@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static play.mvc.Controller.session;
 
 public class SunrisePageDataFactory {
     private final Messages messages;
@@ -44,7 +45,14 @@ public class SunrisePageDataFactory {
         final String title = messages.at("header.title") + pageContent.additionalTitle();
         final CollectionData<SelectableData> countries = getCountries();
         final NavMenuData navMenuData = getNavMenuData();
-        return new PageHeader(messages, title, countries, navMenuData);
+        final MiniCartData miniCartData = getMiniCartData();
+        return new PageHeader(messages, title, countries, navMenuData, miniCartData);
+    }
+
+    private MiniCartData getMiniCartData() {
+        final String url = "";
+        final int numItems = Optional.ofNullable(session("CART_ITEM_COUNT")).map(Integer::parseInt).orElse(0);
+        return new MiniCartData(url, numItems);
     }
 
     private NavMenuData getNavMenuData() {
