@@ -34,7 +34,7 @@ public class ApplicationController extends SunriseController {
     }
 
     public F.Promise<Result> index() {
-        return setupController.handleOrFallback(() -> injector.instanceOf(HomeController.class).index("en"));
+        return setupController.handleOrFallback(() -> injector.instanceOf(HomeController.class).show());
     }
 
     public Result version() throws IOException {

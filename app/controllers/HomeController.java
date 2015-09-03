@@ -10,6 +10,7 @@ import productcatalog.pages.HomePageContent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Locale;
 
 /**
  * Controller for main web pages like index, imprint and contact.
@@ -22,8 +23,14 @@ public final class HomeController extends SunriseController {
         super(controllerDependency);
     }
 
-    public F.Promise<Result> index(final String locale) {
-        final UserContext userContext = userContext(locale);
+    public F.Promise<Result> show() {
+        final String language = context().project().languages().stream().findFirst().map(Locale::toLanguageTag)
+                .orElse("en");
+        return F.Promise.pure(redirect(reverseRouter().home(language)));
+    }
+
+    public F.Promise<Result> show(final String language) {
+        final UserContext userContext = userContext(language);
         final F.Promise<CmsPage> cmsPagePromise = cmsService().getPage(userContext.locale(), "home");
         return cmsPagePromise.map(cms -> getResult(userContext));
     }

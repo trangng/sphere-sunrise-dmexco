@@ -116,6 +116,11 @@ public class ProductDetailPageContentTest {
     private static ReverseRouter dummyReverseRouter() {
         return new ReverseRouter() {
             @Override
+            public Call home(final String language) {
+                return null;
+            }
+
+            @Override
             public Call category(final String locale, final String slug, final int page) {
                 return null;
             }

@@ -7,6 +7,7 @@ GET        /                                                @controllers.Applica
 GET        /version                                         @controllers.ApplicationController.version()
 GET        /health                                          @controllers.ApplicationController.health()
 
+GET        /:language/home/                                 @controllers.HomeController.show(language:String)
 
 GET        /products                                        @controllers.TmpPopController.show
 
