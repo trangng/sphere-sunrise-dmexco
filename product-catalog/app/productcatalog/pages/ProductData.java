@@ -32,7 +32,7 @@ public class ProductData extends Base {
     }
 
     public String getId() {
-        return Integer.toString(hashCode());
+        return sku;
     }
 
     public String getText() {
