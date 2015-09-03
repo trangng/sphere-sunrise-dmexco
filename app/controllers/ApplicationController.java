@@ -2,6 +2,7 @@ package controllers;
 
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
+import io.sphere.sdk.products.search.ProductProjectionSearch;
 import org.apache.commons.io.IOUtils;
 import play.Application;
 import play.libs.F;
@@ -35,5 +36,26 @@ public final class ApplicationController extends SunriseController {
         final String jsonString =
                 IOUtils.toString(application.resourceAsStream("internal/version.json"), StandardCharsets.UTF_8);
         return ok(jsonString).as(Http.MimeTypes.JSON);
+    }
+
+    public F.Promise<Result> health() throws IOException {
+        return sphere().execute(ProductProjectionSearch.ofCurrent().withLimit(1))
+                .map(result -> {
+                    final boolean ok = !result.getResults().isEmpty();
+                    if (!ok) {
+                        throw new RuntimeException("cannot fetch any product");
+                    }
+                    return ok("{\n" +
+                            "  \"self\" : {\n" +
+                            "    \"healthy\" : true\n" +
+                            "  }\n" +
+                            "}");
+                })
+                .recover(e -> status(Http.Status.SERVICE_UNAVAILABLE, "{\n" +
+                        "  \"self\" : {\n" +
+                        "    \"healthy\" : true\n" +
+                        "  }\n" +
+                        "}"))
+                .map(r -> r.as(Http.MimeTypes.JSON));
     }
 }
