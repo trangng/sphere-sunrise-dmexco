@@ -70,6 +70,11 @@ public class ProductDataFactoryTest {
                     }
                 };
             }
+
+            @Override
+            public Call productVariantToCartForm(final String language) {
+                return null;
+            }
         };
     }
 }

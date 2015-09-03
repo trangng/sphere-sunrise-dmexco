@@ -72,10 +72,6 @@ public abstract class SunriseController extends ShopController {
                 reverseRouter(), saleCategoryExtId).create(content);
     }
 
-    protected final ReverseRouter reverseRouter() {
-        return controllerDependency.getReverseRouter();
-    }
-
     protected final Messages messages(final UserContext userContext) {
         final Lang lang = Lang.forCode(userContext.locale().toLanguageTag());
         return new Messages(lang, controllerDependency.messagesApi());
