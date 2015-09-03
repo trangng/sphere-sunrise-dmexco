@@ -44,8 +44,8 @@ public class ProductDetailPageController extends SunriseController {
         this.numberOfSuggestions = configuration().getInt("pdp.productSuggestions.count");
     }
 
-    public F.Promise<Result> show(final String language, final String slug, final String sku) {
-        final UserContext userContext = userContext(language);
+    public F.Promise<Result> show(final String locale, final String slug, final String sku) {
+        final UserContext userContext = userContext(locale);
         final F.Promise<CmsPage> cmsPagePromise = cmsService().getPage(userContext.locale(), "pdp");
         final F.Promise<ProductProjection> productProjectionPromise = fetchProduct(userContext.locale(), slug);
         final F.Promise<List<ProductProjection>> suggestionPromise = productProjectionPromise.flatMap(this::fetchSuggestions);
@@ -128,7 +128,7 @@ public class ProductDetailPageController extends SunriseController {
 
     private ProductData getProductData(final UserContext userContext, final ProductProjection productProjection,
                                        final ProductVariant productVariant) {
-        final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext);
+        final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
         return productDataFactory.create(productProjection, productVariant);
     }
 
@@ -141,7 +141,7 @@ public class ProductDetailPageController extends SunriseController {
     }
 
     private List<ProductData> getSuggestionData(final UserContext userContext, final List<ProductProjection> suggestions) {
-        final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext);
+        final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
         return suggestions.stream()
                 .map((product) -> productDataFactory.create(product, product.getMasterVariant()))
                 .collect(toList());

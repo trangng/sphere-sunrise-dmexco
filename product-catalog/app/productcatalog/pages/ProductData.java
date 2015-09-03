@@ -11,6 +11,7 @@ public class ProductData extends Base {
 
     private final String text;
     private final String sku;
+    private final String url;
     private final String description;
     private final String price;
     private final String priceOld;
@@ -19,9 +20,12 @@ public class ProductData extends Base {
     private final List<SelectableData> sizes;
     private final List<DetailData> details;
 
-    public ProductData (final String text, final String sku, final String description, final String price, final String priceOld, final List<ImageData> images, final List<SelectableData> colors, final List<SelectableData> sizes, final List<DetailData> details) {
+    public ProductData (final String text, final String sku, final String url, final String description, final String price,
+                        final String priceOld, final List<ImageData> images, final List<SelectableData> colors,
+                        final List<SelectableData> sizes, final List<DetailData> details) {
         this.text = text;
         this.sku = sku;
+        this.url = url;
         this.description = description;
         this.price = price;
         this.priceOld = priceOld;
@@ -41,6 +45,10 @@ public class ProductData extends Base {
 
     public String getSku() {
         return sku;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getDescription() {
