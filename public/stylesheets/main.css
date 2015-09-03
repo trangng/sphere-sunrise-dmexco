@@ -1,16 +1,2 @@
-/*.brands-list*/
-.pop-filter-list {
-
-}
-
-/*.pop-filter-color / size */
-.pop-filter-select {
-
-}
-
-/* #brands-checkbox */
-.brands-checkbox {
-
-}
-
-/*  */
+/* Disable product thumbnail quick view */
+.shop-item .shop-item-overlay { display: none !important; }
