@@ -9,4 +9,4 @@ EXPOSE 9000
 
 WORKDIR $APPDIR
 ENTRYPOINT ["/app/target/universal/stage/bin/sphere-sunrise"]
-CMD ["-Dconfig.resource=prod.conf"]
+CMD ["-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml"]
