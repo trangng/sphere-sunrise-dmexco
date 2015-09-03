@@ -53,7 +53,7 @@ public final class ApplicationController extends SunriseController {
                 })
                 .recover(e -> status(Http.Status.SERVICE_UNAVAILABLE, "{\n" +
                         "  \"self\" : {\n" +
-                        "    \"healthy\" : true\n" +
+                        "    \"healthy\" : false\n" +
                         "  }\n" +
                         "}"))
                 .map(r -> r.as(Http.MimeTypes.JSON));
