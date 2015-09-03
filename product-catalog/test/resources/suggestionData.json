@@ -1,9 +1,12 @@
 {
   "suggestions": [
     {
+      "id":"4f643a44-5bed-415e-ae60-64c46bfb26f5",
       "text": "Tasche \u201eSelma\u201d medium Michael Kors rot",
       "sku": "A0E200000001YLW",
       "url": "michael-kors-tasche-30S3GLMS2L-selma-rot-url-A0E200000001YLW",
+      "slug":"michael-kors-tasche-30S3GLMS2L-selma-rot",
+      "variantId":1,
       "description": "",
       "price": "EUR 295,-",
       "priceOld": "",
@@ -33,12 +36,14 @@
       ],
       "details": [
 
-      ],
-      "id": "A0E200000001YLW"
+      ]
     },
     {
+      "id":"a3f4588e-fcfe-41de-bd09-a071d76d697d",
       "text": "Brieftasche DKNY rot",
       "sku": "A0E2000000026IK",
+      "slug":"dkny-brieftasche-r1521110-rot",
+      "variantId":1,
       "url": "dkny-brieftasche-r1521110-rot-url-A0E2000000026IK",
       "description": "",
       "price": "EUR 85,-",
@@ -69,13 +74,15 @@
       ],
       "details": [
 
-      ],
-      "id": "A0E2000000026IK"
+      ]
     },
     {
+      "id": "dc9a4460-491c-48b4-bcf6-1d802bb7e164",
       "text": "Schal Altea blau",
       "sku": "A0E20000000251R",
       "url": "altea-schal-1550031-blau-url-A0E20000000251R",
+      "slug":"altea-schal-1550031-blau",
+      "variantId":1,
       "description": "",
       "price": "EUR 92,-",
       "priceOld": "",
@@ -105,13 +112,15 @@
       ],
       "details": [
 
-      ],
-      "id": "A0E20000000251R"
+      ]
     },
     {
+      "id": "4f643a44-5bed-415e-ae60-64c46bfb26f5",
       "text": "Tasche \u201eSelma\u201d medium Michael Kors rot",
       "sku": "A0E200000001YLW",
       "url": "michael-kors-tasche-30S3GLMS2L-selma-rot-url-A0E200000001YLW",
+      "slug":"michael-kors-tasche-30S3GLMS2L-selma-rot",
+      "variantId":1,
       "description": "",
       "price": "EUR 295,-",
       "priceOld": "",
@@ -141,8 +150,7 @@
       ],
       "details": [
 
-      ],
-      "id": "A0E200000001YLW"
+      ]
     }
   ]
 }
