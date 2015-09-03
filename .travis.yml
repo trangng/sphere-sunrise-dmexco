@@ -1,29 +1,26 @@
 sudo: false
 cache:
   directories:
-  - $HOME/.ivy2
-  - $HOME/.sbt
+  - "$HOME/.ivy2"
+  - "$HOME/.sbt"
 language: scala
 scala:
 - 2.10.5
 script:
-- "./sbt test it:test pt:test unidoc" #cover
+- "./sbt test it:test pt:test"
 - rm conf/dev.conf
-#- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then sbt "gitPublish target/scala-2.11/it-jacoco/html https://$GH_TOKEN:x-oauth-basic@github.com/$TRAVIS_REPO_SLUG.git coverage sphere-oss automation@commercetools.de"; fi
-- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then sbt "gitPublish target/javaunidoc https://$GH_TOKEN:x-oauth-basic@github.com/$TRAVIS_REPO_SLUG.git javadoc sphere-oss automation@commercetools.de"; fi
 jdk:
 - oraclejdk8
 env:
   matrix:
   - SBT_OPTS="-XX:PermSize=512M -XX:MaxPermSize=1024M"
   global:
-  - secure: MGKwVKFrBHDPBKuyvDsvDreT+zoPbw0dKiWMoGxJfnJBwEL1DVqHeYkuK4sfBKD4LE2pze1nRURSP7+RcKCB2IhMcL2GkDBx0lIkq2s0YnDbI/b0WFNFv8yyT70LYSeHmme5EcPT0OlMeu8//UQu136yO6NLKXMl5H3LMj4v020=
-  - secure: AFCenTD52oSdFplohvf5z/eT8t5tLzpCAvbgA26zApeTkbl26fOKkCwiaR2lg0MUrlEnnWcCMHu9fuSB9hW6Q+BPOfuDeT4ZfUku2EVNiXqjW8S3Vux82gF3So9fZbBCmpt+/n7yAy3SOGX8cSahMN15XvN7rgy4yKSyPQFL0vs=
-  - secure: VSXOYdyfnBMdHyFuPzZMxYE94c7Afve3meKZXNs+h7YofW33tgP3PNQBMk8gMjD/taZX4dELmyJqZTJW1kKeC9KDkGtcDPhQnJ8kPaW2YX0WInq7n5/++TwYL5eFU/RPa34572cmz4bDLW5ONKuWU8X4b+tOpGk3Kzqz/RKB7QA=
   - SPHERE_SUNRISE_PROJECT="dummysetting"
   - SPHERE_SUNRISE_CLIENT_SECRET="dummysetting"
   - SPHERE_SUNRISE_CLIENT_ID="dummysetting"
-  - secure: ocKHAWZJhmxs6tqMXtRf5mtbo671DHll91nzk2yl+bFMvhxHt5/7Y50ReLhq8Y/gXBfwA/qBAQg/ql8/q6jElg4/5T1mUdK2U153kf7FaVhDEF5ZtFbfGl+LugZAwrNGSM1+18C0ctIq87P04NU9GKY+06ZLEi95v0SS7JaRJPg=
+  - secure: uNC8SWEJIU/KOM43m803On3cP4/GrzP1DKMU54SdREJBA9F5pbNrweaLoDwmK5veNGUM4iSC4TPWySbpe7Ci1ej+A7oNcdJk4UnBM7yqht9P8rUniclldMe0YQSERAxSLfx4KLiVQOO41BBnHsYOtITjcVbwuvGn9Id9d6ww4v6YLKvZiW05thGrUHymwiCD8aODppamV5RILZ1e5vwFz3olJdS3MGSuEtpOO+obxA/Vwng5ugjkbln++vkYdUDC54Hf1ijXlM1cWXsijZH2wFwKnA5TyQVv7AFol3eoHjSx4AffxkgYuAxZ3DX3NmHuJuoE5/YU6odd/QErtWAf0gU1JXT8PgkYyGB0tTdc8NQoB/t7elj/xAn1CWjrXk93W8Tae1CMam7MZOKlsWmjbtqF6BEEndhUu4wDegqYYFlKyGBtZSVbdOQEbF98eRvPu/WzCnqRNNb8pL9APYOGz80+Qjm7r90UN9oZRU1fL3+B4svy0ms+G3mxiGzO8kSwflHS8qvrVItUHNXw6BzJGJCTq/zm0v5vMN7x3eam47zvCp64NJv6I2arn7ehe5OB6w2LoFxHxwCBXkBdlKVmI9XYq7xqC7o8zKtwL9L44Y5PdHWP2rIh4Tcz60i9EZbpsEUyQnqlUoAjMNn2nBbsVrTs+IyhVR6wVH4rhOWfdLM=
+  - secure: K9iff5MawqLzVImCSjjQoM24xnIQtYyYk76ZpWPZzlIukHObU4es7gb3zOLUfDCGc2T7YZiB1KvawffIi+AK+/mhWtvhEq0ohTLzt+7j5jsqMsvkQ99T9bIJ3ixFDMgJmeMOZkUoO2tNW240zjrF/2iKKXa09i4GfXv8HNu9nmNAkDLpbQGr9qzTrqOtVMctZLWcS4iCOupplox0NlrEPSkr+KL9HLbkXWBOhvGPIRuh5rLQqgGkvXALz4yPf3lzKrzKJSquSbTVR4LOX0rzgiN/PMrGhFEiMfi3XgqBZVQIHVTOLP/I9ofB099+YxaJ3jpEppo18DzFYFkYizPR6+iaL4fFJzboVYLq2u8eLgII2y09HZ9O8TQ4JVhxHWBVJoI7o7t64RztwwQcYhxjHBFHBbM9ubI0hgpmV6MdWGzlbVVl4jWPJzeRPOt6b7eDUM2TTlPjsduciR8K25UcfkSoOX6YeR44bWwX/kTskz4GH+h+fRTezl2SgxhsSQipUKt4dudgl8C+RuClJLsNUi4ofz6AKfwWvYMLO0BnQHeYU4R15AFpjHu5Epq1rDWsSqAz/d/KOW9eG7xMM6tLdpDMyuPnMzA1tYJMruGYgdRGBPe9rnXPu9TbBn2Xo9dj8rZ2JrRnr9mqvQ2JiuPd+aQZTczZ4p+0O8JnJEhkJ8Q=
+  - secure: yYudeqOaU9fn1G34UpRRRVBjbOD2jh5WiI4sBJN5HaW/3Lu/IpS+/jikf5cYOjBMPRScUcjLrJDfU5OoKBf7QRqGWU/n31ZxnwlfzpqD7kEtPWAlE+TNJAIeBryJf98mBIPqydcg+oQ2r4VitW3WkKnDypqSwGcfOG5tAkJZ5aN7IKd0DUR/Jt3KaifTvuLZud5wQbZDBuDJBE5sk2SKct+lOUo1h5obHgOC7zmQxtPf2U0TUIeR4UF/038mXUXDuVsRGiWXJ9oEaXc2xSK7Qquq1OcnOXWrNrlKhI5edMgIjFwJGB4+UEqtxEmkBga+GiOZdPE96lvXKZQHjwvgrk5nhIQli2vTz82KkxxqCIvjAribOr8NhLCz8vQXNYjerttoMyzVvjdfQZQ7ukoBkUQOnSCuWFhOLRZV6Gq5uPt0dsZpMX5apADTSFzSBahhgeU2s1kkIvOybM6oU3nWzwFJb6Q5/U520mgdZkHnzwvqALpyOOjsKnLg18v5eu53n04mEw6AA0ELoNj0DKnvE2zRSMj1xw2FnHSCrnEBu7MCkqkEA7HGMEbISOPBaapk2AI+V6iqolLJb2nzgjHWiSSeAKVo/N731vv+ahAG/6VTRVsm/LqxiP+Ch/fR5382YQmLcMtZcaYgu1mulzzd7w7rVgpUHvlRHRvwtDW3hFc=
 notifications:
   email:
     on_success: never
@@ -31,9 +28,9 @@ notifications:
 deploy:
   provider: heroku
   buildpack: scala
-  api_key:
-    secure: NE6m0300BPmc8jJQbpTFyOP1uU6uK+7aVpN5lmKAPhV2gByzzq9XT3uwYqPcD9turCYujDXAmXrBzI6ISfLlrqpcxKjSupeUvvjpOxqhbpP65hA79VTuxDIajazzXrvjuKPgvUJAjD+1qdQWzoOjKJ4Y/iJ1YL+fqt8omOSFda0=
-  app: sphere-sunrise
+  app: sphere-sunrise-dmexco
   on:
-    repo: sphereio/sphere-sunrise
+    repo: sphereio/sphere-sunrise-dmexco
     branch: master
+  api_key:
+    secure: AVNRuAgr5lIR4wBKbY9D+AfhaHprRooEZUlkI4P3W/aJS6ZI0d+5GXIr0VR0RmNKDrjje2ztkrqifbC9fP+iBPqVH34OAwJ9its+ctIqdfgZezHgOeUJSpg0PCsNIEjk6g/ACylPiSKc1HP0srEGB8RC5+k70g8/7y4mf9QC2FUTukb6A3cGp6P2kc21Cx5opqtt9rCdVGByajfq/OikwbF9FsNBd+HYt+yoANzTlY8U8TOJS3cg9gNjNXnMxEn1A0Gcw+WycY1lUrzBoCR+vH3fPfFDDf9emlRpTk+ZOpvvEDcW6qZlAwJi9rr6L9AqSVprc0Izwe8oVpmcv1b7W2TLLusAAJW92Dsu0jcW/zl2lV+QptlwsQRBf4d32CQIV4BOUnmnBef8mJJcCIatx8irTJfoIEKfLXfAip3FHXTrz7r2Z1MPxq2mTF3eHiAA4lEzhuamC0+0tx7C7j7V0kI/o+7r27YIjDS81277++tefWvDubQfbIJ2/I/pdrTkxRB6ibuQWa1xu4/CmsymovO0DEHeJqjyNhO3v5/GR3Ukr4Xz0CRrqFLcQR8CSJafp02n+dbxcXujnj+TtfDXc3Av2COmmTLfdYsg6Q1MS3sbR4z1CkrC9vZytyxDCLlwm+V5ZiS7jLa1P2n29KPWFpC0FRy8RCUD/yS/SOhv5TM=
