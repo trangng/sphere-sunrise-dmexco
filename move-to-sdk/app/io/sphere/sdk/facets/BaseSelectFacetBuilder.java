@@ -16,7 +16,7 @@ abstract class BaseSelectFacetBuilder<T extends BaseSelectFacetBuilder<T>> exten
     protected boolean matchingAll = false;
     protected List<String> selectedValues = Collections.emptyList();
     protected Optional<TermFacetResult> facetResult = Optional.empty();
-    protected Optional<Long> threshold = Optional.empty();
+    protected Optional<Long> threshold = Optional.of(1L);
     protected Optional<Long> limit = Optional.empty();
 
     protected BaseSelectFacetBuilder(final String key, final String label, final FacetType type) {

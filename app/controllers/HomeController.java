@@ -1,9 +1,9 @@
 package controllers;
 
 import common.cms.CmsPage;
+import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.SunrisePageData;
 import play.libs.F;
 import play.mvc.Result;
 import productcatalog.pages.HomePageContent;
@@ -22,13 +22,14 @@ public final class HomeController extends SunriseController {
         super(controllerDependency);
     }
 
-    public F.Promise<Result> index() {
-        return getCmsPage("home").map(this::getResult);
+    public F.Promise<Result> index(final String locale) {
+        final UserContext userContext = userContext(locale);
+        final F.Promise<CmsPage> cmsPagePromise = cmsService().getPage(userContext.locale(), "home");
+        return cmsPagePromise.map(cms -> getResult(userContext));
     }
 
-    private Result getResult(final CmsPage cms) {
+    private Result getResult(final UserContext userContext) {
         final HomePageContent content = new HomePageContent();
-        final SunrisePageData pageData = SunrisePageData.of(cms, context(), content);
-        return ok(templateService().renderToHtml("home", pageData));
+        return ok(templateService().renderToHtml("home", pageData(userContext, content)));
     }
 }

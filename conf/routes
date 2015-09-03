@@ -4,6 +4,9 @@
 
 # Home page
 GET        /                                                @controllers.ApplicationController.index()
+GET        /version                                         @controllers.ApplicationController.version()
+GET        /health                                          @controllers.ApplicationController.health()
+
 
 GET        /products                                        @controllers.TmpPopController.show
 
@@ -15,8 +18,8 @@ GET        /assets/public/*file                             controllers.Assets.a
 # Map static resources from webjars to the /assets URL path
 GET        /assets/*file                                    controllers.WebJarAssets.at(file)
 
+GET        /:language/cart                                  @cart.CartDetailPageController.show(language: String)
 
-GET        /:language/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(language: String, productSlug: String, sku: String)
+GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 
-GET        /:language/:categorySlug1/                       @productcatalog.controllers.ProductOverviewPageController.showCategory(language: String, categorySlug1: String, page: Int ?= 1)
-GET        /:language/:categorySlug1/:categorySlug2/        @productcatalog.controllers.ProductOverviewPageController.showSubcategory(language: String, categorySlug1: String, categorySlug2: String, page: Int ?= 1)
+GET        /:locale/:categorySlug/                        @productcatalog.controllers.ProductOverviewPageController.show(locale: String, categorySlug: String, page: Int ?= 1)

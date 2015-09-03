@@ -38,7 +38,7 @@ public class SelectFacetTest {
                 .selectedValues(SELECTED_VALUE_TWO)
                 .matchingAll(true)
                 .multiSelect(false)
-                .threshold(4L)
+                .threshold(3L)
                 .limit(10L)
                 .build();
         assertThat(facet.getKey()).isEqualTo(KEY);
@@ -49,9 +49,9 @@ public class SelectFacetTest {
         assertThat(facet.getSelectedValues()).containsExactlyElementsOf(SELECTED_VALUE_TWO);
         assertThat(facet.isMatchingAll()).isTrue();
         assertThat(facet.isMultiSelect()).isFalse();
-        assertThat(facet.getThreshold()).contains(4L);
+        assertThat(facet.getThreshold()).contains(3L);
         assertThat(facet.getLimit()).contains(10L);
-        assertThat(facet.isAvailable()).isFalse();
+        assertThat(facet.isAvailable()).isTrue();
         assertThat(facet.getAllOptions()).containsExactlyElementsOf(OPTIONS);
         assertThat(facet.getLimitedOptions()).containsExactlyElementsOf(OPTIONS);
     }
@@ -67,9 +67,9 @@ public class SelectFacetTest {
         assertThat(facet.getSelectedValues()).isEmpty();
         assertThat(facet.isMatchingAll()).isFalse();
         assertThat(facet.isMultiSelect()).isTrue();
-        assertThat(facet.getThreshold()).isEmpty();
+        assertThat(facet.getThreshold()).contains(1L);
         assertThat(facet.getLimit()).isEmpty();
-        assertThat(facet.isAvailable()).isTrue();
+        assertThat(facet.isAvailable()).isFalse();
         assertThat(facet.getAllOptions()).isEmpty();
         assertThat(facet.getLimitedOptions()).isEmpty();
     }
