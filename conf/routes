@@ -4,6 +4,7 @@
 
 # Home page
 GET        /                                                @controllers.HomeController.index()
+GET        /version                                         @controllers.ApplicationController.version()
 
 GET        /products                                        @controllers.TmpPopController.show
 

@@ -1,6 +1,11 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import play.sbt.PlayImport
 import de.johoop.jacoco4sbt._
 import de.johoop.jacoco4sbt.JacocoPlugin._
+
+import scala.util.{Success, Try}
 
 name := "sphere-sunrise"
 
@@ -54,7 +59,8 @@ lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
     "io.sphere.sdk.jvm" % "sphere-play-2_4-java-client_2.10" % "1.0.0-M16", // % sphereJvmSdkVersion,
     "io.sphere" % "sphere-sunrise-design" % "0.7.0",
     "org.webjars" % "webjars-play_2.10" % "2.4.0-1",
-    "com.github.jknack" % "handlebars" % "2.2.3"
+    "com.github.jknack" % "handlebars" % "2.2.3",
+    "commons-io" % "commons-io" % "2.4"
   ),
   dependencyOverrides ++= Set (
     "com.google.guava" % "guava" % "18.0",
@@ -114,3 +120,24 @@ lazy val testCoverageSettings =  jacoco.settings ++ itJacoco.settings ++ Seq (
     "com.novocode" % "junit-interface" % "0.11" % "it"
   )
 )
+
+resourceGenerators in Compile += Def.task {
+  val file = (resourceManaged in Compile).value / "internal" / "version.json"
+  val date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ").format(new Date)
+
+  val gitCommit = Try(Process("git rev-parse HEAD").lines.head) match {
+    case Success(sha) => sha
+    case _ => "unknown"
+  }
+  val buildNumber = Option(System.getenv("BUILD_NUMBER")).getOrElse("unknown")
+  val contents = s"""{
+                    |  "version" : "${version.value}",
+                    |  "build" : {
+                    |    "date" : "$date",
+                    |    "number" : "$buildNumber",
+                    |    "gitCommit" : "$gitCommit"
+                    |  }
+                    |}""".stripMargin
+  IO.write(file, contents)
+  Seq(file)
+}.taskValue
