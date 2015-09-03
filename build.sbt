@@ -15,6 +15,12 @@ organization := "io.sphere"
 
 version := "1.0-SNAPSHOT"
 
+version in Docker := "latest"
+packageName in Docker := "sunrise"
+dockerRepository in Docker := Some("dockerhub.commercetools.de")
+dockerExposedPorts in Docker := Seq(9000)
+dockerCmd in Docker := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml")
+
 /**
  * SUB-PROJECT DEFINITIONS
  */
