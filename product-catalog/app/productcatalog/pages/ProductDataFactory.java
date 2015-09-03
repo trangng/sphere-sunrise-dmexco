@@ -54,8 +54,10 @@ public class ProductDataFactory {
                 getImages(variant),
                 getColors(product),
                 getSizes(product),
-                getDetails(variant)
-        );
+                getDetails(variant),
+                variant.getId(),
+                product.getSlug().find(locales).orElse(""),
+                product.getId());
     }
 
     private List<ImageData> getImages(final ProductVariant productVariant) {

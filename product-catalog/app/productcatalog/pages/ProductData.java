@@ -9,8 +9,11 @@ import java.util.List;
 
 public class ProductData extends Base {
 
+    private final String id;
     private final String text;
     private final String sku;
+    private final String slug;
+    private final Integer variantId;
     private final String description;
     private final String price;
     private final String priceOld;
@@ -19,7 +22,7 @@ public class ProductData extends Base {
     private final List<SelectableData> sizes;
     private final List<DetailData> details;
 
-    public ProductData (final String text, final String sku, final String description, final String price, final String priceOld, final List<ImageData> images, final List<SelectableData> colors, final List<SelectableData> sizes, final List<DetailData> details) {
+    public ProductData(final String text, final String sku, final String description, final String price, final String priceOld, final List<ImageData> images, final List<SelectableData> colors, final List<SelectableData> sizes, final List<DetailData> details, final Integer variantId, final String slug, final String id) {
         this.text = text;
         this.sku = sku;
         this.description = description;
@@ -29,10 +32,13 @@ public class ProductData extends Base {
         this.colors = colors;
         this.sizes = sizes;
         this.details = details;
+        this.variantId = variantId;
+        this.slug = slug;
+        this.id = id;
     }
 
     public String getId() {
-        return Integer.toString(hashCode());
+        return id;
     }
 
     public String getText() {
@@ -69,5 +75,13 @@ public class ProductData extends Base {
 
     public List<DetailData> getDetails() {
         return details;
+    }
+
+    public Integer getVariantId() {
+        return variantId;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 }

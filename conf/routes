@@ -17,6 +17,7 @@ GET        /assets/public/*file                             controllers.Assets.a
 # Map static resources from webjars to the /assets URL path
 GET        /assets/*file                                    controllers.WebJarAssets.at(file)
 
+POST       /:language/add-to-cart                           @cart.LineItemAddController.process(language: String)
 GET        /:language/cart                                  @cart.CartDetailPageController.show(language: String)
 
 GET        /:language/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(language: String, productSlug: String, sku: String)
