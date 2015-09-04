@@ -26,7 +26,6 @@ public class CartDetailPageController extends CartController {
         return cartPromise.map(cart -> {
             final Messages messages = messages(userContext);
             final CartDetailPageContent content = new CartDetailPageContent(cart, userContext, reverseRouter(), messages);
-            System.err.println(prettyPrint(toJsonString(content)));
             final SunrisePageData pageData = pageData(userContext, content);
             return ok(templateService().renderToHtml("cart", pageData));
         });

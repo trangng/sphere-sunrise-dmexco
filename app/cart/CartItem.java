@@ -11,6 +11,7 @@ public class CartItem extends Base {
     private String priceOld;
     private String price;
     private String totalPrice;
+    private String imageUrl;
     private Long quantity;
 
     public CartItem() {
@@ -86,5 +87,13 @@ public class CartItem extends Base {
 
     public void setQuantity(final Long quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(final String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

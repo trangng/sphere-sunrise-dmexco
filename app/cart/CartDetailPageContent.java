@@ -44,7 +44,8 @@ public class CartDetailPageContent extends PageContent {
                             .map(DiscountedPrice::getValue)
                             .orElseGet(() -> lineItem.getPrice().getValue());
                     cartItem.setTotalPrice(priceFormatter.format(monetaryAmount.multiply(lineItem.getQuantity())));
-
+                    final String imageUrl = productVariant.getImages().stream().findFirst().map(i -> i.getUrl()).orElse("");
+                    cartItem.setImageUrl(imageUrl);
                     return cartItem;
                 })
                 .collect(toList());
