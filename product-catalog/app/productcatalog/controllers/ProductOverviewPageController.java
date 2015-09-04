@@ -4,7 +4,7 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.ProductThumbnailDataFactory;
+import common.pages.LinkData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
@@ -22,7 +22,9 @@ import productcatalog.services.ProductProjectionService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.IntStream;
 
+import static common.utils.UrlUtils.buildUrl;
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
 import static java.util.Arrays.asList;
@@ -57,7 +59,7 @@ public class ProductOverviewPageController extends SunriseController {
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
-                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets);
+                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets, page);
                                 return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
                             })
             );
@@ -80,12 +82,13 @@ public class ProductOverviewPageController extends SunriseController {
 
     private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext,
                                                       final PagedSearchResult<ProductProjection> searchResult,
-                                                      final List<Facet<ProductProjection>> boundFacets) {
+                                                      final List<Facet<ProductProjection>> boundFacets, final int currentPage) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
-        return new ProductOverviewPageContent(additionalTitle, staticData, productListData, filterListData);
+        final PaginationData paginationData = getPaginationData(searchResult, currentPage);
+        return new ProductOverviewPageContent(additionalTitle, staticData, productListData, filterListData, paginationData);
     }
 
     /* Maybe move to some common controller class */
@@ -167,5 +170,28 @@ public class ProductOverviewPageController extends SunriseController {
                 .map(FacetData::new)
                 .collect(toList());
         return new FilterListData(facets);
+    }
+
+    private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
+        final int prev = currentPage - 1;
+        final int next = currentPage + 1;
+        final String urlPrev = buildRequestUrlWithPage(prev);
+        final String urlNext = buildRequestUrlWithPage(next);
+        final int totalPages = getTotalPages(searchResult);
+        final List<LinkData> pages = IntStream.rangeClosed(1, totalPages)
+                .mapToObj(page -> LinkData.of(String.valueOf(page), buildRequestUrlWithPage(page), page == currentPage))
+                .collect(toList());
+        return new PaginationData(urlPrev, urlNext, prev, next, pages);
+    }
+
+    private String buildRequestUrlWithPage(final int page) {
+        final Map<String, String[]> queryString = new HashMap<>(request().queryString());
+        queryString.put("page", new String[]{String.valueOf(page)});
+        return buildUrl(request().path(), queryString);
+    }
+
+    private <T> int getTotalPages(final PagedSearchResult<T> searchResult) {
+        final Double totalPages = Math.ceil(searchResult.getTotal() / pageSize);
+        return totalPages.intValue();
     }
 }
