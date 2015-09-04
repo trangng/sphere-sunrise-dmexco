@@ -15,12 +15,6 @@ organization := "io.sphere"
 
 version := "1.0-SNAPSHOT"
 
-version in Docker := "latest"
-packageName in Docker := "sunrise"
-dockerRepository := Some("dockerhub.commercetools.de")
-dockerExposedPorts := Seq(9000)
-dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml")
-
 /**
  * SUB-PROJECT DEFINITIONS
  */
@@ -28,7 +22,7 @@ dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger
 lazy val commonWithTests: ClasspathDep[ProjectReference] = common % "compile;test->test;it->it;pt->pt"
 
 lazy val `sphere-sunrise` = (project in file("."))
-  .enablePlugins(PlayJava, DockerPlugin).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava, DockerPlugin).configs(IntegrationTest, PlayTest).settings(commonSettings ++ dockerSettings: _*)
   .dependsOn(commonWithTests, `product-catalog`, `setup-widget`)
   .aggregate(common, `product-catalog`, `setup-widget`, `move-to-sdk`)
 
@@ -53,6 +47,13 @@ lazy val `move-to-sdk` = project
 javaUnidocSettings
 
 lazy val sphereJvmSdkVersion = "1.0.0-M17"
+
+val dockerSettings = Seq(
+  version in Docker := "latest",
+  packageName in Docker := "sunrise",
+  dockerRepository := Some("dockerhub.commercetools.de"),
+  dockerExposedPorts := Seq(9000),
+  dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml"))
 
 lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
   scalaVersion := "2.10.5",
