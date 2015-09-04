@@ -8,7 +8,7 @@ GET        /                                                @controllers.Applica
 GET        /version                                         @controllers.StatusController.version()
 GET        /health                                          @controllers.StatusController.health()
 
-GET        /:language/home/                                 @controllers.HomeController.show(language:String)
+GET        /:languageTag/home/                              @controllers.HomeController.show(languageTag:String)
 
 GET        /products                                        @controllers.TmpPopController.show
 
@@ -20,8 +20,8 @@ GET        /assets/public/*file                             controllers.Assets.a
 # Map static resources from webjars to the /assets URL path
 GET        /assets/*file                                    controllers.WebJarAssets.at(file)
 
-POST       /:language/add-to-cart                           @cart.LineItemAddController.process(language: String)
-GET        /:language/cart                                  @cart.CartDetailPageController.show(language: String)
+POST       /:languageTag/add-to-cart                        @cart.LineItemAddController.process(languageTag: String)
+GET        /:languageTag/cart                               @cart.CartDetailPageController.show(languageTag: String)
 
 GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 
