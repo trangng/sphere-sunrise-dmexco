@@ -1,4 +1,4 @@
-package cart;
+package common.cart;
 
 import common.pages.PageContent;
 

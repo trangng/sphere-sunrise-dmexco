@@ -1,5 +1,6 @@
-package cart;
+package common.cart;
 
+import common.cart.CartSessionKeys;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;

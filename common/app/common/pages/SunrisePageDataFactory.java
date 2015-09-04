@@ -1,5 +1,6 @@
 package common.pages;
 
+import common.cart.CartSessionKeys;
 import common.contexts.ProjectContext;
 import common.contexts.UserContext;
 import common.utils.Session;
@@ -51,7 +52,7 @@ public class SunrisePageDataFactory {
 
     private MiniCartData getMiniCartData() {
         final String url = String.format("/%s/cart", userContext.locale().toLanguageTag());
-        final int numItems = Session.readInt("CART_ITEM_COUNT").orElse(0);
+        final int numItems = Session.readInt(CartSessionKeys.CART_ITEM_COUNT).orElse(0);
         return new MiniCartData(url, numItems);
     }
 

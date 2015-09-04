@@ -1,4 +1,4 @@
-package cart;
+package common.cart;
 
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
@@ -8,7 +8,9 @@ import io.sphere.sdk.carts.commands.updateactions.AddLineItem;
 import org.apache.commons.lang3.ObjectUtils;
 import play.data.Form;
 import play.libs.F;
+import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 
@@ -24,14 +26,14 @@ public class LineItemAddController extends CartController {
 
         final Form<ProductVariantToCartFormData> form = getFilledForm();
         if (form.hasErrors()) {
-            return F.Promise.pure(badRequest(form.errorsAsJson()));
+            return F.Promise.pure(Results.badRequest(form.errorsAsJson()));
         } else {
             final ProductVariantToCartFormData data = form.get();
-            final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, session());
+            final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, Controller.session());
             return cartPromise.flatMap(cart -> {
                 final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), ObjectUtils.firstNonNull(data.getAmount(), 1));
                 return sphere().execute(CartUpdateCommand.of(cart, action))
-                .map(cartWithLineItem -> redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku())));
+                .map(cartWithLineItem -> Results.redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku())));
             });
         }
     }
