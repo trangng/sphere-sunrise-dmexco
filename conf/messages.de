@@ -1,3 +1,4 @@
+cdp.totalItems = {0,choice,0#kein|1#ein|1<{0}} Artikel im Warenkorb
 
 common.header.title = Sunrise -
 common.header.stores = FILIALEN
