@@ -4,6 +4,7 @@ import common.cms.CmsService;
 import common.contexts.AppContext;
 import common.contexts.UserContext;
 import common.pages.PageContent;
+import common.pages.ReverseRouter;
 import common.pages.SunrisePageData;
 import common.pages.SunrisePageDataFactory;
 import common.templates.TemplateService;
@@ -56,6 +57,10 @@ public abstract class SunriseController extends ShopController {
         return controllerDependency.configuration();
     }
 
+    protected final ReverseRouter reverseRouter() {
+        return controllerDependency.getReverseRouter();
+    }
+
     protected final AppContext context() {
         return context;
     }
@@ -64,7 +69,7 @@ public abstract class SunriseController extends ShopController {
         final Messages messages = messages(userContext);
         final String saleCategoryExtId = configuration().getString("common.saleCategoryExternalId");
         return new SunrisePageDataFactory(messages, userContext, context().project(), categories(),
-                controllerDependency.getReverseRouter(), saleCategoryExtId).create(content);
+                reverseRouter(), saleCategoryExtId).create(content);
     }
 
     protected final Messages messages(final UserContext userContext) {

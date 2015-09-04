@@ -1,6 +1,13 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import play.sbt.PlayImport
+import de.johoop.jacoco4sbt._
 import de.johoop.jacoco4sbt.JacocoPlugin._
 import de.johoop.jacoco4sbt._
 import play.sbt.PlayImport
+
+import scala.util.{Success, Try}
 
 name := "sphere-sunrise"
 
@@ -15,23 +22,23 @@ version := "1.0-SNAPSHOT"
 lazy val commonWithTests: ClasspathDep[ProjectReference] = common % "compile;test->test;it->it;pt->pt"
 
 lazy val `sphere-sunrise` = (project in file("."))
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava, DockerPlugin).configs(IntegrationTest, PlayTest).settings(commonSettings ++ dockerSettings: _*)
   .dependsOn(commonWithTests, `product-catalog`, `setup-widget`)
   .aggregate(common, `product-catalog`, `setup-widget`, `move-to-sdk`)
 
 lazy val common = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(`move-to-sdk`)
 
 lazy val `product-catalog` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(commonWithTests)
 
 lazy val `setup-widget` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 lazy val `move-to-sdk` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 /**
  * COMMON SETTINGS
@@ -39,7 +46,19 @@ lazy val `move-to-sdk` = project
 
 javaUnidocSettings
 
-lazy val sphereJvmSdkVersion = "1.0.0-RC1-1db2b40e940d0fca60579e6fe7c7e6c3a982607c-SNAPSHOT"
+lazy val sphereJvmSdkVersion = "1.0.0-M17"
+
+lazy val dockerSettings = Seq(
+  version in Docker := "latest",
+  packageName in Docker := "sunrise",
+  dockerRepository := Some("dockerhub.commercetools.de"),
+  dockerExposedPorts := Seq(9000),
+  dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml"))
+
+lazy val disableDockerPublish = Seq(
+  publish in Docker := {},
+  publishLocal in Docker := {}
+)
 
 lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
   scalaVersion := "2.10.5",
@@ -51,10 +70,11 @@ lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
   ),
   libraryDependencies ++= Seq (
     "io.sphere.sdk.jvm" % "sphere-models" % sphereJvmSdkVersion,
-    "io.sphere.sdk.jvm" % "sphere-play-2_4-java-client_2.10" % "1.0.0-M16", // % sphereJvmSdkVersion,
+    "io.sphere.sdk.jvm" % "sphere-play-2_4-java-client_2.10" % sphereJvmSdkVersion,
     "io.sphere" % "sphere-sunrise-design" % "0.7.0",
     "org.webjars" % "webjars-play_2.10" % "2.4.0-1",
-    "com.github.jknack" % "handlebars" % "2.2.3"
+    "com.github.jknack" % "handlebars" % "2.2.3",
+    "commons-io" % "commons-io" % "2.4"
   ),
   dependencyOverrides ++= Set (
     "com.google.guava" % "guava" % "18.0",
@@ -63,7 +83,8 @@ lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
     "com.fasterxml.jackson.core" % "jackson-core" % "2.6.0",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.0",
     "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % "2.6.0",
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.0"
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.0",
+    "io.netty" % "netty" % "3.10.4.Final"
   )
 )
 
@@ -114,3 +135,24 @@ lazy val testCoverageSettings =  jacoco.settings ++ itJacoco.settings ++ Seq (
     "com.novocode" % "junit-interface" % "0.11" % "it"
   )
 )
+
+resourceGenerators in Compile += Def.task {
+  val file = (resourceManaged in Compile).value / "internal" / "version.json"
+  val date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZ").format(new Date)
+
+  val gitCommit = Try(Process("git rev-parse HEAD").lines.head) match {
+    case Success(sha) => sha
+    case _ => "unknown"
+  }
+  val buildNumber = Option(System.getenv("BUILD_NUMBER")).getOrElse("unknown")
+  val contents = s"""{
+                    |  "version" : "${version.value}",
+                    |  "build" : {
+                    |    "date" : "$date",
+                    |    "number" : "$buildNumber",
+                    |    "gitCommit" : "$gitCommit"
+                    |  }
+                    |}""".stripMargin
+  IO.write(file, contents)
+  Seq(file)
+}.taskValue

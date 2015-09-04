@@ -4,6 +4,7 @@ import common.contexts.PriceFinderFactory;
 import common.contexts.UserContext;
 import common.pages.DetailData;
 import common.pages.ImageData;
+import common.pages.ReverseRouter;
 import common.pages.SelectableData;
 import common.prices.PriceFinder;
 import common.utils.PriceFormatter;
@@ -15,7 +16,6 @@ import io.sphere.sdk.products.attributes.Attribute;
 import io.sphere.sdk.products.attributes.AttributeAccess;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,34 +28,34 @@ public class ProductDataFactory {
     private static final AttributeAccess<LocalizedEnumValue> LENUM_ATTR_ACCESS = AttributeAccess.ofLocalizedEnumValue();
     private static final AttributeAccess<Set<LocalizedString>> LENUM_SET_ATTR_ACCESS = AttributeAccess.ofLocalizedStringSet();
 
-    private final List<Locale> locales;
+    private final UserContext userContext;
     private final PriceFormatter priceFormatter;
     private final PriceFinder priceFinder;
+    private final ReverseRouter reverseRouter;
 
-    private ProductDataFactory(final UserContext userContext) {
-        this.locales = userContext.locales();
+    private ProductDataFactory(final UserContext userContext, final ReverseRouter reverseRouter) {
+        this.userContext = userContext;
         this.priceFormatter = PriceFormatter.of(userContext.locale());
         this.priceFinder = PriceFinderFactory.create(userContext);
+        this.reverseRouter = reverseRouter;
     }
 
-    public static ProductDataFactory of(final UserContext userContext) {
-        return new ProductDataFactory(userContext);
+    public static ProductDataFactory of(final UserContext userContext, final ReverseRouter reverseRouter) {
+        return new ProductDataFactory(userContext, reverseRouter);
     }
 
     public ProductData create(final ProductProjection product, final ProductVariant variant) {
         final Optional<Price> priceOpt = priceFinder.findPrice(variant.getPrices());
-
-        return new ProductData(
-                product.getName().find(locales).orElse(""),
-                Optional.ofNullable(variant.getSku()).orElse(""),
-                Optional.ofNullable(product.getDescription()).flatMap(description -> description.find(locales)).orElse(""),
-                getPriceCurrent(priceOpt).map(price -> priceFormatter.format(price.getValue())).orElse(""),
-                getPriceOld(priceOpt).map(price -> priceFormatter.format(price.getValue())).orElse(""),
-                getImages(variant),
-                getColors(product),
-                getSizes(product),
-                getDetails(variant)
-        );
+        final String name = product.getName().find(userContext.locales()).orElse("");
+        final String sku = Optional.ofNullable(variant.getSku()).orElse("");
+        final String slug = product.getSlug().find(userContext.locales()).orElse("");
+        final String url = reverseRouter.product(userContext.locale().toLanguageTag(), slug, sku).url();
+        final String description = Optional.ofNullable(product.getDescription()).flatMap(d -> d.find(userContext.locales())).orElse("");
+        final String price = getPriceCurrent(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
+        final String priceOld = getPriceOld(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
+        final Integer variantId = variant.getId();
+        final String id = product.getId();
+        return new ProductData(name, sku, description, price, priceOld, getImages(variant), getColors(product), getSizes(product), getDetails(variant), variantId, slug, id, url);
     }
 
     private List<ImageData> getImages(final ProductVariant productVariant) {
@@ -107,7 +107,7 @@ public class ProductDataFactory {
     }
 
     private SelectableData colorToSelectableItem(final Attribute color) {
-        final String colorLabel = color.getValue(LENUM_ATTR_ACCESS).getLabel().find(locales).orElse("");
+        final String colorLabel = color.getValue(LENUM_ATTR_ACCESS).getLabel().find(userContext.locales()).orElse("");
         return new SelectableData(colorLabel, color.getName(), "", "", false);
     }
 
@@ -117,7 +117,7 @@ public class ProductDataFactory {
     }
 
     private DetailData localizedStringsToDetailData(final LocalizedString localizedStrings) {
-        final String label = localizedStrings.find(locales).orElse("");
+        final String label = localizedStrings.find(userContext.locales()).orElse("");
         return new DetailData(label, "");
     }
 
