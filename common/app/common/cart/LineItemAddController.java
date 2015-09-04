@@ -2,7 +2,6 @@ package common.cart;
 
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
-import common.utils.Session;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
 import io.sphere.sdk.carts.commands.updateactions.AddLineItem;
@@ -32,20 +31,14 @@ public class LineItemAddController extends CartController {
             final ProductVariantToCartFormData data = form.get();
             final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, Controller.session());
             return cartPromise.flatMap(cart -> {
-                final Integer amount = ObjectUtils.firstNonNull(data.getAmount(), 1);
-                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), amount);
+                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), ObjectUtils.firstNonNull(data.getAmount(), 1L));
                 return sphere().execute(CartUpdateCommand.of(cart, action))
                 .map(cartWithLineItem -> {
-                    increaseMiniCartItemCount(amount);
+                    MiniCart.updateCartItemCount(cart);
                     return Results.redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
                 });
             });
         }
-    }
-
-    private void increaseMiniCartItemCount(final Integer amount) {
-        final Integer currentAmount = Session.readInt(CartSessionKeys.CART_ITEM_COUNT).orElse(0);
-        session().put(CartSessionKeys.CART_ITEM_COUNT, String.valueOf(currentAmount + amount));
     }
 
     private Form<ProductVariantToCartFormData> getFilledForm() {
@@ -56,7 +49,7 @@ public class LineItemAddController extends CartController {
         private String productId;
         private String productSlug;
         private String sku;
-        private Integer amount;
+        private Long amount;
         private Integer variantId;
 
         public ProductVariantToCartFormData() {
@@ -70,11 +63,11 @@ public class LineItemAddController extends CartController {
             this.productId = productId;
         }
 
-        public Integer getAmount() {
+        public Long getAmount() {
             return amount;
         }
 
-        public void setAmount(final Integer amount) {
+        public void setAmount(final Long amount) {
             this.amount = amount;
         }
 

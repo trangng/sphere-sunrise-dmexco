@@ -6,9 +6,9 @@ import io.sphere.sdk.models.Base;
 public class MiniCartData extends Base {
 
     final String url;
-    final int numItems;
+    final Long numItems;
 
-    public MiniCartData(final String url, final int numItems) {
+    public MiniCartData(final String url, final Long numItems) {
         this.url = url;
         this.numItems = numItems;
     }
@@ -17,7 +17,7 @@ public class MiniCartData extends Base {
         return url;
     }
 
-    public int getNumItems() {
+    public Long getNumItems() {
         return numItems;
     }
 }

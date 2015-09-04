@@ -1,6 +1,5 @@
 package common.cart;
 
-import common.cart.CartSessionKeys;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
@@ -25,6 +24,7 @@ public abstract class CartController extends SunriseController {
                         .map(cart -> {
                             session.put(CartSessionKeys.CART_ID, cart.getId());
                             return cart;
-                        }));
+                        }))
+                .map(MiniCart::updateCartItemCount);
     }
 }

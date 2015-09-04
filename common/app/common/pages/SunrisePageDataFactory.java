@@ -1,9 +1,8 @@
 package common.pages;
 
-import common.cart.CartSessionKeys;
+import common.cart.MiniCart;
 import common.contexts.ProjectContext;
 import common.contexts.UserContext;
-import common.utils.Session;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import play.i18n.Messages;
@@ -52,8 +51,7 @@ public class SunrisePageDataFactory {
 
     private MiniCartData getMiniCartData() {
         final String url = String.format("/%s/cart", userContext.locale().toLanguageTag());
-        final int numItems = Session.readInt(CartSessionKeys.CART_ITEM_COUNT).orElse(0);
-        return new MiniCartData(url, numItems);
+        return new MiniCartData(url, MiniCart.getCartItemCount());
     }
 
     private NavMenuData getNavMenuData() {
