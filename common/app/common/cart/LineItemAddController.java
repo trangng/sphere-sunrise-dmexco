@@ -31,10 +31,11 @@ public class LineItemAddController extends CartController {
             final ProductVariantToCartFormData data = form.get();
             final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, Controller.session());
             return cartPromise.flatMap(cart -> {
-                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), ObjectUtils.firstNonNull(data.getAmount(), 1L));
+                final Long itemCount = ObjectUtils.firstNonNull(data.getAmount(), 1L);
+                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), itemCount);
                 return sphere().execute(CartUpdateCommand.of(cart, action))
                 .map(cartWithLineItem -> {
-                    MiniCart.updateCartItemCount(cart);
+                    MiniCartActions.increaseCartItemCount(itemCount);
                     return Results.redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
                 });
             });

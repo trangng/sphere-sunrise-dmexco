@@ -5,6 +5,7 @@ import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.CartDraft;
+import io.sphere.sdk.carts.LineItem;
 import io.sphere.sdk.carts.commands.CartCreateCommand;
 import io.sphere.sdk.carts.queries.CartByIdGet;
 import play.libs.F;
@@ -25,6 +26,12 @@ public abstract class CartController extends SunriseController {
                             session.put(CartSessionKeys.CART_ID, cart.getId());
                             return cart;
                         }))
-                .map(MiniCart::updateCartItemCount);
+                .map(this::setCartItemCount);
+    }
+
+    private Cart setCartItemCount(final Cart cart) {
+        final Long itemCount = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
+        MiniCartActions.setCartItemCount(itemCount);
+        return cart;
     }
 }

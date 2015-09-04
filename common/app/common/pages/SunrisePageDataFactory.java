@@ -1,6 +1,6 @@
 package common.pages;
 
-import common.cart.MiniCart;
+import common.cart.MiniCartActions;
 import common.contexts.ProjectContext;
 import common.contexts.UserContext;
 import io.sphere.sdk.categories.Category;
@@ -51,7 +51,7 @@ public class SunrisePageDataFactory {
 
     private MiniCartData getMiniCartData() {
         final String url = String.format("/%s/cart", userContext.locale().toLanguageTag());
-        return new MiniCartData(url, MiniCart.getCartItemCount());
+        return new MiniCartData(url, MiniCartActions.getCartItemCount());
     }
 
     private NavMenuData getNavMenuData() {

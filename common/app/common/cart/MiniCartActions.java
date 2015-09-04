@@ -1,18 +1,22 @@
 package common.cart;
 
-import io.sphere.sdk.carts.Cart;
-import io.sphere.sdk.carts.LineItem;
-
 import java.util.Optional;
 
 import static play.mvc.Controller.session;
 
-public class MiniCart {
+public class MiniCartActions {
 
-    public static Cart updateCartItemCount(final Cart cart) {
-        final Long itemCount = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
+
+    public static void decreaseCartItemCount(final Long itemCount) {
+        increaseCartItemCount(-itemCount);
+    }
+
+    public static void increaseCartItemCount(final Long itemCount) {
+        setCartItemCount(getCartItemCount() + itemCount);
+    }
+
+    public static void setCartItemCount(final Long itemCount) {
         session().put(CartSessionKeys.CART_ITEM_COUNT, String.valueOf(itemCount));
-        return cart;
     }
 
     public static Long getCartItemCount() {
