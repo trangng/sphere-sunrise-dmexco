@@ -1,6 +1,5 @@
 package controllers;
 
-import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
@@ -30,9 +29,7 @@ public final class HomeController extends SunriseController {
     }
 
     public F.Promise<Result> show(final String language) {
-        final UserContext userContext = userContext(language);
-        final F.Promise<CmsPage> cmsPagePromise = cmsService().getPage(userContext.locale(), "home");
-        return cmsPagePromise.map(cms -> getResult(userContext));
+        return F.Promise.pure(getResult(userContext(language)));
     }
 
     private Result getResult(final UserContext userContext) {
