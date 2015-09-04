@@ -16,7 +16,7 @@ public class StaticCartDetailPageContent extends Base {
     }
 
     public String getQuantityTitle() {
-        return "Product Description";
+        return "Quantity";
     }
 
     public String getPriceTitle() {
