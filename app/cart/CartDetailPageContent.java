@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 
 public class CartDetailPageContent extends PageContent {
     private final CartItems cartItems = new CartItems();
+    private final StaticCartDetailPageContent staticData = new StaticCartDetailPageContent();
     private final String itemsTotal;
 
 
@@ -36,13 +37,13 @@ public class CartDetailPageContent extends PageContent {
                     cartItem.setSku(productVariant.getSku());
                     cartItem.setColor(productVariant.getAttribute("color").getValue(AttributeAccess.ofLocalizedEnumValue()).getLabel().get(userContext.locales()));
                     cartItem.setSize(productVariant.getAttribute("size").getValue(AttributeAccess.ofString()));
-                    cartItem.setPrice(productDataFactory.getPrice(productVariant));
-                    cartItem.setPriceOld(productDataFactory.getOldPrice(productVariant));
+                    final PriceFormatter priceFormatter = PriceFormatter.of(userContext.locale());
+                    cartItem.setPrice(priceFormatter.format(lineItem.getPrice().getValue()));
                     cartItem.setQuantity(lineItem.getQuantity());
                     final MonetaryAmount monetaryAmount = Optional.ofNullable(lineItem.getPrice().getDiscounted())
                             .map(DiscountedPrice::getValue)
                             .orElseGet(() -> lineItem.getPrice().getValue());
-                    cartItem.setTotalPrice(PriceFormatter.of(userContext.locale()).format(monetaryAmount));
+                    cartItem.setTotalPrice(priceFormatter.format(monetaryAmount.multiply(lineItem.getQuantity())));
 
                     return cartItem;
                 })
@@ -61,5 +62,9 @@ public class CartDetailPageContent extends PageContent {
 
     public String getItemsTotal() {
         return itemsTotal;
+    }
+
+    public StaticCartDetailPageContent getStatic() {
+        return staticData;
     }
 }

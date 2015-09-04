@@ -62,7 +62,9 @@ public class ProductDataFactory {
     }
 
     public String getPrice(final ProductVariant variant) {
-        return getPriceCurrent(priceFinder.findPrice(variant.getPrices())).map(p -> priceFormatter.format(p.getValue())).orElse("");
+        return getPriceCurrent(priceFinder.findPrice(variant.getPrices()))
+                .map(p -> priceFormatter.format(p.getValue()))
+                .orElse("");
     }
 
     private List<ImageData> getImages(final ProductVariant productVariant) {
