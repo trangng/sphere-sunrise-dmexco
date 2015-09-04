@@ -2,6 +2,7 @@ package common.cart;
 
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
+import common.utils.Session;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
 import io.sphere.sdk.carts.commands.updateactions.AddLineItem;
@@ -31,11 +32,20 @@ public class LineItemAddController extends CartController {
             final ProductVariantToCartFormData data = form.get();
             final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, Controller.session());
             return cartPromise.flatMap(cart -> {
-                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), ObjectUtils.firstNonNull(data.getAmount(), 1));
+                final Integer amount = ObjectUtils.firstNonNull(data.getAmount(), 1);
+                final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), amount);
                 return sphere().execute(CartUpdateCommand.of(cart, action))
-                .map(cartWithLineItem -> Results.redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku())));
+                .map(cartWithLineItem -> {
+                    increaseMiniCartItemCount(amount);
+                    return Results.redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
+                });
             });
         }
+    }
+
+    private void increaseMiniCartItemCount(final Integer amount) {
+        final Integer currentAmount = Session.readInt(CartSessionKeys.CART_ITEM_COUNT).orElse(0);
+        session().put(CartSessionKeys.CART_ITEM_COUNT, String.valueOf(currentAmount + amount));
     }
 
     private Form<ProductVariantToCartFormData> getFilledForm() {
