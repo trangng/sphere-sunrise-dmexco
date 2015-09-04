@@ -48,7 +48,7 @@ javaUnidocSettings
 
 lazy val sphereJvmSdkVersion = "1.0.0-M17"
 
-val dockerSettings = Seq(
+lazy val dockerSettings = Seq(
   version in Docker := "latest",
   packageName in Docker := "sunrise",
   dockerRepository := Some("dockerhub.commercetools.de"),
