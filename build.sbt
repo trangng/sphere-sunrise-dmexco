@@ -17,9 +17,9 @@ version := "1.0-SNAPSHOT"
 
 version in Docker := "latest"
 packageName in Docker := "sunrise"
-dockerRepository in Docker := Some("dockerhub.commercetools.de")
-dockerExposedPorts in Docker := Seq(9000)
-dockerCmd in Docker := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml")
+dockerRepository := Some("dockerhub.commercetools.de")
+dockerExposedPorts := Seq(9000)
+dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml")
 
 /**
  * SUB-PROJECT DEFINITIONS
@@ -28,7 +28,7 @@ dockerCmd in Docker := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=doc
 lazy val commonWithTests: ClasspathDep[ProjectReference] = common % "compile;test->test;it->it;pt->pt"
 
 lazy val `sphere-sunrise` = (project in file("."))
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava, DockerPlugin).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
   .dependsOn(commonWithTests, `product-catalog`, `setup-widget`)
   .aggregate(common, `product-catalog`, `setup-widget`, `move-to-sdk`)
 
