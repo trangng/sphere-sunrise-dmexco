@@ -53,7 +53,9 @@ public class ProductDataFactory {
         final String description = Optional.ofNullable(product.getDescription()).flatMap(d -> d.find(userContext.locales())).orElse("");
         final String price = getPriceCurrent(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
         final String priceOld = getPriceOld(priceOpt).map(p -> priceFormatter.format(p.getValue())).orElse("");
-        return new ProductData(name, sku, url, description, price, priceOld, getImages(variant), getColors(product), getSizes(product), getDetails(variant));
+        final Integer variantId = variant.getId();
+        final String id = product.getId();
+        return new ProductData(name, sku, description, price, priceOld, getImages(variant), getColors(product), getSizes(product), getDetails(variant), variantId, slug, id, url);
     }
 
     private List<ImageData> getImages(final ProductVariant productVariant) {

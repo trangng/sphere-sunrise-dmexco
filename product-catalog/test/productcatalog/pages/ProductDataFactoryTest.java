@@ -8,7 +8,6 @@ import common.pages.SelectableData;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.ProductVariant;
 import org.junit.Test;
-import play.mvc.Call;
 
 import javax.money.Monetary;
 import java.util.List;

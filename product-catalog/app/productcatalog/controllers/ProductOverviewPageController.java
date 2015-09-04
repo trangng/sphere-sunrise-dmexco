@@ -4,7 +4,6 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.ProductThumbnailDataFactory;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
@@ -90,14 +89,6 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* Maybe move to some common controller class */
 
-    private boolean isRootCategory(final Category category) {
-        return categories().getRoots().contains(category);
-    }
-
-    private Locale locale(final String language) {
-        return Locale.forLanguageTag(language);
-    }
-
     private static <T> List<Facet<T>> bindFacetsWithRequest(final List<Facet<T>> facets) {
         return facets.stream().map(facet -> {
             final List<String> selectedValues = asList(request().queryString().getOrDefault(facet.getKey(), new String[0]));
@@ -138,17 +129,13 @@ public class ProductOverviewPageController extends SunriseController {
     private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest, final List<Facet<T>> facets) {
         S searchRequest = baseSearchRequest;
         for (final Facet<T> facet : facets) {
-            searchRequest = getFacetedSearchRequest(searchRequest, facet);
+            final List<FilterExpression<T>> filterExpressions = facet.getFilterExpressions();
+            searchRequest = searchRequest
+                    .plusFacets(facet.getFacetExpression())
+                    .plusFacetFilters(filterExpressions)
+                    .plusResultFilters(filterExpressions);
         }
         return searchRequest;
-    }
-
-    private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest, final Facet<T> facet) {
-        final List<FilterExpression<T>> filterExpressions = facet.getFilterExpressions();
-        return baseSearchRequest
-                .plusFacets(facet.getFacetExpression())
-                .plusFacetFilters(filterExpressions)
-                .plusResultFilters(filterExpressions);
     }
 
     /* This will probably be moved to some kind of factory classes */
@@ -166,6 +153,6 @@ public class ProductOverviewPageController extends SunriseController {
                 .map(facet -> facet.withSearchResult(searchResult))
                 .map(FacetData::new)
                 .collect(toList());
-        return new FilterListData(facets);
+        return new FilterListData(request().uri(), facets);
     }
 }
