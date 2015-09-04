@@ -23,12 +23,12 @@ public final class HomeController extends SunriseController {
     }
 
     public F.Promise<Result> show() {
-        final String language = request().acceptLanguages().stream().findFirst().map(Lang::code).orElse("en");
-        return F.Promise.pure(redirect(reverseRouter().home(language)));
+        final String languageTag = request().acceptLanguages().stream().findFirst().map(Lang::code).orElse("en");
+        return F.Promise.pure(redirect(reverseRouter().home(languageTag)));
     }
 
-    public F.Promise<Result> show(final String language) {
-        return F.Promise.pure(getResult(userContext(language)));
+    public F.Promise<Result> show(final String languageTag) {
+        return F.Promise.pure(getResult(userContext(languageTag)));
     }
 
     private Result getResult(final UserContext userContext) {
