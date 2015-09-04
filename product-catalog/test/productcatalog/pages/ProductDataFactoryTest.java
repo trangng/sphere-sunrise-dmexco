@@ -8,7 +8,6 @@ import common.pages.SelectableData;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.ProductVariant;
 import org.junit.Test;
-import play.mvc.Call;
 
 import javax.money.Monetary;
 import java.util.List;
@@ -44,37 +43,6 @@ public class ProductDataFactoryTest {
     }
 
     private ReverseRouter reverseRouter() {
-        return new ReverseRouter() {
-
-            @Override
-            public Call category(final String locale, final String slug, final int page) {
-                return null;
-            }
-
-            @Override
-            public Call product(final String locale, final String productSlug, final String sku) {
-                return new Call() {
-                    @Override
-                    public String url() {
-                        return productSlug + "-url-" + sku;
-                    }
-
-                    @Override
-                    public String method() {
-                        return null;
-                    }
-
-                    @Override
-                    public String fragment() {
-                        return null;
-                    }
-                };
-            }
-
-            @Override
-            public Call productVariantToCartForm(final String language) {
-                return null;
-            }
-        };
+        return new DefaultTestReverseRouter();
     }
 }

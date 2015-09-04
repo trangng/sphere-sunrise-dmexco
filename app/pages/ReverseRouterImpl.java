@@ -3,22 +3,26 @@ package pages;
 import common.pages.ReverseRouter;
 import io.sphere.sdk.models.Base;
 import play.mvc.Call;
-import productcatalog.controllers.routes;
 
 public class ReverseRouterImpl extends Base implements ReverseRouter {
 
     @Override
-    public Call category(final String locale, final String slug, final int page) {
-        return routes.ProductOverviewPageController.show(locale, slug, page);
+    public Call home(final String languageTag) {
+        return controllers.routes.HomeController.show(languageTag);
     }
 
     @Override
-    public Call productVariantToCartForm(final String language) {
-        return cart.routes.LineItemAddController.process(language);
+    public Call category(final String languageTag, final String slug, final int page) {
+        return productcatalog.controllers.routes.ProductOverviewPageController.show(languageTag, slug, page);
     }
 
     @Override
-    public Call product(final String locale, final String productSlug, final String sku) {
-        return routes.ProductDetailPageController.show(locale, productSlug, sku);
+    public Call productVariantToCartForm(final String languageTag) {
+        return cart.routes.LineItemAddController.process(languageTag);
+    }
+
+    @Override
+    public Call product(final String languageTag, final String productSlug, final String sku) {
+        return productcatalog.controllers.routes.ProductDetailPageController.show(languageTag, productSlug, sku);
     }
 }
