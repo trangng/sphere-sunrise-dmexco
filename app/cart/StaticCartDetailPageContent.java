@@ -38,4 +38,12 @@ public class StaticCartDetailPageContent extends Base {
     public String getDeleteLabel() {
         return "Delete";
     }
+
+    public String getColorTitle() {
+        return "Color: ";
+    }
+
+    public String getSizeTitle() {
+        return "Size: ";
+    }
 }

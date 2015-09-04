@@ -10,9 +10,6 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 
-import static io.sphere.sdk.json.SphereJsonUtils.prettyPrint;
-import static io.sphere.sdk.json.SphereJsonUtils.toJsonString;
-
 public class CartDetailPageController extends CartController {
 
     @Inject
