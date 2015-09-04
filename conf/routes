@@ -4,8 +4,9 @@
 
 # Home page
 GET        /                                                @controllers.ApplicationController.index()
-GET        /version                                         @controllers.ApplicationController.version()
-GET        /health                                          @controllers.ApplicationController.health()
+
+GET        /version                                         @controllers.StatusController.version()
+GET        /health                                          @controllers.StatusController.health()
 
 GET        /:language/home/                                 @controllers.HomeController.show(language:String)
 
