@@ -27,18 +27,18 @@ lazy val `sphere-sunrise` = (project in file("."))
   .aggregate(common, `product-catalog`, `setup-widget`, `move-to-sdk`)
 
 lazy val common = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(`move-to-sdk`)
 
 lazy val `product-catalog` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(commonWithTests)
 
 lazy val `setup-widget` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 lazy val `move-to-sdk` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 /**
  * COMMON SETTINGS
@@ -54,6 +54,11 @@ lazy val dockerSettings = Seq(
   dockerRepository := Some("dockerhub.commercetools.de"),
   dockerExposedPorts := Seq(9000),
   dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml"))
+
+lazy val disableDockerPublish = Seq(
+  publish in Docker := {},
+  publishLocal in Docker := {}
+)
 
 lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
   scalaVersion := "2.10.5",
