@@ -35,7 +35,7 @@ public class LineItemAddController extends CartController {
                 final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), itemCount);
                 return sphere().execute(CartUpdateCommand.of(cart, action))
                 .map(cartWithLineItem -> {
-                    MiniCartActions.increaseCartItemCount(itemCount);
+                    MiniCartActions.increaseCartItemCount(itemCount, session());
                     return redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
                 });
             });

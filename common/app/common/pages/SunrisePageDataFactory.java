@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static play.mvc.Controller.session;
 
 public class SunrisePageDataFactory {
     private final Messages messages;
@@ -51,7 +52,7 @@ public class SunrisePageDataFactory {
 
     private MiniCartData getMiniCartData() {
         final String url = reverseRouter.cart(userContext.locale().toLanguageTag()).url();
-        return new MiniCartData(url, MiniCartActions.getCartItemCount());
+        return new MiniCartData(url, MiniCartActions.getCartItemCount(session()));
     }
 
     private NavMenuData getNavMenuData() {
