@@ -5,6 +5,8 @@ common.header.help = HILFE
 common.header.callUs = KONTAKT +44 123 456 000
 common.header.countries = REGION
 
+pop.countSeparator = von
+
 pdp.writeFirstRatingText = Erste Rezension schreiben
 
 pdp.ratingFiveStarText = Hervorragend

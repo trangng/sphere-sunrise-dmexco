@@ -6,37 +6,64 @@ import io.sphere.sdk.models.Base;
 import java.util.List;
 
 public class PaginationData extends Base {
-    private final String urlPrev;
-    private final String urlNext;
-    private final int prev;
-    private final int next;
-    private final List<LinkData> pages;
+    private final int currentPage;
+    private final int totalPages;
+    private List<LinkData> pages;
+    private LinkData prevPage;
+    private LinkData nextPage;
+    private LinkData firstPage;
+    private LinkData lastPage;
 
-    public PaginationData(final String urlPrev, final String urlNext, final int prev, final int next, final List<LinkData> pages) {
-        this.urlPrev = urlPrev;
-        this.urlNext = urlNext;
-        this.prev = prev;
-        this.next = next;
-        this.pages = pages;
+    public PaginationData(final int currentPage, final int totalPages) {
+        this.currentPage = currentPage;
+        this.totalPages = totalPages;
     }
 
-    public String getUrlPrev() {
-        return urlPrev;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public String getUrlNext() {
-        return urlNext;
-    }
-
-    public int getPrev() {
-        return prev;
-    }
-
-    public int getNext() {
-        return next;
+    public int getTotalPages() {
+        return totalPages;
     }
 
     public List<LinkData> getPages() {
         return pages;
+    }
+
+    public void setPages(final List<LinkData> pages) {
+        this.pages = pages;
+    }
+
+    public LinkData getPrevPage() {
+        return prevPage;
+    }
+
+    public void setPrevPage(final LinkData prevPage) {
+        this.prevPage = prevPage;
+    }
+
+    public LinkData getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(final LinkData nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    public LinkData getFirstPage() {
+        return firstPage;
+    }
+
+    public void setFirstPage(final LinkData firstPage) {
+        this.firstPage = firstPage;
+    }
+
+    public LinkData getLastPage() {
+        return lastPage;
+    }
+
+    public void setLastPage(final LinkData lastPage) {
+        this.lastPage = lastPage;
     }
 }

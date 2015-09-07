@@ -57,4 +57,8 @@ public class ProductOverviewPageStaticData extends Base {
     public String getReviewsText() {
         return messages.at("pdp.reviewsText");
     }
+
+    public String getPageSeparatorText() {
+        return messages.at("pop.pageSeparator");
+    }
 }

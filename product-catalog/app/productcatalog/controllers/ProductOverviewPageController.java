@@ -4,7 +4,6 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.LinkData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
@@ -22,9 +21,7 @@ import productcatalog.services.ProductProjectionService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.IntStream;
 
-import static common.utils.UrlUtils.buildUrl;
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
 import static java.util.Arrays.asList;
@@ -39,6 +36,7 @@ public class ProductOverviewPageController extends SunriseController {
     private static final StringSearchModel<ProductProjection, ?> SIZE_SEARCH_MODEL = ProductProjectionSearchModel.of().allVariants().attribute().ofEnum("commonSize").label();
     private static final StringSearchModel<ProductProjection, ?> CATEGORY_SEARCH_MODEL = ProductProjectionSearchModel.of().categories().id();
     private final int pageSize;
+    private final int displayedPages;
     private final ProductProjectionService productService;
 
     @Inject
@@ -47,6 +45,7 @@ public class ProductOverviewPageController extends SunriseController {
         super(controllerDependency);
         this.productService = productService;
         this.pageSize = configuration.getInt("pop.pageSize");
+        this.displayedPages = configuration.getInt("pop.displayedPages");
     }
 
     public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
@@ -173,25 +172,12 @@ public class ProductOverviewPageController extends SunriseController {
     }
 
     private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
-        final int prev = currentPage - 1;
-        final int next = currentPage + 1;
-        final String urlPrev = buildRequestUrlWithPage(prev);
-        final String urlNext = buildRequestUrlWithPage(next);
         final int totalPages = getTotalPages(searchResult);
-        final List<LinkData> pages = IntStream.rangeClosed(1, totalPages)
-                .mapToObj(page -> LinkData.of(String.valueOf(page), buildRequestUrlWithPage(page), page == currentPage))
-                .collect(toList());
-        return new PaginationData(urlPrev, urlNext, prev, next, pages);
-    }
-
-    private String buildRequestUrlWithPage(final int page) {
-        final Map<String, String[]> queryString = new HashMap<>(request().queryString());
-        queryString.put("page", new String[]{String.valueOf(page)});
-        return buildUrl(request().path(), queryString);
+        return new PaginationDataFactory(request(), currentPage, totalPages, displayedPages).create();
     }
 
     private <T> int getTotalPages(final PagedSearchResult<T> searchResult) {
-        final Double totalPages = Math.ceil(searchResult.getTotal() / pageSize);
+        final Double totalPages = Math.ceil((float) searchResult.getTotal() / pageSize);
         return totalPages.intValue();
     }
 }
