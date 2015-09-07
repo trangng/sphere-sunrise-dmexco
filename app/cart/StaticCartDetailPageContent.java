@@ -54,4 +54,40 @@ public class StaticCartDetailPageContent extends Base {
     public String getApplyBtn() {
         return "Apply";
     }
+
+    public String getDeliveryTooltip() {
+        return "Discount options additional information...";
+    }
+
+    public String getSubtotalTitle() {
+        return "Subtotal";
+    }
+
+    public String getOrderDiscountTitle() {
+        return "Order Discount";
+    }
+
+    public String getDeliveryEstimate() {
+        return "Delivery estimate options";
+    }
+
+    public String getDeliveryOption() {
+        return "Standard Delivery";
+    }
+
+    public String getTaxTitle() {
+        return "Sales Tax";
+    }
+
+    public String getOrderTotalTitle() {
+        return "Order Total";
+    }
+
+    public String getContinueShoppingBtn() {
+        return "Continue Shopping";
+    }
+
+    public String getCheckoutBtn() {
+        return "Checkout now";
+    }
 }
