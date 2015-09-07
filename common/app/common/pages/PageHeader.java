@@ -8,12 +8,14 @@ public class PageHeader extends Base {
     private final String title;
     private final CollectionData<SelectableData> countries;
     private final NavMenuData navMenuData;
+    private final MiniCartData miniCartData;
 
-    public PageHeader(final Messages messages, final String title, final CollectionData<SelectableData> countries, final NavMenuData navMenuData) {
+    public PageHeader(final Messages messages, final String title, final CollectionData<SelectableData> countries, final NavMenuData navMenuData, final MiniCartData miniCartData) {
         this.messages = messages;
         this.countries = countries;
         this.title = title;
         this.navMenuData = navMenuData;
+        this.miniCartData = miniCartData;
     }
 
     public String getTitle() {
@@ -34,6 +36,10 @@ public class PageHeader extends Base {
 
     public NavMenuData getNavMenu() {
         return navMenuData;
+    }
+
+    public MiniCartData getMiniCart() {
+        return miniCartData;
     }
 
     public CollectionData getCountries() {

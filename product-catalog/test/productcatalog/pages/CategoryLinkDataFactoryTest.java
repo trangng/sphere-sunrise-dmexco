@@ -27,8 +27,7 @@ public class CategoryLinkDataFactoryTest {
     }
 
     private ReverseRouter reverseRouter() {
-        return new ReverseRouter() {
-
+        return new DefaultTestReverseRouter() {
             @Override
             public Call category(final String locale, final String slug, final int page) {
                 return new Call() {

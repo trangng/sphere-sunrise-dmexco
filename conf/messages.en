@@ -1,3 +1,4 @@
+cdp.totalItems = {0} {0,choice,0#items|1#item|1<items} in total
 
 common.header.title = Sunrise -
 common.header.stores = STORES
