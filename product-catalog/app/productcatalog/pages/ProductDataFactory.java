@@ -77,7 +77,7 @@ public class ProductDataFactory {
     }
 
     private ImageData getPlaceholderImage() {
-        return ImageData.of(Image.of("http://placehold.it/300x400", ImageDimensions.of(300, 400)));
+        return ImageData.of(Image.of("placehold.it/300x400", ImageDimensions.of(300, 400)));
     }
 
     private List<SelectableData> getColors(final ProductProjection product) {
