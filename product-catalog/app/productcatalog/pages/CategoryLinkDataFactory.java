@@ -10,17 +10,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class CategoryLinkFactory {
+public class CategoryLinkDataFactory {
     private final ReverseRouter reverseRouter;
     private final List<Locale> languages;
 
-    private CategoryLinkFactory(final ReverseRouter reverseRouter, final List<Locale> languages) {
+    private CategoryLinkDataFactory(final ReverseRouter reverseRouter, final List<Locale> languages) {
         this.reverseRouter = reverseRouter;
         this.languages = languages;
     }
 
-    public static CategoryLinkFactory of(final ReverseRouter reverseRouter, final List<Locale> languages) {
-        return new CategoryLinkFactory(reverseRouter, languages);
+    public static CategoryLinkDataFactory of(final ReverseRouter reverseRouter, final List<Locale> languages) {
+        return new CategoryLinkDataFactory(reverseRouter, languages);
     }
 
     public LinkData create(final Category category) {
