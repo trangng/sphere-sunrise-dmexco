@@ -25,4 +25,9 @@ public class ReverseRouterImpl extends Base implements ReverseRouter {
     public Call product(final String languageTag, final String productSlug, final String sku) {
         return productcatalog.controllers.routes.ProductDetailPageController.show(languageTag, productSlug, sku);
     }
+
+    @Override
+    public Call cart(final String languageTag) {
+        return cart.routes.CartDetailPageController.show(languageTag);
+    }
 }

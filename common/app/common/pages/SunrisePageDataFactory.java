@@ -50,7 +50,7 @@ public class SunrisePageDataFactory {
     }
 
     private MiniCartData getMiniCartData() {
-        final String url = String.format("/%s/cart", userContext.locale().toLanguageTag());
+        final String url = reverseRouter.cart(userContext.locale().toLanguageTag()).url();
         return new MiniCartData(url, MiniCartActions.getCartItemCount());
     }
 

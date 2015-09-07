@@ -38,4 +38,9 @@ public class DefaultTestReverseRouter implements ReverseRouter {
             }
         };
     }
+
+    @Override
+    public Call cart(final String languageTag) {
+        return null;
+    }
 }
