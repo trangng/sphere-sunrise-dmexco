@@ -173,7 +173,8 @@ public class ProductOverviewPageController extends SunriseController {
 
     private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
         final int totalPages = getTotalPages(searchResult);
-        return new PaginationDataFactory(request(), currentPage, totalPages, displayedPages).create();
+        final int productsCount = searchResult.getOffset() + searchResult.size();
+        return new PaginationDataFactory(request(), productsCount, searchResult.getTotal(), currentPage, totalPages, displayedPages).create();
     }
 
     private <T> int getTotalPages(final PagedSearchResult<T> searchResult) {

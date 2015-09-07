@@ -6,25 +6,25 @@ import io.sphere.sdk.models.Base;
 import java.util.List;
 
 public class PaginationData extends Base {
-    private final int currentPage;
-    private final int totalPages;
+    private final int totalProducts;
+    private final int productsCount;
     private List<LinkData> pages;
     private LinkData prevPage;
     private LinkData nextPage;
     private LinkData firstPage;
     private LinkData lastPage;
 
-    public PaginationData(final int currentPage, final int totalPages) {
-        this.currentPage = currentPage;
-        this.totalPages = totalPages;
+    public PaginationData(final int productsCount, final int totalProducts) {
+        this.productsCount = productsCount;
+        this.totalProducts = totalProducts;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
+    public int getProductsCount() {
+        return productsCount;
     }
 
-    public int getTotalPages() {
-        return totalPages;
+    public int getTotalProducts() {
+        return totalProducts;
     }
 
     public List<LinkData> getPages() {

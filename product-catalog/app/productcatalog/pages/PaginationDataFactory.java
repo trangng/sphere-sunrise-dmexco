@@ -14,14 +14,19 @@ import static java.util.stream.Collectors.toList;
 
 public class PaginationDataFactory extends Base {
     private final Http.Request request;
+    private final int productsCount;
+    private final int totalProducts;
     private final int currentPage;
     private final int totalPages;
     private final int displayedPages;
     private int pageThresholdLeft;
     private int pageThresholdRight;
 
-    public PaginationDataFactory(final Http.Request request, final int currentPage, final int totalPages, final int displayedPages) {
+    public PaginationDataFactory(final Http.Request request, final int productsCount, final int totalProducts,
+                                 final int currentPage, final int totalPages, final int displayedPages) {
         this.request = request;
+        this.productsCount = productsCount;
+        this.totalProducts = totalProducts;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
         this.displayedPages = displayedPages;
@@ -30,7 +35,7 @@ public class PaginationDataFactory extends Base {
     }
 
     public PaginationData create() {
-        final PaginationData paginationData = new PaginationData(currentPage, totalPages);
+        final PaginationData paginationData = new PaginationData(productsCount, totalProducts);
 
         final List<LinkData> pages;
         if (totalPages <= displayedPages) {

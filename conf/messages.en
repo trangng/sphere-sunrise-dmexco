@@ -5,7 +5,7 @@ common.header.help = HELP
 common.header.callUs = CALL US ON +44 123 456 000
 common.header.countries = Location
 
-pop.pageSeparator = of
+pop.productCountSeparator = of
 
 pdp.writeFirstRatingText = Write first review
 
