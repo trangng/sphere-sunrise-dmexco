@@ -8,7 +8,10 @@ import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.CartDraft;
 import io.sphere.sdk.carts.LineItem;
 import io.sphere.sdk.carts.commands.CartCreateCommand;
+import io.sphere.sdk.carts.commands.CartUpdateCommand;
+import io.sphere.sdk.carts.commands.updateactions.SetShippingAddress;
 import io.sphere.sdk.carts.queries.CartByIdGet;
+import io.sphere.sdk.models.Address;
 import play.libs.F;
 import play.mvc.Http;
 
@@ -23,6 +26,11 @@ public abstract class CartController extends SunriseController {
         return Optional.ofNullable(session(CartSessionKeys.CART_ID))
                 .map(cartId -> sphere().execute(CartByIdGet.of(cartId)))
                 .orElseGet(() -> sphere().execute(CartCreateCommand.of(CartDraft.of(userContext.currency()).withCountry(userContext.country())))
+                        .flatMap(cart -> {
+                            //required to show the taxes
+                            final Address address = Address.of(userContext.country());
+                            return sphere().execute(CartUpdateCommand.of(cart, SetShippingAddress.of(address)));
+                        })
                         .map(cart -> {
                             session.put(CartSessionKeys.CART_ID, cart.getId());
                             return cart;
