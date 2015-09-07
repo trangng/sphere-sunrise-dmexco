@@ -18,6 +18,6 @@ public class CategoryLinkDataFactory {
 
     public LinkData create(final Category category) {
         final String label = category.getName().find(locales).orElse("");
-        return LinkData.of(label, "");
+        return new LinkData(label, "");
     }
 }

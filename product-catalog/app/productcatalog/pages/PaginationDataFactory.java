@@ -1,6 +1,7 @@
 package productcatalog.pages;
 
 import common.pages.LinkData;
+import common.pages.SelectableLinkData;
 import io.sphere.sdk.models.Base;
 import play.mvc.Http;
 
@@ -76,7 +77,7 @@ public class PaginationDataFactory extends Base {
     }
 
     private LinkData getLinkData(final int page) {
-        return LinkData.of(String.valueOf(page), buildRequestUrlWithPage(page), page == currentPage);
+        return new SelectableLinkData(String.valueOf(page), buildRequestUrlWithPage(page), page == currentPage);
     }
 
     private String buildRequestUrlWithPage(final int page) {

@@ -21,15 +21,15 @@ public class PageHeader extends Base {
     }
 
     public LinkData getStores() {
-        return LinkData.of(messages.at("header.stores"), "");
+        return new LinkData(messages.at("header.stores"), "");
     }
 
     public LinkData getHelp() {
-        return LinkData.of(messages.at("header.help"), "");
+        return new LinkData(messages.at("header.help"), "");
     }
 
     public LinkData getCallUs() {
-        return LinkData.of(messages.at("header.callUs"), "");
+        return new LinkData(messages.at("header.callUs"), "");
     }
 
     public NavMenuData getNavMenu() {
