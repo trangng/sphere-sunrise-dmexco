@@ -1,6 +1,5 @@
 package cart;
 
-import com.neovisionaries.i18n.CountryCode;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
@@ -18,8 +17,6 @@ import java.util.Optional;
 
 public abstract class CartController extends SunriseController {
 
-    private static final Address DEFAULT_ADDRESS = Address.of(CountryCode.DE);
-
     public CartController(final ControllerDependency controllerDependency) {
         super(controllerDependency);
     }
@@ -27,11 +24,18 @@ public abstract class CartController extends SunriseController {
     protected F.Promise<Cart> getOrCreateCart(final UserContext userContext, final Http.Session session) {
         return Optional.ofNullable(session(CartSessionKeys.CART_ID))
                 .map(cartId -> sphere().execute(CartByIdGet.of(cartId)))
-                .orElseGet(() -> sphere().execute(CartCreateCommand.of(CartDraft.of(userContext.currency()).withCountry(userContext.country())))
-                        .flatMap(cart -> sphere().execute(CartUpdateCommand.of(cart, SetShippingAddress.of(DEFAULT_ADDRESS))))
-                        .map(cart -> {
-                            session.put(CartSessionKeys.CART_ID, cart.getId());
-                            return cart;
-                        }));
+                .orElseGet(() -> {
+                    final CartDraft cartDraft = CartDraft.of(userContext.currency()).withCountry(userContext.country());
+                    return sphere().execute(CartCreateCommand.of(cartDraft))
+                            .flatMap(cart -> {
+                                //required to show the taxes
+                                final Address address = Address.of(userContext.country());
+                                return sphere().execute(CartUpdateCommand.of(cart, SetShippingAddress.of(address)));
+                            })
+                            .map(cart -> {
+                                session.put(CartSessionKeys.CART_ID, cart.getId());
+                                return cart;
+                            });
+                });
     }
 }
