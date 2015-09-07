@@ -46,4 +46,12 @@ public class StaticCartDetailPageContent extends Base {
     public String getSizeTitle() {
         return "Size: ";
     }
+
+    public String getPromoDiscount() {
+        return "Promotional Discount";
+    }
+
+    public String getApplyBtn() {
+        return "Apply";
+    }
 }
