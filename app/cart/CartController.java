@@ -32,7 +32,7 @@ public abstract class CartController extends SunriseController {
 
     private Cart setCartItemCount(final Cart cart) {
         final Long itemCount = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
-        MiniCartActions.setCartItemCount(itemCount);
+        MiniCartActions.setCartItemCount(itemCount, session());
         return cart;
     }
 }
