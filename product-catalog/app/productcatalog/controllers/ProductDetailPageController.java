@@ -113,7 +113,7 @@ public class ProductDetailPageController extends SunriseController {
     }
 
     private List<LinkData> getBreadcrumbData(final UserContext userContext, final ProductProjection productProjection) {
-        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(userContext.locales());
+        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(reverseRouter(), userContext.locales());
         final List<Category> breadcrumbs = getBreadcrumbsForProduct(productProjection);
         return breadcrumbs.stream()
                 .map(categoryLinkDataFactory::create)
