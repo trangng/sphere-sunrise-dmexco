@@ -27,17 +27,6 @@
 <div class="row select-row">
     <ul class="list-inline">
         <li>
-            <p class="text-uppercase">{{content.static.colorsText}}</p>
-            <div>
-                <select id="{{content.static.colorSelectId}}" class="select-product-detail">
-                    <option id="{{content.static.colorDefaultItem.id}}" value="{{content.static.colorDefaultItem.id}}" {{#if content.static.colorDefaultItem.selected}}selected{{/if}}>{{content.static.colorDefaultItem.text}}</option>
-                    {{#each content.product.colors}}
-                        <option id="{{id}}" value="{{value}}" {{#if selected}}selected{{/if}}>{{text}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </li>
-        <li>
             <p class="text-uppercase">{{content.static.sizesText}}</p>
             <div>
                 <select id="{{content.static.sizeGuideId}}" class="select-product-detail">
