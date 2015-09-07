@@ -1,6 +1,15 @@
 package cart;
 
+import common.contexts.UserContext;
+import common.utils.PriceFormatter;
+import io.sphere.sdk.carts.LineItem;
 import io.sphere.sdk.models.Base;
+import io.sphere.sdk.productdiscounts.DiscountedPrice;
+import io.sphere.sdk.products.ProductVariant;
+import io.sphere.sdk.products.attributes.AttributeAccess;
+
+import javax.money.MonetaryAmount;
+import java.util.Optional;
 
 public class CartItem extends Base {
     private String nameHeadline;
@@ -15,6 +24,26 @@ public class CartItem extends Base {
     private Long quantity;
 
     public CartItem() {
+    }
+
+    public static CartItem of(final LineItem lineItem, final UserContext userContext) {
+        final CartItem cartItem = new CartItem();
+        cartItem.setNameHeadline(lineItem.getName().find(userContext.locales()).orElse(""));
+        cartItem.setNameSubline("");
+        final ProductVariant productVariant = lineItem.getVariant();
+        cartItem.setSku(productVariant.getSku());
+        cartItem.setColor(productVariant.getAttribute("color").getValue(AttributeAccess.ofLocalizedEnumValue()).getLabel().get(userContext.locales()));
+        cartItem.setSize(productVariant.getAttribute("size").getValue(AttributeAccess.ofString()));
+        final PriceFormatter priceFormatter = PriceFormatter.of(userContext.locale());
+        cartItem.setPrice(priceFormatter.format(lineItem.getPrice().getValue()));
+        cartItem.setQuantity(lineItem.getQuantity());
+        final MonetaryAmount monetaryAmount = Optional.ofNullable(lineItem.getPrice().getDiscounted())
+                .map(DiscountedPrice::getValue)
+                .orElseGet(() -> lineItem.getPrice().getValue());
+        cartItem.setTotalPrice(priceFormatter.format(monetaryAmount.multiply(lineItem.getQuantity())));
+        final String imageUrl = productVariant.getImages().stream().findFirst().map(i -> i.getUrl()).orElse("");
+        cartItem.setImageUrl(imageUrl);
+        return cartItem;
     }
 
     public String getNameHeadline() {
