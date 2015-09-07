@@ -46,7 +46,7 @@ public class CartItems extends Base {
                 .orElse(zeroMoneyAmount);
         cartItems.setTax(tax);
         final String orderTotal = Optional.ofNullable(cart.getTaxedPrice())
-                .map(taxedPrice -> priceFormatter.format(taxedPrice.getTotalNet()))
+                .map(taxedPrice -> priceFormatter.format(taxedPrice.getTotalGross()))
                 .orElse(subtotal);
         cartItems.setOrderTotal(orderTotal);
         return cartItems;
