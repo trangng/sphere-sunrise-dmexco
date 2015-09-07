@@ -20,7 +20,7 @@ public abstract class CartController extends SunriseController {
     protected F.Promise<Cart> getOrCreateCart(final UserContext userContext, final Http.Session session) {
         return Optional.ofNullable(session(CartSessionKeys.CART_ID))
                 .map(cartId -> sphere().execute(CartByIdGet.of(cartId)))
-                .orElseGet(() -> sphere().execute(CartCreateCommand.of(CartDraft.of(userContext.currency())))
+                .orElseGet(() -> sphere().execute(CartCreateCommand.of(CartDraft.of(userContext.currency()).withCountry(userContext.country())))
                         .map(cart -> {
                             session.put(CartSessionKeys.CART_ID, cart.getId());
                             return cart;

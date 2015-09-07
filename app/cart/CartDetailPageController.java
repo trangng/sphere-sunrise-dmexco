@@ -4,6 +4,7 @@ import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.pages.SunrisePageData;
 import io.sphere.sdk.carts.Cart;
+import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Result;
 
@@ -20,7 +21,8 @@ public class CartDetailPageController extends CartController {
         final UserContext userContext = userContext(language);
         final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, session());
         return cartPromise.map(cart -> {
-            final CartDetailPageContent content = new CartDetailPageContent();
+            final Messages messages = messages(userContext);
+            final CartDetailPageContent content = new CartDetailPageContent(cart, userContext, reverseRouter(), messages);
             final SunrisePageData pageData = pageData(userContext, content);
             return ok(templateService().renderToHtml("cart", pageData));
         });
