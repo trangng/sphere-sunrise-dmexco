@@ -2,10 +2,12 @@ package cart;
 
 import common.contexts.UserContext;
 import common.utils.PriceFormatter;
+import io.sphere.sdk.cartdiscounts.DiscountedLineItemPrice;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.models.Base;
 import io.sphere.sdk.utils.MoneyImpl;
 
+import javax.money.MonetaryAmount;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +32,7 @@ public class CartItems extends Base {
                 .collect(toList());
         cartItems.setList(cartItemList);
         final PriceFormatter priceFormatter = PriceFormatter.of(userContext.locale());
-        final String subtotal = priceFormatter.format(cart.getTotalPrice());
+        final String subtotal = priceFormatter.format(calculateSubTotal(cart));
         cartItems.setSubtotal(subtotal);
         final String zeroMoneyAmount = priceFormatter.format(MoneyImpl.ofCents(0, cart.getTotalPrice().getCurrency()));
         cartItems.setOrderDiscount(zeroMoneyAmount);
@@ -48,6 +50,21 @@ public class CartItems extends Base {
                 .orElse(subtotal);
         cartItems.setOrderTotal(orderTotal);
         return cartItems;
+    }
+
+    private static MonetaryAmount calculateSubTotal(final Cart cart) {
+        final MonetaryAmount zeroAmount = MoneyImpl.ofCents(0, cart.getTotalPrice().getCurrency());
+
+        return cart.getLineItems()
+                .stream()
+                .map(lineItem -> {
+                    final MonetaryAmount amount = Optional.ofNullable(lineItem.getDiscountedPrice())
+                            .map(DiscountedLineItemPrice::getMoney)
+                            .orElseGet(() -> lineItem.getPrice().getValue());
+                    final Long quantity = lineItem.getQuantity();
+                    return amount.multiply(quantity);
+                })
+                .reduce(zeroAmount, (left, right) -> left.add(right));
     }
 
     public List<CartItem> getList() {
