@@ -6,12 +6,13 @@ import common.controllers.ControllerDependency;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
 import io.sphere.sdk.carts.commands.updateactions.AddLineItem;
-import org.apache.commons.lang3.ObjectUtils;
 import play.data.Form;
 import play.libs.F;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+
+import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 
 public class LineItemAddController extends CartController {
 
@@ -30,7 +31,7 @@ public class LineItemAddController extends CartController {
             final ProductVariantToCartFormData data = form.get();
             final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, session());
             return cartPromise.flatMap(cart -> {
-                final Long itemCount = ObjectUtils.firstNonNull(data.getAmount(), 1L);
+                final Long itemCount = firstNonNull(data.getAmount(), 1L);
                 final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), itemCount);
                 return sphere().execute(CartUpdateCommand.of(cart, action))
                 .map(cartWithLineItem -> {
