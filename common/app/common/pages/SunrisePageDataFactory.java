@@ -1,5 +1,6 @@
 package common.pages;
 
+import common.cart.MiniCartActions;
 import common.contexts.ProjectContext;
 import common.contexts.UserContext;
 import io.sphere.sdk.categories.Category;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static play.mvc.Controller.session;
 
 public class SunrisePageDataFactory {
     private final Messages messages;
@@ -44,7 +46,13 @@ public class SunrisePageDataFactory {
         final String title = messages.at("header.title") + pageContent.additionalTitle();
         final CollectionData<SelectableData> countries = getCountries();
         final NavMenuData navMenuData = getNavMenuData();
-        return new PageHeader(messages, title, countries, navMenuData);
+        final MiniCartData miniCartData = getMiniCartData();
+        return new PageHeader(messages, title, countries, navMenuData, miniCartData);
+    }
+
+    private MiniCartData getMiniCartData() {
+        final String url = reverseRouter.cart(userContext.locale().toLanguageTag()).url();
+        return new MiniCartData(url, MiniCartActions.getCartItemCount(session()));
     }
 
     private NavMenuData getNavMenuData() {
