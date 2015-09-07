@@ -1,5 +1,6 @@
-package common.cart;
+package cart;
 
+import common.cart.MiniCartActions;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import io.sphere.sdk.carts.Cart;

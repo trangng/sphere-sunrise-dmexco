@@ -1,4 +1,4 @@
-package common.cart;
+package cart;
 
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
