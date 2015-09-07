@@ -3,13 +3,16 @@ package controllers;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
+import common.pages.LinkData;
 import play.i18n.Lang;
 import play.libs.F;
 import play.mvc.Result;
+import productcatalog.pages.CategoryLinkDataFactory;
 import productcatalog.pages.HomePageContent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Locale;
 
 /**
  * Controller for main web pages like index, imprint and contact.
@@ -32,7 +35,10 @@ public final class HomeController extends SunriseController {
     }
 
     private Result getResult(final UserContext userContext) {
-        final HomePageContent content = new HomePageContent();
+        final CategoryLinkDataFactory linkFactory = CategoryLinkDataFactory.of(reverseRouter(), userContext.locales());
+        final LinkData menLink = linkFactory.create(categories().findBySlug(Locale.ENGLISH, "men").get());
+        final LinkData womenLink = linkFactory.create(categories().findBySlug(Locale.ENGLISH, "women").get());
+        final HomePageContent content = new HomePageContent(womenLink, menLink);
         return ok(templateService().renderToHtml("home", pageData(userContext, content)));
     }
 }
