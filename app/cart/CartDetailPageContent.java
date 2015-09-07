@@ -25,7 +25,7 @@ public class CartDetailPageContent extends PageContent {
 
     public CartDetailPageContent(final Cart cart, final UserContext userContext, final ReverseRouter reverseRouter, final Messages messages) {
         final long totalItems = cart.getLineItems().stream().mapToLong(lineItem -> lineItem.getQuantity()).sum();
-        itemsTotal = messages.get("cdp.totalItems", totalItems);
+        itemsTotal = messages.at("cdp.totalItems", totalItems);
         final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter);
         final List<CartItem> cartItemList = cart.getLineItems()
                 .stream()
