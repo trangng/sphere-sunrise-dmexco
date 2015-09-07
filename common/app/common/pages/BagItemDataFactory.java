@@ -43,7 +43,7 @@ public class BagItemDataFactory {
      * @return the default item
      */
     private SelectableData bagItemDefaultItem() {
-        return new SelectableData("1", "", "", "", true);
+        return new SelectableData("1", "1", "", "", true);
     }
 
     /**
@@ -52,6 +52,6 @@ public class BagItemDataFactory {
      * @return a selectable item
      */
     private SelectableData bagItemToSelectableItem(final int quantity) {
-        return new SelectableData(Integer.toString(quantity), "", "", "", false);
+        return new SelectableData(Integer.toString(quantity), Integer.toString(quantity), "", "", false);
     }
 }
