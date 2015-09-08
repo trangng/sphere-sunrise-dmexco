@@ -1,8 +1,8 @@
 package productcatalog.pages;
 
-import common.pages.LinkData;
 import common.pages.SelectableLinkData;
 import io.sphere.sdk.models.Base;
+import io.sphere.sdk.queries.PagedResult;
 import play.mvc.Http;
 
 import java.util.HashMap;
@@ -15,21 +15,23 @@ import static java.util.stream.Collectors.toList;
 
 public class PaginationDataFactory extends Base {
     private final Http.Request request;
-    private final int productsCount;
-    private final int totalProducts;
+    private final PagedResult<?> searchResult;
     private final int currentPage;
     private final int totalPages;
+    private final int productsCount;
+    private final int totalProducts;
     private final int displayedPages;
     private int pageThresholdLeft;
     private int pageThresholdRight;
 
-    public PaginationDataFactory(final Http.Request request, final int productsCount, final int totalProducts,
-                                 final int currentPage, final int totalPages, final int displayedPages) {
+    public PaginationDataFactory(final Http.Request request, final PagedResult<?> searchResult,
+                                     final int currentPage, final int pageSize, final int displayedPages) {
         this.request = request;
-        this.productsCount = productsCount;
-        this.totalProducts = totalProducts;
+        this.searchResult = searchResult;
         this.currentPage = currentPage;
-        this.totalPages = totalPages;
+        this.totalPages = getTotalPages(searchResult, pageSize);
+        this.productsCount = searchResult.getOffset() + searchResult.size();
+        this.totalProducts = searchResult.getTotal();
         this.displayedPages = displayedPages;
         this.pageThresholdLeft = displayedPages - 1;
         this.pageThresholdRight = totalPages - displayedPages + 2;
@@ -38,7 +40,7 @@ public class PaginationDataFactory extends Base {
     public PaginationData create() {
         final PaginationData paginationData = new PaginationData(productsCount, totalProducts);
 
-        final List<LinkData> pages;
+        final List<SelectableLinkData> pages;
         if (totalPages <= displayedPages) {
             pages = getPages(1, totalPages);
         } else if (currentPage < pageThresholdLeft) {
@@ -53,30 +55,23 @@ public class PaginationDataFactory extends Base {
             paginationData.setLastPage(getLinkData(totalPages));
         }
         paginationData.setPages(pages);
-        setPrevPage(paginationData);
-        setNextPage(paginationData);
+
+        if (!searchResult.isFirst()) {
+            paginationData.setPrevPage(getLinkData(currentPage - 1));
+        }
+        if (!searchResult.isLast()) {
+            paginationData.setNextPage(getLinkData(currentPage + 1));
+        }
         return paginationData;
     }
 
-    private void setNextPage(final PaginationData paginationData) {
-        if (currentPage < totalPages) {
-            paginationData.setNextPage(getLinkData(currentPage + 1));
-        }
-    }
-
-    private void setPrevPage(final PaginationData paginationData) {
-        if (currentPage > 1) {
-            paginationData.setPrevPage(getLinkData(currentPage - 1));
-        }
-    }
-
-    private List<LinkData> getPages(final int startPage, final int endPage) {
+    private List<SelectableLinkData> getPages(final int startPage, final int endPage) {
         return IntStream.rangeClosed(startPage, endPage)
                 .mapToObj(this::getLinkData)
                 .collect(toList());
     }
 
-    private LinkData getLinkData(final int page) {
+    private SelectableLinkData getLinkData(final int page) {
         return new SelectableLinkData(String.valueOf(page), buildRequestUrlWithPage(page), page == currentPage);
     }
 
@@ -86,4 +81,8 @@ public class PaginationDataFactory extends Base {
         return buildUrl(request.path(), queryString);
     }
 
+    private static int getTotalPages(final PagedResult<?> searchResult, final int pageSize) {
+        final Double totalPages = Math.ceil((float) searchResult.getTotal() / pageSize);
+        return totalPages.intValue();
+    }
 }

@@ -1,6 +1,7 @@
 package productcatalog.pages;
 
 import common.pages.LinkData;
+import common.pages.SelectableLinkData;
 import io.sphere.sdk.models.Base;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class PaginationData extends Base {
     private final int totalProducts;
     private final int productsCount;
-    private List<LinkData> pages;
+    private List<SelectableLinkData> pages;
     private LinkData prevPage;
     private LinkData nextPage;
     private LinkData firstPage;
@@ -27,11 +28,11 @@ public class PaginationData extends Base {
         return totalProducts;
     }
 
-    public List<LinkData> getPages() {
+    public List<SelectableLinkData> getPages() {
         return pages;
     }
 
-    public void setPages(final List<LinkData> pages) {
+    public void setPages(final List<SelectableLinkData> pages) {
         this.pages = pages;
     }
 
