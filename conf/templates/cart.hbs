@@ -44,42 +44,45 @@
                     </div>
                     {{#each content.cartItems.list}}
                         <div class="row single-cart-item">
-                            <div class="col-sm-1 col-xs-4 product-img-col">
-                                <img class="img-responsive cart-item-img" src="{{imageUrl}}" alt="cart item image">
-                            </div>
-                            <div class="col-sm-3 col-xs-8 product-info-text">
-                                <p class="cart-item-name">{{nameHeadline}}<br>{{nameSubline}}</p>
-                                <p class="grey-p">{{sku}}</p>
-                                <p class="cart-color-size">{{content.static.colorTitle}}<span class="black-p">{{color}}</span><br>{{content.static.sizeTitle}}<span class="black-p">{{size}}</span></p>
-                                <p class="cart-item-availability grey-p hidden-xs"><span class="glyphicon glyphicon-ok-sign"></span>{{content.static.availableLabel}}</p>
-                                <p class="cart-item-availability grey-p visible-xs"><span class="glyphicon glyphicon-ok-sign"></span>{{content.static.availableLabel}}</p>
-                            </div>
-                            <div class="col-sm-2 col-xs-6 text-center cart-edit-delete">
-                                <div class="text-uppercase edit-delete-section">
-                                    <a id="{{editId}}" href="#"><span><img class="cart-action-icon" src="{{../meta.assetsPath}}img/edit-1.png" alt="delete">{{content.static.editLabel}}</span></a>
+                            <form method="post" action="{{content.editQuantityFormUrl}}">
+                                <div class="col-sm-1 col-xs-4 product-img-col">
+                                    <img class="img-responsive cart-item-img" src="{{imageUrl}}" alt="cart item image">
                                 </div>
-                                <div class="text-uppercase edit-delete-section">
-                                    <a id="{{deleteId}}" href="#"><span><img class="cart-action-icon" src="{{../meta.assetsPath}}img/delete-1.png" alt="delete">{{content.static.deleteLabel}}</span></a>
+                                <div class="col-sm-3 col-xs-8 product-info-text">
+                                    <p class="cart-item-name">{{nameHeadline}}<br>{{nameSubline}}</p>
+                                    <p class="grey-p">{{sku}}</p>
+                                    <p class="cart-color-size">{{content.static.colorTitle}}<span class="black-p">{{color}}</span><br>{{content.static.sizeTitle}}<span class="black-p">{{size}}</span></p>
+                                    <p class="cart-item-availability grey-p hidden-xs"><span class="glyphicon glyphicon-ok-sign"></span>{{content.static.availableLabel}}</p>
+                                    <p class="cart-item-availability grey-p visible-xs"><span class="glyphicon glyphicon-ok-sign"></span>{{content.static.availableLabel}}</p>
                                 </div>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">
-                                <div class="quantity-spinner">
-                                    <span id="{{cartQuantityDecrementId}}" class="input-number-decrement">–</span><input id="{{cartQuantityValueId}}" class="input-number" type="text" value="{{quantity}}" min="1" max="10"><span id="{{cartQuantityIncrementId}}" class="input-number-increment">+</span>
+                                <div class="col-sm-2 col-xs-6 text-center cart-edit-delete">
+                                    <div class="text-uppercase edit-delete-section">
+                                        <button id="line-item-edit-button" name="subject" value="edit"><img class="cart-action-icon" src="{{../meta.assetsPath}}img/edit-1.png" alt="delete">{{content.static.editLabel}}</button>
+                                    </div>
+                                    <div class="text-uppercase edit-delete-section">
+                                        <button id="line-item-delete-button" name="subject" value="delete"><img class="cart-action-icon" src="{{../meta.assetsPath}}img/delete-1.png" alt="delete">{{content.static.deleteLabel}}</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2 col-xs-7">
-                                <div class="text-right cart-item-price">
-                                    <span class="visible-xs xs-price-title">{{priceTitle}}</span>
-                                    {{#if priceOld}}<span class="discounted-price">{{priceOld}}</span>{{/if}}
-                                    <span>{{price}}</span>
+                                <div class="col-sm-2 col-xs-6">
+                                    <div class="quantity-spinner">
+                                        <input type="hidden" name="lineItemId" value="{{lineItemId}}">
+                                        <span id="{{cartQuantityDecrementId}}" class="input-number-decrement">–</span><input id="{{cartQuantityValueId}}" class="input-number" type="text" value="{{quantity}}" min="1" max="10" name="quantity"><span id="{{cartQuantityIncrementId}}" class="input-number-increment">+</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2 col-xs-5">
-                                <div class="text-right cart-item-price">
-                                    <span class="visible-xs xs-price-title">{{totalPriceTitle}}</span>
-                                    <span>{{totalPrice}}</span>
+                                <div class="col-sm-2 col-xs-7">
+                                    <div class="text-right cart-item-price">
+                                        <span class="visible-xs xs-price-title">{{priceTitle}}</span>
+                                        {{#if priceOld}}<span class="discounted-price">{{priceOld}}</span>{{/if}}
+                                        <span>{{price}}</span>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-sm-2 col-xs-5">
+                                    <div class="text-right cart-item-price">
+                                        <span class="visible-xs xs-price-title">{{totalPriceTitle}}</span>
+                                        <span>{{totalPrice}}</span>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     {{/each}}
                     <div class="row">
