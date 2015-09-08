@@ -1,2 +1,17 @@
 /* Disable product thumbnail quick view */
 .shop-item .shop-item-overlay { display: none !important; }
+
+/* Disable wish list related content */
+.pdp-product-heart, .pdp-wishlist-btn, .wishlist { display: none !important; }
+
+/* Disable search box */
+form.search-box { display: none !important; }
+
+/* Disable star rating */
+fieldset.rating { display: none !important; }
+
+/* Disable 'Brands' tab in nav menu */
+ul.navbar-nav li:nth-child(5) { display: none !important; }
+
+/* Disable broken image thumbs in gallery */
+li.bzoom_small_thumbs img[src="undefined"] { display: none !important; }
