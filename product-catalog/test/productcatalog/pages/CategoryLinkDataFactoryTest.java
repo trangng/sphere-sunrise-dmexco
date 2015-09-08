@@ -63,11 +63,6 @@ public class CategoryLinkDataFactoryTest {
                     }
                 };
             }
-
-            @Override
-            public Call product(final String locale, final String productSlug, final String sku) {
-                return null;
-            }
         };
     }
 }
