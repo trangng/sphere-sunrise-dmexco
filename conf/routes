@@ -20,8 +20,8 @@ GET        /assets/public/*file                             controllers.Assets.a
 # Map static resources from webjars to the /assets URL path
 GET        /assets/*file                                    controllers.WebJarAssets.at(file)
 
-POST       /:languageTag/remove-from-cart                   @cart.LineItemQuantityChangeController.process(languageTag: String)
-POST       /:languageTag/add-to-cart                        @cart.LineItemAddController.process(languageTag: String)
+POST       /:languageTag/cart/edit                          @cart.LineItemQuantityChangeController.process(languageTag: String)
+POST       /:languageTag/cart/add                           @cart.LineItemAddController.process(languageTag: String)
 GET        /:languageTag/cart                               @cart.CartDetailPageController.show(languageTag: String)
 
 GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
