@@ -13,10 +13,7 @@ import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.search.ProductProjectionSearch;
 import io.sphere.sdk.products.search.ProductProjectionSearchModel;
-import io.sphere.sdk.search.FilterExpression;
-import io.sphere.sdk.search.MetaModelSearchDsl;
-import io.sphere.sdk.search.PagedSearchResult;
-import io.sphere.sdk.search.StringSearchModel;
+import io.sphere.sdk.search.*;
 import play.Configuration;
 import play.Logger;
 import play.libs.F;
@@ -27,10 +24,7 @@ import productcatalog.services.ProductProjectionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
@@ -46,6 +40,7 @@ public class ProductOverviewPageController extends SunriseController {
     private static final StringSearchModel<ProductProjection, ?> SIZE_SEARCH_MODEL = ProductProjectionSearchModel.of().allVariants().attribute().ofEnum("commonSize").label();
     private static final StringSearchModel<ProductProjection, ?> CATEGORY_SEARCH_MODEL = ProductProjectionSearchModel.of().categories().id();
     private final int pageSize;
+    private final int displayedPages;
     private final ProductProjectionService productService;
     private final CategoryService categoryService;
 
@@ -56,6 +51,7 @@ public class ProductOverviewPageController extends SunriseController {
         this.productService = productService;
         this.categoryService = categoryService;
         this.pageSize = configuration.getInt("pop.pageSize");
+        this.displayedPages = configuration.getInt("pop.displayedPages");
     }
 
     public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
@@ -68,8 +64,7 @@ public class ProductOverviewPageController extends SunriseController {
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
-                                final ProductOverviewPageContent content =
-                                        getPopPageData(cms, userContext, searchResult, boundFacets, category.get().toReference());
+                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets, page, category.get().toReference());
                                 return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
                             })
             );
@@ -92,14 +87,15 @@ public class ProductOverviewPageController extends SunriseController {
 
     private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext,
                                                       final PagedSearchResult<ProductProjection> searchResult,
-                                                      final List<Facet<ProductProjection>> boundFacets,
+                                                      final List<Facet<ProductProjection>> boundFacets, final int currentPage,
                                                       final Reference<Category> category) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
         final List<LinkData> breadcrumbData = getBreadcrumbData(userContext, category);
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
-        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData);
+        final PaginationData paginationData = getPaginationData(searchResult, currentPage);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, paginationData);
     }
 
     /* Maybe move to some common controller class */
@@ -177,4 +173,9 @@ public class ProductOverviewPageController extends SunriseController {
                 .collect(toList());
         return new FilterListData(request().uri(), facets);
     }
+
+    private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
+        return new PaginationDataFactory(request(), searchResult, currentPage, pageSize, displayedPages).create();
+    }
+
 }
