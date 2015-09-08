@@ -12,13 +12,16 @@ public class CartDetailPageContent extends PageContent {
     private final StaticCartDetailPageContent staticData = new StaticCartDetailPageContent();
     private final String itemsTotal;
     private final String editQuantityFormUrl;
+    private final String checkoutShippingUrl;
 
 
     public CartDetailPageContent(final Cart cart, final UserContext userContext, final Messages messages, final ReverseRouter reverseRouter) {
         final long totalItems = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
         itemsTotal = messages.at("cdp.totalItems", totalItems);
         cartItems = CartItems.of(cart, userContext);
-        editQuantityFormUrl = reverseRouter.changeLineItemQuantityForm(userContext.locale().toLanguageTag()).url();
+        final String languageTag = userContext.locale().toLanguageTag();
+        editQuantityFormUrl = reverseRouter.changeLineItemQuantityForm(languageTag).url();
+        checkoutShippingUrl = reverseRouter.checkoutShipping(languageTag).url();
     }
 
     @Override
@@ -38,8 +41,11 @@ public class CartDetailPageContent extends PageContent {
         return staticData;
     }
 
-
     public String getEditQuantityFormUrl() {
         return editQuantityFormUrl;
+    }
+
+    public String getCheckoutShippingUrl() {
+        return checkoutShippingUrl;
     }
 }

@@ -23,6 +23,8 @@ GET        /assets/*file                                    controllers.WebJarAs
 POST       /:languageTag/cart/edit                          @cart.LineItemQuantityChangeController.process(languageTag: String)
 POST       /:languageTag/cart/add                           @cart.LineItemAddController.process(languageTag: String)
 GET        /:languageTag/cart                               @cart.CartDetailPageController.show(languageTag: String)
+POST       /:languageTag/checkout/shipping                  @cart.CheckoutShippingController.process(languageTag: String)
+GET        /:languageTag/checkout/shipping                  @cart.CheckoutShippingController.show(languageTag: String)
 
 GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 

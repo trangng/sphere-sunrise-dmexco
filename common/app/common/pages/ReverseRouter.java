@@ -15,5 +15,7 @@ public interface ReverseRouter {
     Call product(final String locale, final String productSlug, final String sku);
 
     Call cart(final String languageTag);
+
+    Call checkoutShipping(final String languageTag);
 }
 

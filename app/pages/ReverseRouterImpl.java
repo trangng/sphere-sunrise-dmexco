@@ -36,4 +36,9 @@ public class ReverseRouterImpl extends Base implements ReverseRouter {
     public Call changeLineItemQuantityForm(final String languageTag) {
         return routes.LineItemQuantityChangeController.process(languageTag);
     }
+
+    @Override
+    public Call checkoutShipping(final String languageTag) {
+        return routes.CheckoutShippingController.show(languageTag);
+    }
 }
