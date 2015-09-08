@@ -42,11 +42,11 @@ public class CategoryLinkDataFactory {
         return getUrlForLocale(category, locale);
     }
 
-    private Optional<Locale> getPreferredLocale(LocalizedString localizedString, Collection<Locale> preferredLocales) {
+    private Optional<Locale> getPreferredLocale(final LocalizedString localizedString, final Collection<Locale> preferredLocales) {
         return preferredLocales.stream().filter(localizedString.getLocales()::contains).findFirst();
     }
 
-    private Locale getFallbackLocale(LocalizedString localizedString) {
+    private Locale getFallbackLocale(final LocalizedString localizedString) {
         return localizedString.getLocales().stream().findFirst().get();
     }
 
