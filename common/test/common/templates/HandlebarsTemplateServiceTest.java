@@ -68,15 +68,15 @@ public class HandlebarsTemplateServiceTest {
     }
 
     private TemplateService handlebars() {
-        return HandlebarsTemplateService.of(singletonList(DEFAULT_LOADER));
+        return HandlebarsTemplateService.of(singletonList(DEFAULT_LOADER), false);
     }
 
     private TemplateService handlebarsWithOverride() {
-        return HandlebarsTemplateService.of(asList(OVERRIDE_LOADER, DEFAULT_LOADER));
+        return HandlebarsTemplateService.of(asList(OVERRIDE_LOADER, DEFAULT_LOADER), false);
     }
 
     private TemplateService handlebarsWithFallbackContext(final TemplateLoader fallbackContextLoader) {
-        return HandlebarsTemplateService.of(singletonList(DEFAULT_LOADER), singletonList(fallbackContextLoader));
+        return HandlebarsTemplateService.of(singletonList(DEFAULT_LOADER), singletonList(fallbackContextLoader), false);
     }
 
     private PageData pageDataWithTitleAndMessage() {
