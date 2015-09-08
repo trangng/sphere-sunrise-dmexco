@@ -47,7 +47,7 @@ public class CategoryLinkDataFactory {
     }
 
     private Locale getFallbackLocale(final LocalizedString localizedString) {
-        return localizedString.getLocales().stream().findFirst().get();
+        return localizedString.getLocales().iterator().next();
     }
 
     private String getUrlForLocale(final Category category, final Locale locale) {
