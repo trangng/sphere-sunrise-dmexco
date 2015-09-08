@@ -1,20 +1,20 @@
 package productcatalog.pages;
 
-import common.pages.LinkData;
 import common.pages.PageContent;
+import common.pages.SelectableLinkData;
 
 import java.util.List;
 
 public class ProductOverviewPageContent extends PageContent {
     private final String additionalTitle;
     private final ProductOverviewPageStaticData staticData;
-    private final List<LinkData> breadcrumb;
+    private final List<SelectableLinkData> breadcrumb;
     private final ProductListData productListData;
     private final FilterListData filterListData;
     private final PaginationData paginationData;
 
     public ProductOverviewPageContent(final String additionalTitle, final ProductOverviewPageStaticData staticData,
-                                      final List<LinkData> breadcrumb, final ProductListData productListData,
+                                      final List<SelectableLinkData> breadcrumb, final ProductListData productListData,
                                       final FilterListData filterListData, final PaginationData paginationData) {
         this.additionalTitle = additionalTitle;
         this.staticData = staticData;
@@ -33,7 +33,7 @@ public class ProductOverviewPageContent extends PageContent {
         return staticData;
     }
 
-    public List<LinkData> getBreadcrumb() {
+    public List<SelectableLinkData> getBreadcrumb() {
         return breadcrumb;
     }
 

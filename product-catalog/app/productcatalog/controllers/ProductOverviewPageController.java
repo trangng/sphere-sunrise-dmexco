@@ -4,8 +4,8 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.CategoryLinkDataFactory;
-import common.pages.LinkData;
+import common.pages.BreadcrumbDataFactory;
+import common.pages.SelectableLinkData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
@@ -13,7 +13,10 @@ import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.search.ProductProjectionSearch;
 import io.sphere.sdk.products.search.ProductProjectionSearchModel;
-import io.sphere.sdk.search.*;
+import io.sphere.sdk.search.FilterExpression;
+import io.sphere.sdk.search.MetaModelSearchDsl;
+import io.sphere.sdk.search.PagedSearchResult;
+import io.sphere.sdk.search.StringSearchModel;
 import play.Configuration;
 import play.Logger;
 import play.libs.F;
@@ -24,7 +27,10 @@ import productcatalog.services.ProductProjectionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
@@ -91,7 +97,7 @@ public class ProductOverviewPageController extends SunriseController {
                                                       final Reference<Category> category) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
-        final List<LinkData> breadcrumbData = getBreadcrumbData(userContext, category);
+        final List<SelectableLinkData> breadcrumbData = getBreadcrumbData(userContext, category);
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
         final PaginationData paginationData = getPaginationData(searchResult, currentPage);
@@ -151,11 +157,10 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* This will probably be moved to some kind of factory classes */
 
-    private List<LinkData> getBreadcrumbData(final UserContext userContext, final Reference<Category> category) {
-        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(userContext.locales());
-        return categoryService.getBreadCrumbCategories(category).stream()
-                .map(categoryLinkDataFactory::create)
-                .collect(toList());
+    private List<SelectableLinkData> getBreadcrumbData(final UserContext userContext, final Reference<Category> category) {
+        final BreadcrumbDataFactory breadcrumbDataFactory = BreadcrumbDataFactory.of(userContext.locales());
+        final List<Category> breadcrumbCategories = categoryService.getBreadCrumbCategories(category);
+        return breadcrumbDataFactory.create(breadcrumbCategories);
     }
 
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {

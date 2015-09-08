@@ -16,8 +16,8 @@ public class CategoryLinkDataFactory {
         return new CategoryLinkDataFactory(locales);
     }
 
-    public LinkData create(final Category category) {
+    public SelectableLinkData create(final Category category) {
         final String label = category.getName().find(locales).orElse("");
-        return new LinkData(label, "");
+        return new SelectableLinkData(label, "", false);
     }
 }
