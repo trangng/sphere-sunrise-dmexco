@@ -1,5 +1,6 @@
 package pages;
 
+import cart.routes;
 import common.pages.ReverseRouter;
 import io.sphere.sdk.models.Base;
 import play.mvc.Call;
@@ -29,5 +30,10 @@ public class ReverseRouterImpl extends Base implements ReverseRouter {
     @Override
     public Call cart(final String languageTag) {
         return cart.routes.CartDetailPageController.show(languageTag);
+    }
+
+    @Override
+    public Call changeLineItemQuantityForm(final String languageTag) {
+        return routes.LineItemQuantityChangeController.process(languageTag);
     }
 }

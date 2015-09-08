@@ -22,6 +22,7 @@ public class CartItem extends Base {
     private String totalPrice;
     private String imageUrl;
     private Long quantity;
+    private String lineItemId;
 
     public CartItem() {
     }
@@ -43,6 +44,7 @@ public class CartItem extends Base {
         cartItem.setTotalPrice(priceFormatter.format(monetaryAmount.multiply(lineItem.getQuantity())));
         final String imageUrl = productVariant.getImages().stream().findFirst().map(i -> i.getUrl()).orElse("");
         cartItem.setImageUrl(imageUrl);
+        cartItem.setLineItemId(lineItem.getId());
         return cartItem;
     }
 
@@ -124,5 +126,13 @@ public class CartItem extends Base {
 
     public void setImageUrl(final String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getLineItemId() {
+        return lineItemId;
+    }
+
+    public void setLineItemId(final String lineItemId) {
+        this.lineItemId = lineItemId;
     }
 }

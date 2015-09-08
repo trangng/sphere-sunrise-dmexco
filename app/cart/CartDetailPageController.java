@@ -22,7 +22,7 @@ public class CartDetailPageController extends CartController {
         final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, session());
         return cartPromise.map(cart -> {
             final Messages messages = messages(userContext);
-            final CartDetailPageContent content = new CartDetailPageContent(cart, userContext, messages);
+            final CartDetailPageContent content = new CartDetailPageContent(cart, userContext, messages, reverseRouter());
             final SunrisePageData pageData = pageData(userContext, content);
             return ok(templateService().renderToHtml("cart", pageData));
         });

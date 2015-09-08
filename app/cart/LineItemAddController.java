@@ -1,6 +1,5 @@
 package cart;
 
-import common.cart.MiniCartActions;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import io.sphere.sdk.carts.Cart;
@@ -14,6 +13,9 @@ import javax.inject.Inject;
 
 import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 
+/**
+ * Adds a line item to a cart. Redirects to the product detail page in the success case.
+ */
 public class LineItemAddController extends CartController {
 
     @Inject
@@ -23,7 +25,6 @@ public class LineItemAddController extends CartController {
 
     public F.Promise<Result> process(final String language) {
         final UserContext userContext = userContext(language);
-
         final Form<ProductVariantToCartFormData> form = getFilledForm();
         if (form.hasErrors()) {
             return F.Promise.pure(badRequest(form.errorsAsJson()));
@@ -34,10 +35,10 @@ public class LineItemAddController extends CartController {
                 final Long itemCount = firstNonNull(data.getAmount(), 1L);
                 final AddLineItem action = AddLineItem.of(data.getProductId(), data.getVariantId(), itemCount);
                 return sphere().execute(CartUpdateCommand.of(cart, action))
-                .map(cartWithLineItem -> {
-                    MiniCartActions.increaseCartItemCount(itemCount, session());
-                    return redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
-                });
+                        .map(cartWithLineItem -> {
+                            CartSessionUtils.overwriteCartSessionData(cartWithLineItem, session());
+                            return redirect(reverseRouter().product(language, data.getProductSlug(), data.getSku()));
+                        });
             });
         }
     }
