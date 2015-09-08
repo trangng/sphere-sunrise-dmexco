@@ -2,15 +2,18 @@
   "breadcrumbs" : [
     {
       "text":"DAMEN",
-      "url":""
+      "url":"",
+      "selected": false
     },
     {
       "text":"taschen",
-      "url":""
+      "url":"",
+      "selected": false
     },
     {
       "text":"handtaschen",
-      "url":""
+      "url":"",
+      "selected": true
     }
   ]
 }
