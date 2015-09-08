@@ -6,10 +6,14 @@
         "id" : "5ebe6dc9-ba32-4030-9f3e-eee0137a1274",
         "version" : 1,
         "name" : {
-            "en" : "TestSnowboard equipment"
+            "de" : "TestSnowboard equipment de",
+            "en" : "TestSnowboard equipment en",
+            "it" : "TestSnowboard equipment it"
         },
         "slug" : {
-            "en" : "snowboard-equipment"
+            "de" : "snowboard-equipment",
+            "en" : "snowboard-equipment",
+            "it" : "snowboard-equipment"
         },
         "ancestors" : [ ],
         "orderHint" : "0.000014020459255201865700631",

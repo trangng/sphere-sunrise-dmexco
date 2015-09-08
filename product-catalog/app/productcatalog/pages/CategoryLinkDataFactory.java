@@ -43,7 +43,7 @@ public class CategoryLinkDataFactory {
     }
 
     private Optional<Locale> getPreferredLocale(LocalizedString localizedString, Collection<Locale> preferredLocales) {
-        return localizedString.getLocales().stream().filter(preferredLocales::contains).findFirst();
+        return preferredLocales.stream().filter(localizedString.getLocales()::contains).findFirst();
     }
 
     private Locale getFallbackLocale(LocalizedString localizedString) {
