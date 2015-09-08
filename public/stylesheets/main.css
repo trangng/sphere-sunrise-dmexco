@@ -15,3 +15,9 @@ ul.navbar-nav li:nth-child(5) { display: none !important; }
 
 /* Disable broken image thumbs in gallery */
 li.bzoom_small_thumbs img[src="undefined"] { display: none !important; }
+
+/* Disable jumbotron on pop */
+#pop-page div.row-offcanvas hr.hidden-xs, div > div.jumbotron { display: none !important; }
+
+/* Disable sign in widget */
+ul.nav-list li.list-item-user { display: none !important; }
