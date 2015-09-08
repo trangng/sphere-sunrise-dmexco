@@ -13,7 +13,6 @@ import io.sphere.sdk.products.ProductVariant;
 import io.sphere.sdk.shippingmethods.ShippingRate;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
-import play.mvc.Call;
 import productcatalog.models.ShopShippingRate;
 
 import javax.money.CurrencyUnit;
@@ -114,31 +113,7 @@ public class ProductDetailPageContentTest {
     }
 
     private static ReverseRouter dummyReverseRouter() {
-        return new ReverseRouter() {
-            @Override
-            public Call category(final String locale, final String slug, final int page) {
-                return null;
-            }
-
-            @Override
-            public Call product(final String locale, final String productSlug, final String sku) {
-                return new Call() {
-                    @Override
-                    public String url() {
-                        return productSlug + "-url-" + sku;
-                    }
-
-                    @Override
-                    public String method() {
-                        return null;
-                    }
-
-                    @Override
-                    public String fragment() {
-                        return null;
-                    }
-                };
-            }
-        };
+        return new DefaultTestReverseRouter();
     }
+
 }

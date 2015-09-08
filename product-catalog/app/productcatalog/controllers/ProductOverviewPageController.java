@@ -4,9 +4,12 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
+import common.pages.CategoryLinkDataFactory;
+import common.pages.LinkData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
+import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.search.ProductProjectionSearch;
 import io.sphere.sdk.products.search.ProductProjectionSearchModel;
@@ -16,6 +19,7 @@ import play.Logger;
 import play.libs.F;
 import play.mvc.Result;
 import productcatalog.pages.*;
+import productcatalog.services.CategoryService;
 import productcatalog.services.ProductProjectionService;
 
 import javax.inject.Inject;
@@ -38,12 +42,14 @@ public class ProductOverviewPageController extends SunriseController {
     private final int pageSize;
     private final int displayedPages;
     private final ProductProjectionService productService;
+    private final CategoryService categoryService;
 
     @Inject
     public ProductOverviewPageController(final Configuration configuration, final ControllerDependency controllerDependency,
-                                         final ProductProjectionService productService) {
+                                         final ProductProjectionService productService, final CategoryService categoryService) {
         super(controllerDependency);
         this.productService = productService;
+        this.categoryService = categoryService;
         this.pageSize = configuration.getInt("pop.pageSize");
         this.displayedPages = configuration.getInt("pop.displayedPages");
     }
@@ -58,7 +64,7 @@ public class ProductOverviewPageController extends SunriseController {
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
-                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets, page);
+                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets, page, category.get().toReference());
                                 return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
                             })
             );
@@ -81,24 +87,18 @@ public class ProductOverviewPageController extends SunriseController {
 
     private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext,
                                                       final PagedSearchResult<ProductProjection> searchResult,
-                                                      final List<Facet<ProductProjection>> boundFacets, final int currentPage) {
+                                                      final List<Facet<ProductProjection>> boundFacets, final int currentPage,
+                                                      final Reference<Category> category) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
+        final List<LinkData> breadcrumbData = getBreadcrumbData(userContext, category);
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
         final PaginationData paginationData = getPaginationData(searchResult, currentPage);
-        return new ProductOverviewPageContent(additionalTitle, staticData, productListData, filterListData, paginationData);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, paginationData);
     }
 
     /* Maybe move to some common controller class */
-
-    private boolean isRootCategory(final Category category) {
-        return categories().getRoots().contains(category);
-    }
-
-    private Locale locale(final String language) {
-        return Locale.forLanguageTag(language);
-    }
 
     private static <T> List<Facet<T>> bindFacetsWithRequest(final List<Facet<T>> facets) {
         return facets.stream().map(facet -> {
@@ -140,20 +140,23 @@ public class ProductOverviewPageController extends SunriseController {
     private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest, final List<Facet<T>> facets) {
         S searchRequest = baseSearchRequest;
         for (final Facet<T> facet : facets) {
-            searchRequest = getFacetedSearchRequest(searchRequest, facet);
+            final List<FilterExpression<T>> filterExpressions = facet.getFilterExpressions();
+            searchRequest = searchRequest
+                    .plusFacets(facet.getFacetExpression())
+                    .plusFacetFilters(filterExpressions)
+                    .plusResultFilters(filterExpressions);
         }
         return searchRequest;
     }
 
-    private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest, final Facet<T> facet) {
-        final List<FilterExpression<T>> filterExpressions = facet.getFilterExpressions();
-        return baseSearchRequest
-                .plusFacets(facet.getFacetExpression())
-                .plusFacetFilters(filterExpressions)
-                .plusResultFilters(filterExpressions);
-    }
-
     /* This will probably be moved to some kind of factory classes */
+
+    private List<LinkData> getBreadcrumbData(final UserContext userContext, final Reference<Category> category) {
+        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(userContext.locales());
+        return categoryService.getBreadCrumbCategories(category).stream()
+                .map(categoryLinkDataFactory::create)
+                .collect(toList());
+    }
 
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {
         final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
@@ -168,7 +171,7 @@ public class ProductOverviewPageController extends SunriseController {
                 .map(facet -> facet.withSearchResult(searchResult))
                 .map(FacetData::new)
                 .collect(toList());
-        return new FilterListData(facets);
+        return new FilterListData(request().uri(), facets);
     }
 
     private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {

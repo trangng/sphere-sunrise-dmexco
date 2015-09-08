@@ -22,23 +22,23 @@ version := "1.0-SNAPSHOT"
 lazy val commonWithTests: ClasspathDep[ProjectReference] = common % "compile;test->test;it->it;pt->pt"
 
 lazy val `sphere-sunrise` = (project in file("."))
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava, DockerPlugin).configs(IntegrationTest, PlayTest).settings(commonSettings ++ dockerSettings: _*)
   .dependsOn(commonWithTests, `product-catalog`, `setup-widget`)
   .aggregate(common, `product-catalog`, `setup-widget`, `move-to-sdk`)
 
 lazy val common = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(`move-to-sdk`)
 
 lazy val `product-catalog` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
   .dependsOn(commonWithTests)
 
 lazy val `setup-widget` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 lazy val `move-to-sdk` = project
-  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings:_*)
+  .enablePlugins(PlayJava).configs(IntegrationTest, PlayTest).settings(commonSettings ++ disableDockerPublish: _*)
 
 /**
  * COMMON SETTINGS
@@ -47,6 +47,18 @@ lazy val `move-to-sdk` = project
 javaUnidocSettings
 
 lazy val sphereJvmSdkVersion = "1.0.0-M17"
+
+lazy val dockerSettings = Seq(
+  version in Docker := "latest",
+  packageName in Docker := "sunrise",
+  dockerRepository := Some("dockerhub.commercetools.de"),
+  dockerExposedPorts := Seq(9000),
+  dockerCmd := Seq("-Dconfig.resource=prod.conf", "-Dlogger.resource=docker-logger.xml"))
+
+lazy val disableDockerPublish = Seq(
+  publish in Docker := {},
+  publishLocal in Docker := {}
+)
 
 lazy val commonSettings = testSettings ++ /*testCoverageSettings ++ */Seq (
   scalaVersion := "2.10.5",

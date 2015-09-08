@@ -69,7 +69,7 @@ public abstract class SunriseController extends ShopController {
         final Messages messages = messages(userContext);
         final String saleCategoryExtId = configuration().getString("common.saleCategoryExternalId");
         return new SunrisePageDataFactory(messages, userContext, context().project(), categories(),
-                controllerDependency.getReverseRouter(), saleCategoryExtId).create(content);
+                reverseRouter(), saleCategoryExtId).create(content);
     }
 
     protected final Messages messages(final UserContext userContext) {
