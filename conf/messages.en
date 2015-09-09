@@ -1,3 +1,8 @@
+checkout.shippingstep.title = Shipping
+checkout.paymentstep.title = Payment
+checkout.confirmationStep.title = Confirmation
+
+
 cdp.totalItems = {0} {0,choice,0#items|1#item|1<items} in total
 cdp.subtotalTitle = Subtotal
 
