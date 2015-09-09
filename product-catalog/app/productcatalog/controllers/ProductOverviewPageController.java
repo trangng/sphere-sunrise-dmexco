@@ -13,7 +13,10 @@ import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.search.ProductProjectionSearch;
 import io.sphere.sdk.products.search.ProductProjectionSearchModel;
-import io.sphere.sdk.search.*;
+import io.sphere.sdk.search.FilterExpression;
+import io.sphere.sdk.search.MetaModelSearchDsl;
+import io.sphere.sdk.search.PagedSearchResult;
+import io.sphere.sdk.search.StringSearchModel;
 import play.Configuration;
 import play.Logger;
 import play.libs.F;
@@ -24,13 +27,15 @@ import productcatalog.services.ProductProjectionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 

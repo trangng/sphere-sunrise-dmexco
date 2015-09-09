@@ -1,9 +1,7 @@
 package common.pages;
 
 import io.sphere.sdk.models.Base;
-import play.Logger;
 import play.i18n.Messages;
-import play.mvc.Http;
 
 public class PageHeader extends Base {
     private final Messages messages;
