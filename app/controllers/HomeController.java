@@ -35,7 +35,7 @@ public final class HomeController extends SunriseController {
     }
 
     private Result getResult(final UserContext userContext) {
-        final CategoryLinkDataFactory linkFactory = CategoryLinkDataFactory.of(reverseRouter(), userContext.locales());
+        final CategoryLinkDataFactory linkFactory = CategoryLinkDataFactory.of(reverseRouter(), userContext.locale());
         final LinkData menLink = linkFactory.create(categories().findBySlug(Locale.ENGLISH, "men").get());
         final LinkData womenLink = linkFactory.create(categories().findBySlug(Locale.ENGLISH, "women").get());
         final HomePageContent content = new HomePageContent(womenLink, menLink);

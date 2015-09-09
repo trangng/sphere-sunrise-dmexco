@@ -63,7 +63,7 @@ public class ProductDetailPageContentTest {
         final Category bags = CATEGORIES.findById("32952779-d916-4f2b-b1d5-9efd7f7b9f58").get();
         final Category handBags = CATEGORIES.findById("9a584ee8-a45a-44e8-b9ec-e11439084687").get();
         final List<Category> breadcrumbs = asList(woman, bags, handBags);
-        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(dummyReverseRouter(), LOCALES);
+        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(dummyReverseRouter(), GERMAN);
         final List<LinkData> breadcrumbData = breadcrumbs.stream().map(categoryLinkDataFactory::create).collect(toList());
 
         final JsonNode expected = readJsonNodeFromResource("breadcrumbData.json").get("breadcrumbs");
