@@ -17,7 +17,13 @@ ul.navbar-nav li:nth-child(5) { display: none !important; }
 li.bzoom_small_thumbs img[src="undefined"] { display: none !important; }
 
 /* Disable jumbotron on pop */
-#pop-page div.row-offcanvas hr.hidden-xs, div > div.jumbotron { display: none !important; }
+#pop-page div.row-offcanvas hr.hidden-xs, div.jumbotron { display: none !important; }
 
 /* Disable sign in widget */
 ul.nav-list li.list-item-user { display: none !important; }
+
+/* Disable localization widget */
+ul.nav-list li.list-item-location { display: none !important; }
+
+/* Disable payment methods in checkout page */
+div.payment-type { display: none !important; }
