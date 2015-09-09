@@ -3,7 +3,7 @@ package productcatalog.models;
 import io.sphere.sdk.models.Base;
 import io.sphere.sdk.search.SearchSort;
 
-class SortOptionImpl<T> extends Base implements SortOption<T> {
+public class SortOptionImpl<T> extends Base implements SortOption<T> {
     private final String label;
     private final String value;
     private final boolean selected;
@@ -38,6 +38,10 @@ class SortOptionImpl<T> extends Base implements SortOption<T> {
 
     @Override
     public SortOption<T> withSelected(final boolean selected) {
+        return new SortOptionImpl<>(label, value, selected, sortModel);
+    }
+
+    public static <T> SortOption<T> of(final String label, final String value, final boolean selected, final SearchSort<T> sortModel) {
         return new SortOptionImpl<>(label, value, selected, sortModel);
     }
 }

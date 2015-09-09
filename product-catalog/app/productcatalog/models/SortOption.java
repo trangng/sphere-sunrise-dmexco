@@ -35,8 +35,4 @@ public interface SortOption<T> {
      */
     SortOption<T> withSelected(boolean selected);
 
-
-    static <T> SortOption<T> of(final String label, final String value, final boolean selected, final SearchSort<T> sortModel) {
-        return new SortOptionImpl<>(label, value, selected, sortModel);
-    }
 }

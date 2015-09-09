@@ -20,6 +20,7 @@ import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Result;
 import productcatalog.models.SortOption;
+import productcatalog.models.SortOptionImpl;
 import productcatalog.pages.*;
 import productcatalog.services.CategoryService;
 import productcatalog.services.ProductProjectionService;
@@ -96,9 +97,9 @@ public class ProductOverviewPageController extends SunriseController {
 
     private List<SortOption<ProductProjection>> boundSortOptionList(final Messages messages) {
         final List<SortOption<ProductProjection>> sortOptions = asList(
-                SortOption.of(messages.at("pop.sortNew"), "new", true, MODIFIED_SORT_BY_DESC),
-                SortOption.of(messages.at("pop.sortPriceAsc"), "price-asc", false, PRICE_SORT_BY_ASC),
-                SortOption.of(messages.at("pop.sortPriceDesc"), "price-desc", false, PRICE_SORT_BY_DESC));
+                SortOptionImpl.of(messages.at("pop.sortNew"), "new", true, MODIFIED_SORT_BY_DESC),
+                SortOptionImpl.of(messages.at("pop.sortPriceAsc"), "price-asc", false, PRICE_SORT_BY_ASC),
+                SortOptionImpl.of(messages.at("pop.sortPriceDesc"), "price-desc", false, PRICE_SORT_BY_DESC));
         return bindSortOptionsWithRequest(sortOptions);
     }
 
