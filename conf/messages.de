@@ -1,10 +1,9 @@
 cdp.totalItems = {0,choice,0#kein|1#ein|1<{0}} Artikel im Warenkorb
 
-common.header.title = Sunrise -
-common.header.stores = FILIALEN
-common.header.help = HILFE
-common.header.callUs = KONTAKT +44 123 456 000
-common.header.countries = REGION
+header.stores = FILIALEN
+header.help = HILFE
+header.callUs = KONTAKT +44 123 456 000
+header.countries = REGION
 
 pop.productCountSeparator = von
 
