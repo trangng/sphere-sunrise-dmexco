@@ -48,4 +48,9 @@ public class DefaultTestReverseRouter implements ReverseRouter {
     public Call cart(final String languageTag) {
         return null;
     }
+
+    @Override
+    public Call search(final String languageTag, final String searchTerm, final int page) {
+        return null;
+    }
 }
