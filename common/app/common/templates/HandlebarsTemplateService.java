@@ -77,11 +77,7 @@ public final class HandlebarsTemplateService implements TemplateService {
     }
 
     private ValueResolver getBeanValueResolver() {
-        if (cachingIsEnabled) {
-            return JavaBeanValueResolver.INSTANCE;
-        } else {
-            return NonCachedJavaBeanValueResolver.INSTANCE;
-        }
+        return cachingIsEnabled ? JavaBeanValueResolver.INSTANCE : NonCachedJavaBeanValueResolver.INSTANCE;
     }
 
     private Optional<Map<String, ?>> buildFallbackContext(final TemplateLoader fallbackLoader, final String templateName) {
