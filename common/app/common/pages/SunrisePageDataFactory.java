@@ -47,7 +47,9 @@ public class SunrisePageDataFactory {
         final CollectionData<SelectableData> countries = getCountries();
         final NavMenuData navMenuData = getNavMenuData();
         final MiniCartData miniCartData = getMiniCartData();
-        return new PageHeader(messages, title, countries, navMenuData, miniCartData);
+        final String searchUrl = reverseRouter.search(userContext.locale().toLanguageTag(), "", 1).url();
+        final String queryParamName = "searchTerm";
+        return new PageHeader(messages, title, countries, navMenuData, miniCartData, searchUrl, queryParamName);
     }
 
     private MiniCartData getMiniCartData() {
