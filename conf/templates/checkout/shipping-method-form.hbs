@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="shipping-method">
+            <div class="text-uppercase shipping-method-title">{{content.shippingMethod}}</div>
+            {{#each content.delivery.list}}
+                <div class="shipping-method-option">
+                    <span><input id="{{id}}" class="shipping-method-radio" type="radio" name="delivery options" value="{{value}}" {{#if selected}}checked{{/if}}>{{text}}</span>
+                    <span class="pull-right text-uppercase delivery-time">{{deliveryDays}}</span>
+                    <a href="#"><span class="pull-right text-uppercase delivery-details">{{details}}</span></a>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

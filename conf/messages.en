@@ -1,3 +1,4 @@
+checkout.billingAddress.isSeparateToShipping = Use a different address for billing
 checkout.shippingstep.title = Shipping
 checkout.paymentstep.title = Payment
 checkout.confirmationStep.title = Confirmation
@@ -11,6 +12,20 @@ common.header.stores = STORES
 common.header.help = HELP
 common.header.callUs = CALL US ON +44 123 456 000
 common.header.countries = Location
+
+form.title.label = Title
+form.firstName.label = First Name
+form.lastName.label = Last Name
+form.addressOne.label = Address 1
+form.addressTwo.label = Address 2
+form.city.label = City
+form.postCode.label = Post Code
+form.country.label = Country
+form.region.label = Region
+form.phone.label = Telephone Number
+form.phone.required = Please provide your telephone number so the shipper can contact you during delivery
+form.email.label = Email
+form.email.required = We require your email address to send your shipping and order confirmation
 
 pop.productCountSeparator = of
 
