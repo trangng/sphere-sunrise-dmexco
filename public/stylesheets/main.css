@@ -27,3 +27,6 @@ ul.nav-list li.list-item-location { display: none !important; }
 
 /* Disable payment methods in checkout page */
 div.payment-type { display: none !important; }
+
+/* Disable line item edit on cart detail page */
+div.single-cart-item div.edit-selection { display: none !important; }
