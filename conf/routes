@@ -26,4 +26,5 @@ GET        /:languageTag/cart                               @cart.CartDetailPage
 
 GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 
+GET        /:languageTag/search/                          @productcatalog.controllers.ProductOverviewPageController.search(languageTag: String, searchTerm: String ?= "", page: Int ?= 1)
 GET        /:locale/:categorySlug/                        @productcatalog.controllers.ProductOverviewPageController.show(locale: String, categorySlug: String, page: Int ?= 1)
