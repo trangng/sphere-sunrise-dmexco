@@ -15,7 +15,7 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryLinkDataFactoryTest {
-    private final CategoryTree categories = CategoryTree.of(CategoryUtils.getQueryResult("categories.json").getResults());
+    private static final CategoryTree categories = CategoryTree.of(CategoryUtils.getQueryResult("categories.json").getResults());
 
     @Test
     public void createWithPreferredLocales() {
