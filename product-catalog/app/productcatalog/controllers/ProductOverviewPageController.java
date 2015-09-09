@@ -30,6 +30,7 @@ import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
@@ -72,6 +73,19 @@ public class ProductOverviewPageController extends SunriseController {
         return F.Promise.pure(notFound("Category not found: " + categorySlug));
     }
 
+    public F.Promise<Result> search(final String languageTag, final String searchTerm, final int page) {
+        final UserContext userContext = userContext(languageTag);
+            final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), categories().getRoots());
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(userContext.locale(), searchTerm, boundFacets, page);
+            final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
+            return searchResultPromise.flatMap(searchResult ->
+                            cmsPromise.map(cms -> {
+                                final ProductOverviewPageContent content = getPopPageData(userContext, searchTerm, searchResult, boundFacets, page);
+                                return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
+                            })
+            );
+    }
+
     private List<Facet<ProductProjection>> boundFacetList(final Locale locale, final List<Category> childrenCategories) {
         final List<Category> subcategories = getCategoriesAsFlatList(categories(), childrenCategories);
         final FacetOptionMapper categoryHierarchyMapper = HierarchicalCategoryFacetOptionMapper.of(subcategories, singletonList(locale));
@@ -98,6 +112,20 @@ public class ProductOverviewPageController extends SunriseController {
         return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, paginationData);
     }
 
+    private ProductOverviewPageContent getPopPageData(final UserContext userContext,
+                                                      final String searchTerm,
+                                                      final PagedSearchResult<ProductProjection> searchResult,
+                                                      final List<Facet<ProductProjection>> boundFacets,
+                                                      final int currentPage) {
+        final String additionalTitle = "";
+        final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
+        final List<LinkData> breadcrumbData = singletonList(new LinkData("Search results for: " + searchTerm, ""));
+        final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
+        final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
+        final PaginationData paginationData = getPaginationData(searchResult, currentPage);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, paginationData);
+    }
+
     /* Maybe move to some common controller class */
 
     private static <T> List<Facet<T>> bindFacetsWithRequest(final List<Facet<T>> facets) {
@@ -114,6 +142,21 @@ public class ProductOverviewPageController extends SunriseController {
         final List<String> categoriesId = getCategoriesAsFlatList(categories(), singletonList(category)).stream().map(Category::getId).collect(toList());
         final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
                 .withQueryFilters(model -> model.categories().id().filtered().by(categoriesId))
+                .withOffset(offset)
+                .withLimit(pageSize);
+        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
+        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
+        searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
+                result.size(),
+                result.getTotal(),
+                searchRequest.httpRequestIntent().getPath()));
+        return searchResultPromise;
+    }
+
+    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Locale locale, final String searchTerm, final List<Facet<ProductProjection>> boundFacets, final int page) {
+        final int offset = (page - 1) * pageSize;
+        final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
+                .withText(locale, searchTerm)
                 .withOffset(offset)
                 .withLimit(pageSize);
         final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
