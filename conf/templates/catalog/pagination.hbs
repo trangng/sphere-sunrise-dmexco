@@ -1,0 +1,25 @@
+<li>
+  <a href="{{content.pagination.prevPage.url}}" class="icon-prev">
+    <span class="sr-only">{{content.pagination.prevPage.text}}</span>
+  </a>
+</li>
+
+{{#if content.pagination.firstPage}}
+  <li><a href="{{content.pagination.firstPage.url}}">{{content.pagination.firstPage.text}}</a></li>
+  <li>...</li>
+{{/if}}
+
+{{#each content.pagination.pages}}
+  <li><a href="{{url}}" {{#if selected}}class="active"{{/if}}>{{text}}</a></li>
+{{/each}}
+
+{{#if content.pagination.lastPage}}
+  <li>...</li>
+  <li><a href="{{content.pagination.lastPage.url}}">{{content.pagination.lastPage.text}}</a></li>
+{{/if}}
+
+<li>
+  <a href="{{content.pagination.nextPage.url}}" class="icon-next">
+    <span class="sr-only">{{content.pagination.nextPage.text}}</span>
+  </a>
+</li>

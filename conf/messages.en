@@ -6,6 +6,8 @@ common.header.help = HELP
 common.header.callUs = CALL US ON +44 123 456 000
 common.header.countries = Location
 
+pop.productCountSeparator = of
+
 pdp.writeFirstRatingText = Write first review
 
 pdp.ratingFiveStarText = Rocks
@@ -25,8 +27,10 @@ pdp.addToWishlistText = Add To Wishlist
 pdp.availableText = Available
 pdp.productDetailsText = Product Details
 pdp.deliveryAndReturnsText = Delivery & Returns
-pdp.deliveryText = Delivery
-pdp.returnsText = Returns
+pdp.standardDeliveryText = Standard delivery - FREE for orders over €29.99, otherwise €3.00. Delivery within 4 working days.
+pdp.expressDeliveryText = Express delivery - €6.00. Delivery within 2 working days.
+pdp.freeReturnsText = Free return for all orders.
+pdp.moreDeliveryInfoText = More info > (link to FAQ Delivery & returns)
 pdp.youMayLikeText = You may also like
 pdp.saleText = Sale
 pdp.newText = New
