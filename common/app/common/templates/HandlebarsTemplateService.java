@@ -61,7 +61,7 @@ public final class HandlebarsTemplateService implements TemplateService {
     private Context buildContext(final PageData pageData, final String templateName) {
         // TODO Use resolver with cache on production
         Context.Builder builder = Context.newBuilder(pageData)
-                .resolver(NonCachedJavaBeanValueResolver.INSTANCE, MapValueResolver.INSTANCE);
+                .resolver(NonCachedJavaBeanValueResolver.INSTANCE, MapValueResolver.INSTANCE, new PlayMessagesResolver());
         for (final TemplateLoader fallbackContext : fallbackContexts) {
             final Optional<Map<String, ?>> map = buildFallbackContext(fallbackContext, templateName);
             if (map.isPresent()) {
