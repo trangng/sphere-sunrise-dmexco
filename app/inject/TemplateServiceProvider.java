@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class TemplateServiceProvider implements Provider<TemplateService> {
     private static final String CONFIG_TEMPLATE_LOADERS = "handlebars.templateLoaders";
     private static final String CONFIG_FALLBACK_CONTEXTS = "handlebars.fallbackContexts";
-    private static final String CONFIG_CACHING_ENABLED = "handlebars.chaching.enabled";
+    private static final String CONFIG_CACHE_ENABLED = "handlebars.chache.enabled";
     private static final String CLASSPATH_TYPE = "classpath";
     private static final String FILE_TYPE = "file";
     private static final String TYPE_ATTR = "type";
@@ -32,7 +32,7 @@ public class TemplateServiceProvider implements Provider<TemplateService> {
 
     @Override
     public TemplateService get() {
-        final boolean cacheIsEnabled = configuration.getBoolean(CONFIG_CACHING_ENABLED);
+        final boolean cacheIsEnabled = configuration.getBoolean(CONFIG_CACHE_ENABLED);
         final List<TemplateLoader> templateLoaders = initializeTemplateLoaders(CONFIG_TEMPLATE_LOADERS);
         final List<TemplateLoader> fallbackContexts = initializeTemplateLoaders(CONFIG_FALLBACK_CONTEXTS);
         final String templatePath = templateLoaders.stream().map(TemplateLoader::getPrefix).collect(joining(", "));
