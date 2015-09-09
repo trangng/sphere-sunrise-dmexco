@@ -151,8 +151,7 @@ public class ProductOverviewPageController extends SunriseController {
     }
 
     private ProductProjectionSearch getProductProjectionSearch(final Locale locale, final String searchTerm) {
-        return ProductProjectionSearch.ofCurrent()
-                .withText(locale, searchTerm);
+        return ProductProjectionSearch.ofCurrent().withText(locale, searchTerm);
     }
 
     private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final ProductProjectionSearch searchRequest, final List<Facet<ProductProjection>> boundFacets, final int page) {
