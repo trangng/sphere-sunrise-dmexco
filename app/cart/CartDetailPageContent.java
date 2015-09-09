@@ -12,9 +12,11 @@ public class CartDetailPageContent extends PageContent {
     private final StaticCartDetailPageContent staticData = new StaticCartDetailPageContent();
     private final String itemsTotal;
     private final String editQuantityFormUrl;
+    private final Messages messages;
 
 
     public CartDetailPageContent(final Cart cart, final UserContext userContext, final Messages messages, final ReverseRouter reverseRouter) {
+        this.messages = messages;
         final long totalItems = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
         itemsTotal = messages.at("cdp.totalItems", totalItems);
         cartItems = CartItems.of(cart, userContext);
@@ -38,8 +40,11 @@ public class CartDetailPageContent extends PageContent {
         return staticData;
     }
 
-
     public String getEditQuantityFormUrl() {
         return editQuantityFormUrl;
+    }
+
+    public Messages getMessages() {
+        return messages;
     }
 }
