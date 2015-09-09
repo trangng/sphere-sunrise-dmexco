@@ -1,8 +1,10 @@
 checkout.billingAddress.isSeparateToShipping = Use a different address for billing
 checkout.shippingstep.title = Shipping
+checkout.shippingStep.form.title = Shipping Information
 checkout.paymentstep.title = Payment
 checkout.confirmationStep.title = Confirmation
-
+checkout.secureCheckout.shipping.title = SECURE CHECKOUT - SHIPPING
+checkout.continueCheckout = Continue Checkout
 
 cdp.totalItems = {0} {0,choice,0#items|1#item|1<items} in total
 cdp.subtotalTitle = Subtotal
@@ -26,6 +28,7 @@ form.phone.label = Telephone Number
 form.phone.required = Please provide your telephone number so the shipper can contact you during delivery
 form.email.label = Email
 form.email.required = We require your email address to send your shipping and order confirmation
+form.required = Required
 
 pop.productCountSeparator = of
 
