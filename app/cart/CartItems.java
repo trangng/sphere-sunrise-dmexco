@@ -4,8 +4,10 @@ import common.contexts.UserContext;
 import common.utils.PriceFormatter;
 import io.sphere.sdk.cartdiscounts.DiscountedLineItemPrice;
 import io.sphere.sdk.carts.Cart;
+import io.sphere.sdk.carts.LineItem;
 import io.sphere.sdk.models.Base;
 import io.sphere.sdk.utils.MoneyImpl;
+import play.i18n.Messages;
 
 import javax.money.MonetaryAmount;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 public class CartItems extends Base {
+    private String itemsTotal;
     private List<CartItem> list;
     private String subtotal;
     private String orderDiscount;
@@ -24,8 +27,10 @@ public class CartItems extends Base {
     public CartItems() {
     }
 
-    public static CartItems of(final Cart cart, final UserContext userContext) {
+    public static CartItems of(final Cart cart, final UserContext userContext, final Messages messages) {
         final CartItems cartItems = new CartItems();
+        final long totalItems = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
+        cartItems.setItemsTotal(messages.at("cdp.totalItems", totalItems));
         final List<CartItem> cartItemList = cart.getLineItems()
                 .stream()
                 .map(lineItem -> CartItem.of(lineItem, userContext))
@@ -113,5 +118,13 @@ public class CartItems extends Base {
 
     public void setOrderTotal(final String orderTotal) {
         this.orderTotal = orderTotal;
+    }
+
+    public String getItemsTotal() {
+        return itemsTotal;
+    }
+
+    public void setItemsTotal(final String itemsTotal) {
+        this.itemsTotal = itemsTotal;
     }
 }

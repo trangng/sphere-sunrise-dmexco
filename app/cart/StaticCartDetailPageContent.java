@@ -40,11 +40,11 @@ public class StaticCartDetailPageContent extends Base {
     }
 
     public String getColorTitle() {
-        return "Color: ";
+        return "Color";
     }
 
     public String getSizeTitle() {
-        return "Size: ";
+        return "Size";
     }
 
     public String getPromoDiscount() {

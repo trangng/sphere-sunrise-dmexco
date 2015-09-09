@@ -3,18 +3,21 @@ package cart;
 import common.contexts.UserContext;
 import common.pages.PageContent;
 import common.pages.ReverseRouter;
+import io.sphere.sdk.carts.Cart;
 import play.i18n.Messages;
 
 public class CheckoutShippingContent extends PageContent {
-
+    private final StaticCartDetailPageContent staticData = new StaticCartDetailPageContent();
     private final Messages messages;
     private final StepWidgetData stepWidget = new StepWidgetData();
+    private final CartItems cartItems;
 
-    public CheckoutShippingContent(final Messages messages, final ReverseRouter reverseRouter, final UserContext userContext) {
+    public CheckoutShippingContent(final Cart cart, final Messages messages, final ReverseRouter reverseRouter, final UserContext userContext) {
         final String shippingStepUrl = reverseRouter.checkoutShipping(userContext.locale().toLanguageTag()).url();
         stepWidget.setShippingStepUrl(shippingStepUrl);
         stepWidget.setShippingStepActive(true);
         this.messages = messages;
+        cartItems = CartItems.of(cart, userContext, messages);
     }
 
     @Override
@@ -28,5 +31,13 @@ public class CheckoutShippingContent extends PageContent {
 
     public StepWidgetData getStepWidget() {
         return stepWidget;
+    }
+
+    public CartItems getCartItems() {
+        return cartItems;
+    }
+
+    public StaticCartDetailPageContent getStatic() {
+        return staticData;
     }
 }
