@@ -32,15 +32,15 @@ public class TemplateServiceProvider implements Provider<TemplateService> {
 
     @Override
     public TemplateService get() {
+        final boolean cacheIsEnabled = configuration.getBoolean(CONFIG_CACHING_ENABLED);
         final List<TemplateLoader> templateLoaders = initializeTemplateLoaders(CONFIG_TEMPLATE_LOADERS);
         final List<TemplateLoader> fallbackContexts = initializeTemplateLoaders(CONFIG_FALLBACK_CONTEXTS);
-        Logger.debug("Provide HandlebarsTemplateService: "
-                + templateLoaders.stream().map(TemplateLoader::getPrefix).collect(joining(", ")));
-        Logger.debug("HandlebarsTemplateService caching is " +
-                (configuration.getBoolean(CONFIG_CACHING_ENABLED) ? "enabled" : "disabled"));
+        final String templatePath = templateLoaders.stream().map(TemplateLoader::getPrefix).collect(joining(", "));
 
-        return HandlebarsTemplateService.of(templateLoaders, fallbackContexts,
-                configuration.getBoolean(CONFIG_CACHING_ENABLED));
+        Logger.debug("Provide HandlebarsTemplateService: {}", templatePath);
+        Logger.debug("HandlebarsTemplateService cache enabled: {}", cacheIsEnabled);
+
+        return HandlebarsTemplateService.of(templateLoaders, fallbackContexts, cacheIsEnabled);
     }
 
     private List<TemplateLoader> initializeTemplateLoaders(final String configKey) {
