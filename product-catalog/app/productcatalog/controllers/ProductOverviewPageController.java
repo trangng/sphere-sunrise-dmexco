@@ -61,7 +61,8 @@ public class ProductOverviewPageController extends SunriseController {
         if (category.isPresent()) {
             final List<Category> childrenCategories = categories().findChildren(category.get());
             final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), childrenCategories);
-            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), boundFacets, page);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise =
+                    searchProducts(getProductProjectionSearch(category.get()), boundFacets, page);
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
@@ -76,7 +77,8 @@ public class ProductOverviewPageController extends SunriseController {
     public F.Promise<Result> search(final String languageTag, final String searchTerm, final int page) {
         final UserContext userContext = userContext(languageTag);
             final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), categories().getRoots());
-            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(userContext.locale(), searchTerm, boundFacets, page);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise =
+                    searchProducts(getProductProjectionSearch(userContext.locale(), searchTerm), boundFacets, page);
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
@@ -137,29 +139,20 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* Move to product service */
 
-    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final List<Facet<ProductProjection>> boundFacets, final int page) {
-        final int offset = (page - 1) * pageSize;
+    private ProductProjectionSearch getProductProjectionSearch(final Category category) {
         final List<String> categoriesId = getCategoriesAsFlatList(categories(), singletonList(category)).stream().map(Category::getId).collect(toList());
-        final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
-                .withQueryFilters(model -> model.categories().id().filtered().by(categoriesId))
-                .withOffset(offset)
-                .withLimit(pageSize);
-        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
-        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
-        searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
-                result.size(),
-                result.getTotal(),
-                searchRequest.httpRequestIntent().getPath()));
-        return searchResultPromise;
+        return ProductProjectionSearch.ofCurrent()
+                .withQueryFilters(model -> model.categories().id().filtered().by(categoriesId));
     }
 
-    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Locale locale, final String searchTerm, final List<Facet<ProductProjection>> boundFacets, final int page) {
+    private ProductProjectionSearch getProductProjectionSearch(final Locale locale, final String searchTerm) {
+        return ProductProjectionSearch.ofCurrent()
+                .withText(locale, searchTerm);
+    }
+
+    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final ProductProjectionSearch searchRequest, final List<Facet<ProductProjection>> boundFacets, final int page) {
         final int offset = (page - 1) * pageSize;
-        final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
-                .withText(locale, searchTerm)
-                .withOffset(offset)
-                .withLimit(pageSize);
-        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
+        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest.withOffset(offset).withLimit(pageSize), boundFacets);
         final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
