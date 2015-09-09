@@ -15,6 +15,7 @@
           {{> catalog/banner}}
         </div>
       </div>
+      <form id="pop-filter-form" action="{{content.filters.url}}" method="GET" onchange="this.submit()">
       <div class="row row-offcanvas row-offcanvas-left">
         <div class="col-xs-12">
           {{> catalog/breadcrumb}}
@@ -41,7 +42,7 @@
                 </li>
                 <li class="pull-left">
                   <select class="select">
-                    {{#each content.sort.list}}
+                    {{#each content.sort}}
                       <option value="{{value}}" {{#if selected}} selected {{/if}}>{{text}}</option>
                     {{/each}}
                   </select>
@@ -57,9 +58,9 @@
           <div class="row hidden-xs item-list-pagination">
             <div class="col-xs-4 text-left">
               <div class="styled-select icon-drop-down">
-                <select class="select">
-                  {{#each content.sort.list}}
-                    <option value="{{value}}" {{#if selected}} selected {{/if}}>{{text}}</option>
+                <select name="sort" class="select">
+                  {{#each content.sort}}
+                      <option value="{{value}}" {{#if selected}} selected {{/if}}>{{label}}</option>
                   {{/each}}
                 </select>
               </div>
@@ -104,6 +105,7 @@
           </div>
         </div>
       </div>
+      </form>
     </div>
   </div>
   {{> catalog/wishlist}}

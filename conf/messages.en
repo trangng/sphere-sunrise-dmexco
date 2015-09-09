@@ -8,6 +8,15 @@ common.header.countries = Location
 
 pop.productCountSeparator = of
 
+pop.facetProductType = Product Type
+pop.facetSize = Size
+pop.facetColor = Color
+pop.facetBrand = Brands
+
+pop.sortNew = What''s new
+pop.sortPriceAsc = Price low to high
+pop.sortPriceDesc = Price high to low
+
 pdp.writeFirstRatingText = Write first review
 
 pdp.ratingFiveStarText = Rocks
