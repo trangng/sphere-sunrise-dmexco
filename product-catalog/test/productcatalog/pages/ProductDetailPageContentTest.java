@@ -13,6 +13,7 @@ import io.sphere.sdk.products.ProductVariant;
 import io.sphere.sdk.shippingmethods.ShippingRate;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
+import play.mvc.Call;
 import productcatalog.models.ShopShippingRate;
 
 import javax.money.CurrencyUnit;
@@ -61,6 +62,7 @@ public class ProductDetailPageContentTest {
         final Category woman = CATEGORIES.findById("33339d11-0e7b-406b-899b-60f4c34c2948").get();
         final Category bags = CATEGORIES.findById("32952779-d916-4f2b-b1d5-9efd7f7b9f58").get();
         final Category handBags = CATEGORIES.findById("9a584ee8-a45a-44e8-b9ec-e11439084687").get();
+
         final List<Category> breadcrumbCategories = asList(woman, bags, handBags);
         final BreadcrumbDataFactory breadCrumbDataFactory = BreadcrumbDataFactory.of(LOCALES);
         final List<SelectableLinkData> breadcrumbData = breadCrumbDataFactory.create(breadcrumbCategories);
@@ -113,7 +115,27 @@ public class ProductDetailPageContentTest {
     }
 
     private static ReverseRouter dummyReverseRouter() {
-        return new DefaultTestReverseRouter();
+        return new DefaultTestReverseRouter() {
+            @Override
+            public Call category(final String locale, final String slug, final int page) {
+                return new Call() {
+                    @Override
+                    public String url() {
+                        return locale + "/" + slug;
+                    }
+
+                    @Override
+                    public String method() {
+                        return null;
+                    }
+
+                    @Override
+                    public String fragment() {
+                        return null;
+                    }
+                };
+            }
+        };
     }
 
 }
