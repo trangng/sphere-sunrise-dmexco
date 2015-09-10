@@ -64,7 +64,7 @@ public class ProductDetailPageContentTest {
         final Category handBags = CATEGORIES.findById("9a584ee8-a45a-44e8-b9ec-e11439084687").get();
 
         final List<Category> breadcrumbCategories = asList(woman, bags, handBags);
-        final BreadcrumbDataFactory breadCrumbDataFactory = BreadcrumbDataFactory.of(LOCALES);
+        final BreadcrumbDataFactory breadCrumbDataFactory = BreadcrumbDataFactory.of(dummyReverseRouter(), GERMAN);
         final List<SelectableLinkData> breadcrumbData = breadCrumbDataFactory.create(breadcrumbCategories);
 
         final JsonNode expected = readJsonNodeFromResource("breadcrumbData.json").get("breadcrumbs");

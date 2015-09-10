@@ -197,7 +197,7 @@ public class ProductOverviewPageController extends SunriseController {
     /* This will probably be moved to some kind of factory classes */
 
     private List<SelectableLinkData> getBreadcrumbData(final UserContext userContext, final Reference<Category> category) {
-        final BreadcrumbDataFactory breadcrumbDataFactory = BreadcrumbDataFactory.of(userContext.locales());
+        final BreadcrumbDataFactory breadcrumbDataFactory = BreadcrumbDataFactory.of(reverseRouter(), userContext.locale());
         final List<Category> breadcrumbCategories = categoryService.getBreadCrumbCategories(category);
         return breadcrumbDataFactory.create(breadcrumbCategories);
     }

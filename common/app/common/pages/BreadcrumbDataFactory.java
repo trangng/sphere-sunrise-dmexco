@@ -4,18 +4,20 @@ import io.sphere.sdk.categories.Category;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 
 public class BreadcrumbDataFactory {
     private final CategoryLinkDataFactory categoryLinkDataFactory;
 
-    private BreadcrumbDataFactory(final List<Locale> languages) {
-        this.categoryLinkDataFactory = CategoryLinkDataFactory.of(languages);
+    private BreadcrumbDataFactory(final ReverseRouter reverseRouter, final Locale locale) {
+        this.categoryLinkDataFactory = CategoryLinkDataFactory.of(reverseRouter, locale);
     }
 
-    public static BreadcrumbDataFactory of(final List<Locale> languages) {
-        return new BreadcrumbDataFactory(languages);
+    public static BreadcrumbDataFactory of(final ReverseRouter reverseRouter, final Locale locale) {
+        return new BreadcrumbDataFactory(reverseRouter, locale);
     }
 
     public List<SelectableLinkData> create(final List<Category> categories) {
