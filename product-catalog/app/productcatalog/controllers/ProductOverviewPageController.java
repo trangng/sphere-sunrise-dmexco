@@ -19,6 +19,7 @@ import io.sphere.sdk.search.PagedSearchResult;
 import io.sphere.sdk.search.StringSearchModel;
 import play.Configuration;
 import play.Logger;
+import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Result;
 import productcatalog.pages.*;
@@ -126,7 +127,7 @@ public class ProductOverviewPageController extends SunriseController {
                                                       final int currentPage) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
-        final List<LinkData> breadcrumbData = singletonList(new LinkData("Search results for: " + searchTerm, ""));
+        final List<LinkData> breadcrumbData = getSearchBreadCrumbData(messages(userContext), userContext.locale().getLanguage(), searchTerm);
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
         final PaginationData paginationData = getPaginationData(searchResult, currentPage);
@@ -198,6 +199,12 @@ public class ProductOverviewPageController extends SunriseController {
                 .collect(toList());
     }
 
+    private List<LinkData> getSearchBreadCrumbData(final Messages messages, final String languageTag, final String searchTerm) {
+        return asList(
+                new LinkData(messages.at("home.pageName"), reverseRouter().home(languageTag).url()),
+                new LinkData(messages.at("search.resultsForText", searchTerm), reverseRouter().search(languageTag, searchTerm, 1).url()));
+    }
+
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {
         final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
         final List<ProductData> productDataList = productList.stream()
@@ -217,5 +224,4 @@ public class ProductOverviewPageController extends SunriseController {
     private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
         return new PaginationDataFactory(request(), searchResult, currentPage, pageSize, displayedPages).create();
     }
-
 }
