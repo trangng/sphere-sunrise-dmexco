@@ -3,9 +3,15 @@ package pages;
 import cart.routes;
 import common.pages.ReverseRouter;
 import io.sphere.sdk.models.Base;
+import play.Configuration;
 import play.mvc.Call;
 
 public class ReverseRouterImpl extends Base implements ReverseRouter {
+    private final int pageSize;
+
+    public ReverseRouterImpl(final Configuration configuration) {
+        this.pageSize = configuration.getInt("pop.pageSize");
+    }
 
     @Override
     public Call home(final String languageTag) {
@@ -14,7 +20,7 @@ public class ReverseRouterImpl extends Base implements ReverseRouter {
 
     @Override
     public Call category(final String languageTag, final String slug, final int page) {
-        return productcatalog.controllers.routes.ProductOverviewPageController.show(languageTag, slug, page);
+        return productcatalog.controllers.routes.ProductOverviewPageController.show(languageTag, slug, page, pageSize);
     }
 
     @Override

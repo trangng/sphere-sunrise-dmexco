@@ -5,6 +5,7 @@ import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
 import common.pages.LinkData;
+import common.pages.SelectableData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
 import io.sphere.sdk.facets.*;
@@ -46,7 +47,6 @@ public class ProductOverviewPageController extends SunriseController {
     private static final SearchSort<ProductProjection> MODIFIED_SORT_BY_DESC = ProductProjectionSearchModel.of().lastModifiedAt().sorted(DESC);
     private static final SearchSort<ProductProjection> PRICE_SORT_BY_DESC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(DESC);
     private static final SearchSort<ProductProjection> PRICE_SORT_BY_ASC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(ASC);
-    private final int pageSize;
     private final int displayedPages;
     private final ProductProjectionService productService;
     private final CategoryService categoryService;
@@ -57,11 +57,10 @@ public class ProductOverviewPageController extends SunriseController {
         super(controllerDependency);
         this.productService = productService;
         this.categoryService = categoryService;
-        this.pageSize = configuration.getInt("pop.pageSize");
         this.displayedPages = configuration.getInt("pop.displayedPages");
     }
 
-    public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
+    public F.Promise<Result> show(final String locale, final String categorySlug, final int page, final int pageSize) {
         final UserContext userContext = userContext(locale);
         final Messages messages = messages(userContext);
         final Optional<Category> category = categories().findBySlug(userContext.locale(), categorySlug);
@@ -69,11 +68,11 @@ public class ProductOverviewPageController extends SunriseController {
             final List<Category> childrenCategories = categories().findChildren(category.get());
             final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), childrenCategories, messages);
             final List<SortOption<ProductProjection>> boundSortOptions = boundSortOptionList(messages);
-            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), page, boundFacets, boundSortOptions);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), page, pageSize, boundFacets, boundSortOptions);
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
-                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, messages, searchResult, boundFacets, page, category.get().toReference());
+                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, messages, searchResult, boundFacets, page, pageSize, category.get().toReference());
                                 return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
                             })
             );
@@ -105,15 +104,16 @@ public class ProductOverviewPageController extends SunriseController {
     private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext, final Messages messages,
                                                       final PagedSearchResult<ProductProjection> searchResult,
                                                       final List<Facet<ProductProjection>> boundFacets, final int currentPage,
-                                                      final Reference<Category> category) {
+                                                      final int pageSize, final Reference<Category> category) {
         final String additionalTitle = "";
         final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
         final List<LinkData> breadcrumbData = getBreadcrumbData(userContext, category);
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
-        final PaginationData paginationData = getPaginationData(searchResult, currentPage);
+        final PaginationData paginationData = getPaginationData(searchResult, currentPage, pageSize);
         final List<SortOption<ProductProjection>> sortingData = boundSortOptionList(messages);
-        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, sortingData, paginationData);
+        final List<SelectableData> displayOptions = getDisplayOptions(pageSize);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, sortingData, paginationData, displayOptions);
     }
 
     /* Maybe move to some common controller class */
@@ -137,7 +137,7 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* Move to product service */
 
-    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final int page,
+    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final int page, final int pageSize,
                                                                            final List<Facet<ProductProjection>> boundFacets,
                                                                            final List<SortOption<ProductProjection>> sortOptions) {
         final int offset = (page - 1) * pageSize;
@@ -215,7 +215,18 @@ public class ProductOverviewPageController extends SunriseController {
         return new FilterListData(request().uri(), facets);
     }
 
-    private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
+    private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage, int pageSize) {
         return new PaginationDataFactory(request(), searchResult, currentPage, pageSize, displayedPages).create();
+    }
+
+    private List<SelectableData> getDisplayOptions(final int pageSize) {
+        return asList(
+                getDisplayOption(9, pageSize),
+                getDisplayOption(24, pageSize),
+                getDisplayOption(64, pageSize));
+    }
+
+    private SelectableData getDisplayOption(final int pageSize, final int currentPageSize) {
+        return new SelectableData(String.valueOf(pageSize), String.valueOf(pageSize), null, null, currentPageSize == pageSize);
     }
 }

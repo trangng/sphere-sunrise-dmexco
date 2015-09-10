@@ -2,6 +2,7 @@ package productcatalog.pages;
 
 import common.pages.LinkData;
 import common.pages.PageContent;
+import common.pages.SelectableData;
 import io.sphere.sdk.products.ProductProjection;
 import productcatalog.models.SortOption;
 
@@ -15,11 +16,12 @@ public class ProductOverviewPageContent extends PageContent {
     private final FilterListData filterListData;
     private final List<SortOption<ProductProjection>> sortOptions;
     private final PaginationData paginationData;
+    private final List<SelectableData> displayOptions;
 
     public ProductOverviewPageContent(final String additionalTitle, final ProductOverviewPageStaticData staticData,
                                       final List<LinkData> breadcrumb, final ProductListData productListData,
                                       final FilterListData filterListData, final List<SortOption<ProductProjection>> sortOptions,
-                                      final PaginationData paginationData) {
+                                      final PaginationData paginationData, final List<SelectableData> displayOptions) {
         this.additionalTitle = additionalTitle;
         this.staticData = staticData;
         this.breadcrumb = breadcrumb;
@@ -27,6 +29,7 @@ public class ProductOverviewPageContent extends PageContent {
         this.filterListData = filterListData;
         this.sortOptions = sortOptions;
         this.paginationData = paginationData;
+        this.displayOptions = displayOptions;
     }
 
     @Override
@@ -52,6 +55,10 @@ public class ProductOverviewPageContent extends PageContent {
 
     public List<SortOption<ProductProjection>> getSort() {
         return sortOptions;
+    }
+
+    public List<SelectableData> getDisplay() {
+        return displayOptions;
     }
 
     public PaginationData getPagination() {

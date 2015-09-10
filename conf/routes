@@ -24,6 +24,6 @@ POST       /:languageTag/cart/edit                          @cart.LineItemQuanti
 POST       /:languageTag/cart/add                           @cart.LineItemAddController.process(languageTag: String)
 GET        /:languageTag/cart                               @cart.CartDetailPageController.show(languageTag: String)
 
-GET        /:locale/:productSlug-$sku<[^-]+>.html         @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
+GET        /:locale/:productSlug-$sku<[^-]+>.html           @productcatalog.controllers.ProductDetailPageController.show(locale: String, productSlug: String, sku: String)
 
-GET        /:locale/:categorySlug/                        @productcatalog.controllers.ProductOverviewPageController.show(locale: String, categorySlug: String, page: Int ?= 1)
+GET        /:locale/:categorySlug/                          @productcatalog.controllers.ProductOverviewPageController.show(locale: String, categorySlug: String, page: Int ?= 1, pageSize: Int ?= 9)

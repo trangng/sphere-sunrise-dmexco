@@ -16,6 +16,8 @@ pop.sortNew = What''s new
 pop.sortPriceAsc = Price low to high
 pop.sortPriceDesc = Price high to low
 
+pop.displaySelectorText = items per page
+
 pdp.writeFirstRatingText = Write first review
 
 pdp.ratingFiveStarText = Rocks

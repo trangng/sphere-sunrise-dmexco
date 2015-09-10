@@ -72,11 +72,11 @@
               </ul>
             </div>
             <div class="col-xs-4 text-right">
-              <p class="item-count">{{content.display.title}}</p>
+              <p class="item-count">{{content.static.displaySelectorText}}</p>
               <div class="styled-select icon-drop-down">
-                <select class="select">
-                  {{#each content.display.list}}
-                    <option value="{{value}}" {{#if selected}} selected {{/if}}>{{name}}</option>
+                <select name="pageSize" class="select">
+                  {{#each content.display}}
+                    <option value="{{value}}" {{#if selected}} selected {{/if}}>{{text}}</option>
                   {{/each}}
                 </select>
               </div>

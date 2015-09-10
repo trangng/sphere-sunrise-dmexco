@@ -61,4 +61,8 @@ public class ProductOverviewPageStaticData extends Base {
     public String getProductCountSeparatorText() {
         return messages.at("pop.productCountSeparator");
     }
+
+    public String getDisplaySelectorText() {
+        return messages.at("pop.displaySelectorText");
+    }
 }
