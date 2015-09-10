@@ -198,7 +198,7 @@ public class ProductOverviewPageController extends SunriseController {
         final int offset = (page - 1) * pageSize;
         final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest.withOffset(offset).withLimit(pageSize), boundFacets);
         final ProductProjectionSearch sortedFacetedSearchRequest = getSortedSearchRequest(facetedSearchRequest, sortOptions);
-        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
+        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(sortedFacetedSearchRequest);
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
                 result.getTotal(),
