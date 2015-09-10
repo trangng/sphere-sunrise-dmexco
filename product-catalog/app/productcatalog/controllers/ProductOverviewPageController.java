@@ -138,7 +138,7 @@ public class ProductOverviewPageController extends SunriseController {
         return searchRequest;
     }
 
-    /* This will probably be moved to some kind of factory classes */
+    /* This will probably be moved to some kind of factory classes  */
 
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {
         final ProductDataFactory productDataFactory = ProductDataFactory.of(userContext, reverseRouter());
