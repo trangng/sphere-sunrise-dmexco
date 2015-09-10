@@ -10,6 +10,15 @@ search.resultsForText = Ergebnisse für "{0}"
 
 pop.productCountSeparator = von
 
+pop.facetProductType = Produkttyp
+pop.facetSize = Größe
+pop.facetColor = Farbe
+pop.facetBrand = Marken
+
+pop.sortNew = Neu eingetroffen
+pop.sortPriceAsc = Preis absteigend
+pop.sortPriceDesc = Preis aufsteigend
+
 pdp.writeFirstRatingText = Erste Rezension schreiben
 
 pdp.ratingFiveStarText = Hervorragend
