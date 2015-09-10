@@ -121,7 +121,7 @@ public class ProductOverviewPageController extends SunriseController {
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
                 result.getTotal(),
-                searchRequest.httpRequestIntent().getPath()));
+                facetedSearchRequest.httpRequestIntent().getPath()));
         return searchResultPromise;
     }
 

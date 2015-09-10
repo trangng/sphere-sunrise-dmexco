@@ -30,7 +30,7 @@
                           <div class="panel-heading" id="heading-one" role="tab">
                             <h4 class="panel-title">
                               <a aria-controls="collapse-one" aria-expanded="true" class="" data-parent="#accordion" data-toggle="collapse" href="#{{value}}">
-                                {{value}} ({{count}})
+                                {{label}} ({{count}})
                               </a>
                             </h4>
                           </div>
@@ -40,7 +40,7 @@
                                 <div class="checkbox">
                                   <label for="filter-{{../facet.key}}-{{value}}">
                                     <input id="filter-{{../facet.key}}-{{value}}" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}>
-                                    {{value}} ({{count}})
+                                    {{label}} ({{count}})
                                   </label>
                                 </div>
                               {{/each}}
@@ -73,7 +73,7 @@
                             {{#each facet.limitedOptions}}
                                 <div class="checkbox">
                                     <input id="filter-{{../facet.key}}-{{value}}" class="{{../facet.key}}-checkbox" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}/>
-                                    <label for="filter-{{../facet.key}}-{{value}}">{{value}} ({{count}})</label>
+                                    <label for="filter-{{../facet.key}}-{{value}}">{{label}} ({{count}})</label>
                                 </div>
                             {{/each}}
                           </div>
@@ -85,7 +85,7 @@
                   <div class="pop-filter-select">
                   {{#each facet.limitedOptions}}
                       <input id="filter-{{../facet.key}}-{{value}}" class="{{../facet.key}}-checkbox" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}/>
-                      <label for="filter-{{../facet.key}}-{{value}}">{{value}} ({{count}})</label><br>
+                      <label for="filter-{{../facet.key}}-{{value}}">{{label}} ({{count}})</label><br>
                   {{/each}}
                 </div>
               {{/if}}
