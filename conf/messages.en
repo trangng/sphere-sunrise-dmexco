@@ -15,7 +15,7 @@ pop.facetSize = Size
 pop.facetColor = Color
 pop.facetBrand = Brands
 
-pop.sortNew = What''s new
+pop.sortNew = What's new
 pop.sortPriceAsc = Price low to high
 pop.sortPriceDesc = Price high to low
 
