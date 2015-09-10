@@ -61,6 +61,7 @@ public class ProductOverviewPageController extends SunriseController {
     private final int displayedPages;
     private final ProductProjectionService productService;
     private final CategoryService categoryService;
+    private final List<String> sortedSizes;
 
     @Inject
     public ProductOverviewPageController(final Configuration configuration, final ControllerDependency controllerDependency,
@@ -70,6 +71,7 @@ public class ProductOverviewPageController extends SunriseController {
         this.categoryService = categoryService;
         this.pageSize = configuration.getInt("pop.pageSize");
         this.displayedPages = configuration.getInt("pop.displayedPages");
+        this.sortedSizes = configuration.getStringList("pop.sizeFacet");
     }
 
     public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
@@ -113,7 +115,7 @@ public class ProductOverviewPageController extends SunriseController {
         final List<Category> subcategories = getCategoriesAsFlatList(categories(), childrenCategories);
         final FacetOptionMapper categoryHierarchyMapper = HierarchicalCategoryFacetOptionMapper.of(subcategories, singletonList(locale));
         final FacetOptionMapper sortedColorFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
-        final FacetOptionMapper sortedSizeFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
+        final FacetOptionMapper sortedSizeFacetOptionMapper = SortedFacetOptionMapper.of(sortedSizes);
         final List<Facet<ProductProjection>> facets = asList(
                 FlexibleSelectFacetBuilder.of(FACET_CATEGORY_KEY, messages.at("pop.facetProductType"), HIERARCHICAL_SELECT, CATEGORY_SEARCH_MODEL, categoryHierarchyMapper).build(),
                 FlexibleSelectFacetBuilder.of(FACET_SIZE_KEY, messages.at("pop.facetSize"), SORTED_SELECT, SIZE_SEARCH_MODEL, sortedSizeFacetOptionMapper).countHidden(true).build(),
