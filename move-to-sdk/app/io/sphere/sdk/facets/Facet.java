@@ -35,6 +35,12 @@ public interface Facet<T> {
     boolean isAvailable();
 
     /**
+     * Whether the facet count should be hidden or not.
+     * @return true if the count should be hidden, false otherwise
+     */
+    boolean isCountHidden();
+
+    /**
      * Gets the selected values for this facet.
      * @return the selected values
      */

@@ -21,8 +21,8 @@ public final class FlexibleSelectFacetBuilder<T> extends BaseSelectFacetBuilder<
 
     @Override
     public FlexibleSelectFacet<T> build() {
-        return new FlexibleSelectFacet<>(getKey(), getLabel(), getType(), searchModel, multiSelect, matchingAll, selectedValues,
-                facetResult.orElse(null), threshold.orElse(null), limit.orElse(null), mapper);
+        return new FlexibleSelectFacet<>(getKey(), getLabel(), countHidden, getType(), searchModel, multiSelect, matchingAll,
+                selectedValues, facetResult.orElse(null), threshold.orElse(null), limit.orElse(null), mapper);
     }
 
     @Override
@@ -67,6 +67,7 @@ public final class FlexibleSelectFacetBuilder<T> extends BaseSelectFacetBuilder<
     public static <T> FlexibleSelectFacetBuilder<T> of(final FlexibleSelectFacet<T> facet) {
         final FlexibleSelectFacetBuilder<T> builder = new FlexibleSelectFacetBuilder<>(facet.getKey(), facet.getLabel(),
                 facet.getType(), facet.getSearchModel(), facet.getMapper());
+        builder.countHidden = facet.isCountHidden();
         builder.multiSelect = facet.isMultiSelect();
         builder.matchingAll = facet.isMatchingAll();
         builder.threshold = facet.getThreshold();

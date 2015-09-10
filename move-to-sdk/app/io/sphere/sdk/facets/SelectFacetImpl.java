@@ -9,10 +9,10 @@ import java.util.List;
 
 public final class SelectFacetImpl<T> extends BaseSelectFacet<T> {
 
-    SelectFacetImpl(final String key, final String label, final FacetType type, final UntypedSearchModel<T> searchModel,
+    SelectFacetImpl(final String key, final String label, final boolean countHidden, final FacetType type, final UntypedSearchModel<T> searchModel,
                     final boolean multiSelect, final boolean matchingAll, final List<String> selectedValues,
                     @Nullable final TermFacetResult termFacetResult, @Nullable final Long threshold, @Nullable final Long limit) {
-        super(key, label, type, searchModel, multiSelect, matchingAll, selectedValues, termFacetResult, threshold, limit);
+        super(key, label, countHidden, type, searchModel, multiSelect, matchingAll, selectedValues, termFacetResult, threshold, limit);
     }
 
     @Override
