@@ -12,6 +12,7 @@ abstract class BaseSelectFacetBuilder<T extends BaseSelectFacetBuilder<T>> exten
     private final String key;
     private final String label;
     private final FacetType type;
+    protected boolean countHidden = false;
     protected boolean multiSelect = true;
     protected boolean matchingAll = false;
     protected List<String> selectedValues = Collections.emptyList();
@@ -23,6 +24,11 @@ abstract class BaseSelectFacetBuilder<T extends BaseSelectFacetBuilder<T>> exten
         this.key = key;
         this.label = label;
         this.type = type;
+    }
+
+    public T countHidden(final boolean countHidden) {
+        this.countHidden = countHidden;
+        return getThis();
     }
 
     public T multiSelect(final boolean multiSelect) {
@@ -65,6 +71,10 @@ abstract class BaseSelectFacetBuilder<T extends BaseSelectFacetBuilder<T>> exten
 
     public FacetType getType() {
         return type;
+    }
+
+    public boolean isCountHidden() {
+        return countHidden;
     }
 
     public boolean isMultiSelect() {

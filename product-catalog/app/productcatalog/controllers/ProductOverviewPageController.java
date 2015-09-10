@@ -46,6 +46,13 @@ public class ProductOverviewPageController extends SunriseController {
     private static final SearchSort<ProductProjection> MODIFIED_SORT_BY_DESC = ProductProjectionSearchModel.of().lastModifiedAt().sorted(DESC);
     private static final SearchSort<ProductProjection> PRICE_SORT_BY_DESC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(DESC);
     private static final SearchSort<ProductProjection> PRICE_SORT_BY_ASC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(ASC);
+    private static final String FACET_COLOR_KEY = "color";
+    private static final String FACET_SIZE_KEY = "size";
+    private static final String FACET_CATEGORY_KEY = "productType";
+    private static final String FACET_BRAND_KEY = "brands";
+    private static final String SORT_NEW_KEY = "new";
+    private static final String SORT_PRICE_ASC_KEY = "price-asc";
+    private static final String SORT_PRICE_DESC_KEY = "price-desc";
     private final int pageSize;
     private final int displayedPages;
     private final ProductProjectionService productService;
@@ -87,18 +94,18 @@ public class ProductOverviewPageController extends SunriseController {
         final FacetOptionMapper sortedColorFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
         final FacetOptionMapper sortedSizeFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
         final List<Facet<ProductProjection>> facets = asList(
-                FlexibleSelectFacetBuilder.of("productType", messages.at("pop.facetProductType"), HIERARCHICAL_SELECT, CATEGORY_SEARCH_MODEL, categoryHierarchyMapper).build(),
-                FlexibleSelectFacetBuilder.of("size", messages.at("pop.facetSize"), SORTED_SELECT, SIZE_SEARCH_MODEL, sortedSizeFacetOptionMapper).build(),
-                FlexibleSelectFacetBuilder.of("color", messages.at("pop.facetColor"), SORTED_SELECT, COLOR_SEARCH_MODEL, sortedColorFacetOptionMapper).build(),
-                SelectFacetBuilder.of("brands", messages.at("pop.facetBrand"), BRAND_SEARCH_MODEL).build());
+                FlexibleSelectFacetBuilder.of(FACET_CATEGORY_KEY, messages.at("pop.facetProductType"), HIERARCHICAL_SELECT, CATEGORY_SEARCH_MODEL, categoryHierarchyMapper).build(),
+                FlexibleSelectFacetBuilder.of(FACET_SIZE_KEY, messages.at("pop.facetSize"), SORTED_SELECT, SIZE_SEARCH_MODEL, sortedSizeFacetOptionMapper).countHidden(true).build(),
+                FlexibleSelectFacetBuilder.of(FACET_COLOR_KEY, messages.at("pop.facetColor"), SORTED_SELECT, COLOR_SEARCH_MODEL, sortedColorFacetOptionMapper).build(),
+                SelectFacetBuilder.of(FACET_BRAND_KEY, messages.at("pop.facetBrand"), BRAND_SEARCH_MODEL).build());
         return bindFacetsWithRequest(facets);
     }
 
     private List<SortOption<ProductProjection>> boundSortOptionList(final Messages messages) {
         final List<SortOption<ProductProjection>> sortOptions = asList(
-                SortOptionImpl.of(messages.at("pop.sortNew"), "new", true, MODIFIED_SORT_BY_DESC),
-                SortOptionImpl.of(messages.at("pop.sortPriceAsc"), "price-asc", false, PRICE_SORT_BY_ASC),
-                SortOptionImpl.of(messages.at("pop.sortPriceDesc"), "price-desc", false, PRICE_SORT_BY_DESC));
+                SortOptionImpl.of(messages.at("pop.sortNew"), SORT_NEW_KEY, true, MODIFIED_SORT_BY_DESC),
+                SortOptionImpl.of(messages.at("pop.sortPriceAsc"), SORT_PRICE_ASC_KEY, false, PRICE_SORT_BY_ASC),
+                SortOptionImpl.of(messages.at("pop.sortPriceDesc"), SORT_PRICE_DESC_KEY, false, PRICE_SORT_BY_DESC));
         return bindSortOptionsWithRequest(sortOptions);
     }
 
@@ -152,7 +159,7 @@ public class ProductOverviewPageController extends SunriseController {
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
                 result.getTotal(),
-                searchRequest.httpRequestIntent().getPath()));
+                sortedFacetedSearchRequest.httpRequestIntent().getPath()));
         return searchResultPromise;
     }
 

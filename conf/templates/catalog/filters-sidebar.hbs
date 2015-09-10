@@ -29,7 +29,7 @@
                                             <div class="panel-heading" id="heading-one" role="tab">
                                                 <h4 class="panel-title">
                                                     <a aria-controls="collapse-one" aria-expanded="true" class="" data-parent="#accordion" data-toggle="collapse" href="#{{value}}">
-                                                        {{value}} ({{count}})
+                                                        {{value}} {{#unless ../facet.countHidden}}({{count}}){{/unless}}
                                                     </a>
                                                 </h4>
                                             </div>
@@ -39,7 +39,7 @@
                                                         <div class="checkbox">
                                                             <label for="filter-{{../facet.key}}-{{value}}">
                                                                 <input id="filter-{{../facet.key}}-{{value}}" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}>
-                                                                {{value}} ({{count}})
+                                                                {{value}} {{#unless ../facet.countHidden}}({{count}}){{/unless}}
                                                             </label>
                                                         </div>
                                                     {{/each}}
@@ -58,7 +58,7 @@
                                 <div class="pop-filter-select">
                                     {{#each facet.limitedOptions}}
                                         <input id="filter-{{../facet.key}}-{{value}}" class="{{../facet.key}}-checkbox" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}/>
-                                        <label for="filter-{{../facet.key}}-{{value}}">{{value}} ({{count}})</label><br>
+                                        <label for="filter-{{../facet.key}}-{{value}}">{{value}} {{#unless ../facet.countHidden}}({{count}}){{/unless}}</label><br>
                                     {{/each}}
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                             <div class="brands-list">
                                 {{#each facet.limitedOptions}}
                                     <input id="filter-{{../facet.key}}-{{value}}" class="{{../facet.key}}-checkbox" type="checkbox" name="{{../facet.key}}" value="{{value}}" {{#if selected}}checked{{/if}}/>
-                                    <label for="filter-{{../facet.key}}-{{value}}">{{value}} ({{count}})</label><br>
+                                    <label for="filter-{{../facet.key}}-{{value}}">{{value}} {{#unless ../facet.countHidden}}({{count}}){{/unless}}</label><br>
                                 {{/each}}
                             </div>
                         </div>
