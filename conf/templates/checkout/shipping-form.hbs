@@ -20,37 +20,37 @@
             <div class="col-sm-6">
                 <div class="first-name">
                     <span class="text-uppercase">{{content.messages.form.firstName.label}}*</span><br>
-                    <input id="shipping-firstname-input" class="checkout-input-field" type="text">
+                    <input id="shipping-firstname-input" class="checkout-input-field" type="text" name="firstName" value="{{content.shippingFormContainer.form.firstName}}">
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="last-name">
                     <span class="text-uppercase">{{content.messages.form.lastName.label}}*</span><br>
-                    <input id="shipping-lastname-input" class="checkout-input-field" type="text">
+                    <input id="shipping-lastname-input" class="checkout-input-field" type="text" name="lastName" value="{{content.shippingFormContainer.form.lastName}}">
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="address-one">
                     <span class="text-uppercase">{{content.messages.form.addressOne.label}}*</span><br>
-                    <input id="shipping-addressone-input"class="checkout-input-field" type="text">
+                    <input id="shipping-addressone-input"class="checkout-input-field" type="text" name="streetName" value="{{content.shippingFormContainer.form.streetName}}">
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="address-two">
                     <span class="text-uppercase">{{content.messages.form.addressTwo.label}}*</span><br>
-                    <input id="shipping-addresstwo-input" class="checkout-input-field" type="text">
+                    <input id="shipping-addresstwo-input" class="checkout-input-field" type="text" name="additionalAddressInfo" value="{{content.shippingFormContainer.form.additionalAddressInfo}}">
                 </div>
             </div>
             <div class="col-sm-8">
                 <div class="city">
                     <span class="text-uppercase">{{content.messages.form.city.label}}*</span><br>
-                    <input id="shipping-city-input" class="checkout-input-field" type="text">
+                    <input id="shipping-city-input" class="checkout-input-field" type="text" name="city" value="{{content.shippingFormContainer.form.city}}">
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="post-code">
                     <span class="text-uppercase">{{content.messages.form.postCode.label}}*</span><br>
-                    <input id="shipping-postcode-input" class="checkout-input-field" type="text">
+                    <input id="shipping-postcode-input" class="checkout-input-field" type="text" name="postalCode" value="{{content.shippingFormContainer.form.postalCode}}">
                 </div>
             </div>
             <div class="col-sm-6">
@@ -66,7 +66,7 @@
             <div class="col-sm-6">
                 <div class="region">
                     <span class="text-uppercase">{{content.messages.form.region.label}}</span><br>
-                    <input id="shipping-region-input" class="checkout-input-field" type="text">
+                    <input id="shipping-region-input" class="checkout-input-field" type="text" name="region" value="{{content.shippingFormContainer.form.region}}">
                 </div>
             </div>
         </div>
@@ -75,14 +75,14 @@
             <div class="col-sm-6">
                 <div class="primary-telephone">
                     <span class="text-uppercase">{{content.messages.form.phone.label}}</span><br>
-                    <input id="shipping-telnumber-input" class="checkout-input-field" type="text">
+                    <input id="shipping-telnumber-input" class="checkout-input-field" type="text" name="phone" value="{{content.shippingFormContainer.form.phone}}">
                     <span class="tel-email-text">{{content.messages.form.phone.required}}</span>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="email-address">
                     <span class="text-uppercase">{{content.messages.form.email.label}}*</span><br>
-                    <input id="shipping-email-input" class="checkout-input-field" type="text">
+                    <input id="shipping-email-input" class="checkout-input-field" type="text" name="email" value="{{content.shippingFormContainer.form.email}}">
                     <span class="tel-email-text">{{content.messages.form.email.required}}</span>
                 </div>
             </div>
