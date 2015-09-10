@@ -4,7 +4,6 @@ import common.cms.CmsPage;
 import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.controllers.SunriseController;
-import common.pages.CategoryLinkDataFactory;
 import common.pages.LinkData;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.categories.CategoryTree;
@@ -194,7 +193,7 @@ public class ProductOverviewPageController extends SunriseController {
     /* This will probably be moved to some kind of factory classes */
 
     private List<LinkData> getBreadcrumbData(final UserContext userContext, final Reference<Category> category) {
-        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(userContext.locales());
+        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(reverseRouter(), userContext.locale());
         return categoryService.getBreadCrumbCategories(category).stream()
                 .map(categoryLinkDataFactory::create)
                 .collect(toList());
@@ -219,5 +218,4 @@ public class ProductOverviewPageController extends SunriseController {
     private PaginationData getPaginationData(final PagedSearchResult<ProductProjection> searchResult, int currentPage) {
         return new PaginationDataFactory(request(), searchResult, currentPage, pageSize, displayedPages).create();
     }
-
 }

@@ -2,15 +2,15 @@
   "breadcrumbs" : [
     {
       "text":"DAMEN",
-      "url":""
+      "url":"de/women"
     },
     {
       "text":"taschen",
-      "url":""
+      "url":"de/women-bags"
     },
     {
       "text":"handtaschen",
-      "url":""
+      "url":"de/women-bags-handtaschen"
     }
   ]
 }
