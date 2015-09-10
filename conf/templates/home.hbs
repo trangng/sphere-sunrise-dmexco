@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> common/htmlhead}}
+</head>
+
+<body>
+<div class="darkbg hidden"></div>
+{{> common/header}}
+
+<div class="home-page">
+    <div class="home-banner-option-one">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 nopadding banner-left">
+                    <img class="img-responsive" src="{{meta.assetsPath}}img/leather-691609.jpg" alt="Banner image" />
+                    <div class="banner-text">
+                        <h4 class="banner-title">{{content.bannerOption1.bannerLeft.text}}</h4>
+                        <p class="banner-paragraph">{{content.bannerOption1.bannerLeft.description}}</p>
+                        <a href="{{content.menLink.url}}" class="btn banner-btn">{{content.bannerOption1.bannerLeft.bannerBtn}}</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 nopadding banner-right">
+                    <img class="img-responsive" src="{{meta.assetsPath}}img/woman-692767_1920.jpg" alt="Banner image" />
+                    <div class="banner-text">
+                        <h4 class="banner-title">{{content.bannerOption1.bannerRight.text}}</h4>
+                        <p class="banner-paragraph">{{content.bannerOption1.bannerRight.description}}</p>
+                        <a href="{{content.womenLink.url}}" class="btn banner-btn">{{content.bannerOption1.bannerRight.bannerBtn}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {{#with content.suggestions}}
+            <h4 class="home-suggestions-title">{{text}}</h4>
+            <hr class="home-suggestions-hr">
+            <p class="home-suggestions-description">{{description}}</p>
+            <div class="row">
+                {{#each list}}
+                    <div class="col-xs-12 col-sm-6 col-md-3 ">
+                        {{> catalog/product-thumbnail context=..}}
+                    </div>
+                {{/each}}
+            </div>
+        {{/with}}
+
+        <div class="home-viewall">
+            <a href="" class="home-viewall-btn">View All New Products</a>
+            <hr class="home-viewall-hr">
+        </div>
+    </div>
+</div>
+
+{{> catalog/wishlist}}
+{{> common/footer}}
+{{> common/htmlscripts}}
+</body>
+</html>

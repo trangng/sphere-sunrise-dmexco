@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class TemplateServiceProvider implements Provider<TemplateService> {
     private static final String CONFIG_TEMPLATE_LOADERS = "handlebars.templateLoaders";
     private static final String CONFIG_FALLBACK_CONTEXTS = "handlebars.fallbackContexts";
+    private static final String CONFIG_CACHE_ENABLED = "handlebars.chache.enabled";
     private static final String CLASSPATH_TYPE = "classpath";
     private static final String FILE_TYPE = "file";
     private static final String TYPE_ATTR = "type";
@@ -31,11 +32,15 @@ public class TemplateServiceProvider implements Provider<TemplateService> {
 
     @Override
     public TemplateService get() {
+        final boolean cacheIsEnabled = configuration.getBoolean(CONFIG_CACHE_ENABLED);
         final List<TemplateLoader> templateLoaders = initializeTemplateLoaders(CONFIG_TEMPLATE_LOADERS);
         final List<TemplateLoader> fallbackContexts = initializeTemplateLoaders(CONFIG_FALLBACK_CONTEXTS);
-        Logger.debug("Provide HandlebarsTemplateService: "
-                + templateLoaders.stream().map(TemplateLoader::getPrefix).collect(joining(", ")));
-        return HandlebarsTemplateService.of(templateLoaders, fallbackContexts);
+        final String templatePath = templateLoaders.stream().map(TemplateLoader::getPrefix).collect(joining(", "));
+
+        Logger.debug("Provide HandlebarsTemplateService: {}", templatePath);
+        Logger.debug("HandlebarsTemplateService cache enabled: {}", cacheIsEnabled);
+
+        return HandlebarsTemplateService.of(templateLoaders, fallbackContexts, cacheIsEnabled);
     }
 
     private List<TemplateLoader> initializeTemplateLoaders(final String configKey) {

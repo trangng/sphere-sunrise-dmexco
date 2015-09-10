@@ -36,6 +36,7 @@ public class SelectFacetTest {
         final SelectFacet<ProductProjection> facet = SelectFacetBuilder.of(KEY, LABEL, SEARCH_MODEL)
                 .facetResult(FACET_RESULT_WITH_THREE_TERMS)
                 .selectedValues(SELECTED_VALUE_TWO)
+                .countHidden(true)
                 .matchingAll(true)
                 .multiSelect(false)
                 .threshold(3L)
@@ -43,6 +44,7 @@ public class SelectFacetTest {
                 .build();
         assertThat(facet.getKey()).isEqualTo(KEY);
         assertThat(facet.getLabel()).isEqualTo(LABEL);
+        assertThat(facet.isCountHidden()).isTrue();
         assertThat(facet.getType()).isEqualTo(SELECT);
         assertThat(facet.getSearchModel()).isEqualTo(SEARCH_MODEL.untyped());
         assertThat(facet.getFacetResult()).contains(FACET_RESULT_WITH_THREE_TERMS);
@@ -61,6 +63,7 @@ public class SelectFacetTest {
         final SelectFacet<ProductProjection> facet = SelectFacetBuilder.of(KEY, LABEL, SEARCH_MODEL).build();
         assertThat(facet.getKey()).isEqualTo(KEY);
         assertThat(facet.getLabel()).isEqualTo(LABEL);
+        assertThat(facet.isCountHidden()).isFalse();
         assertThat(facet.getType()).isEqualTo(SELECT);
         assertThat(facet.getSearchModel()).isEqualTo(SEARCH_MODEL.untyped());
         assertThat(facet.getFacetResult()).isEmpty();

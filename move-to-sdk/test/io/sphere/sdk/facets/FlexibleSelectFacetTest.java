@@ -37,6 +37,7 @@ public class FlexibleSelectFacetTest {
         final FlexibleSelectFacet<ProductProjection> facet = FlexibleSelectFacetBuilder.of(KEY, LABEL, SORTED_SELECT, SEARCH_MODEL, MAPPER)
                 .facetResult(FACET_RESULT_WITH_THREE_TERMS)
                 .selectedValues(SELECTED_VALUE_TWO)
+                .countHidden(true)
                 .matchingAll(true)
                 .multiSelect(false)
                 .threshold(3L)
@@ -44,6 +45,7 @@ public class FlexibleSelectFacetTest {
                 .build();
         assertThat(facet.getKey()).isEqualTo(KEY);
         assertThat(facet.getLabel()).isEqualTo(LABEL);
+        assertThat(facet.isCountHidden()).isTrue();
         assertThat(facet.getType()).isEqualTo(SORTED_SELECT);
         assertThat(facet.getSearchModel()).isEqualTo(SEARCH_MODEL.untyped());
         assertThat(facet.getMapper()).isEqualTo(MAPPER);
@@ -63,6 +65,7 @@ public class FlexibleSelectFacetTest {
         final FlexibleSelectFacet<ProductProjection> facet = FlexibleSelectFacetBuilder.of(KEY, LABEL, SORTED_SELECT, SEARCH_MODEL, MAPPER).build();
         assertThat(facet.getKey()).isEqualTo(KEY);
         assertThat(facet.getLabel()).isEqualTo(LABEL);
+        assertThat(facet.isCountHidden()).isFalse();
         assertThat(facet.getType()).isEqualTo(SORTED_SELECT);
         assertThat(facet.getSearchModel()).isEqualTo(SEARCH_MODEL.untyped());
         assertThat(facet.getMapper()).isEqualTo(MAPPER);

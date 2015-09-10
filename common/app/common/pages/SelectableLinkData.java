@@ -1,10 +1,14 @@
 package common.pages;
 
 public class SelectableLinkData extends LinkData {
-    private final boolean selected;
+    private boolean selected;
 
     public SelectableLinkData(final String text, final String url, final boolean selected) {
         super(text, url);
+        this.selected = selected;
+    }
+
+    public void setSelected(final boolean selected) {
         this.selected = selected;
     }
 

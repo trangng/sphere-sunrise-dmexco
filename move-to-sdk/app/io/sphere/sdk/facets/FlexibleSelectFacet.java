@@ -17,11 +17,11 @@ import java.util.List;
 public final class FlexibleSelectFacet<T> extends BaseSelectFacet<T> {
     private final FacetOptionMapper mapper;
 
-    FlexibleSelectFacet(final String key, final String label, final FacetType type, final UntypedSearchModel<T> searchModel,
-                        final boolean multiSelect, final boolean matchingAll, final List<String> selectedValues,
-                        @Nullable final TermFacetResult termFacetResult, @Nullable final Long threshold, @Nullable final Long limit,
-                        final FacetOptionMapper mapper) {
-        super(key, label, type, searchModel, multiSelect, matchingAll, selectedValues, termFacetResult, threshold, limit);
+    FlexibleSelectFacet(final String key, final String label, final boolean countHidden, final FacetType type,
+                        final UntypedSearchModel<T> searchModel, final boolean multiSelect, final boolean matchingAll,
+                        final List<String> selectedValues, @Nullable final TermFacetResult termFacetResult,
+                        @Nullable final Long threshold, @Nullable final Long limit, final FacetOptionMapper mapper) {
+        super(key, label, countHidden, type, searchModel, multiSelect, matchingAll, selectedValues, termFacetResult, threshold, limit);
         this.mapper = mapper;
     }
 
