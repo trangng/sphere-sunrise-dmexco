@@ -17,5 +17,7 @@ public interface ReverseRouter {
     Call cart(final String languageTag);
 
     Call checkoutShipping(final String languageTag);
+
+    Call processCheckoutShipping(final String languageTag);
 }
 

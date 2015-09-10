@@ -11,6 +11,7 @@ public class CheckoutShippingContent extends PageContent {
     private final Messages messages;
     private final StepWidgetData stepWidget = new StepWidgetData();
     private final CartItems cartItems;
+    private final CheckoutShippingFormContainer shippingFormContainer;
 
     public CheckoutShippingContent(final Cart cart, final Messages messages, final ReverseRouter reverseRouter, final UserContext userContext) {
         final String shippingStepUrl = reverseRouter.checkoutShipping(userContext.locale().toLanguageTag()).url();
@@ -18,6 +19,9 @@ public class CheckoutShippingContent extends PageContent {
         stepWidget.setShippingStepActive(true);
         this.messages = messages;
         cartItems = CartItems.of(cart, userContext, messages);
+        shippingFormContainer = new CheckoutShippingFormContainer();
+        shippingFormContainer.setFormAction(reverseRouter.processCheckoutShipping(userContext.locale().toLanguageTag()).url());
+        shippingFormContainer.setForm(new CheckoutShippingFormData(cart, userContext));
     }
 
     @Override
@@ -39,5 +43,9 @@ public class CheckoutShippingContent extends PageContent {
 
     public StaticCartDetailPageContent getStatic() {
         return staticData;
+    }
+
+    public CheckoutShippingFormContainer getShippingFormContainer() {
+        return shippingFormContainer;
     }
 }

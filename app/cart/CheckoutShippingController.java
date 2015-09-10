@@ -4,6 +4,7 @@ import common.contexts.UserContext;
 import common.controllers.ControllerDependency;
 import common.pages.SunrisePageData;
 import io.sphere.sdk.carts.Cart;
+import io.sphere.sdk.models.Base;
 import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Result;
@@ -31,4 +32,5 @@ public class CheckoutShippingController extends CartController {
     public F.Promise<Result> process(final String languageTag) {
         return F.Promise.pure(TODO);
     }
+
 }

@@ -53,4 +53,9 @@ public class DefaultTestReverseRouter implements ReverseRouter {
     public Call checkoutShipping(final String languageTag) {
         return null;
     }
+
+    @Override
+    public Call processCheckoutShipping(final String languageTag) {
+        return null;
+    }
 }
