@@ -9,13 +9,17 @@ public class PageHeader extends Base {
     private final CollectionData<SelectableData> countries;
     private final NavMenuData navMenuData;
     private final MiniCartData miniCartData;
+    private final String searchUrl;
+    private final String queryParamName;
 
-    public PageHeader(final Messages messages, final String title, final CollectionData<SelectableData> countries, final NavMenuData navMenuData, final MiniCartData miniCartData) {
+    public PageHeader(final Messages messages, final String title, final CollectionData<SelectableData> countries, final NavMenuData navMenuData, final MiniCartData miniCartData, final String searchUrl, final String queryParamName) {
         this.messages = messages;
         this.countries = countries;
         this.title = title;
         this.navMenuData = navMenuData;
         this.miniCartData = miniCartData;
+        this.searchUrl = searchUrl;
+        this.queryParamName = queryParamName;
     }
 
     public String getTitle() {
@@ -44,5 +48,13 @@ public class PageHeader extends Base {
 
     public CollectionData getCountries() {
         return countries;
+    }
+
+    public String getSearchUrl() {
+        return searchUrl;
+    }
+
+    public String getSearchInputName() {
+        return queryParamName;
     }
 }

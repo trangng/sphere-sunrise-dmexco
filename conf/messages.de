@@ -5,6 +5,9 @@ header.help = HILFE
 header.callUs = KONTAKT +44 123 456 000
 header.countries = REGION
 
+home.pageName = Home
+search.resultsForText = Ergebnisse für "{0}"
+
 pop.productCountSeparator = von
 
 pdp.writeFirstRatingText = Erste Rezension schreiben

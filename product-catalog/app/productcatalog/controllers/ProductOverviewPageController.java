@@ -80,7 +80,8 @@ public class ProductOverviewPageController extends SunriseController {
             final List<Category> childrenCategories = categories().findChildren(category.get());
             final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), childrenCategories, messages);
             final List<SortOption<ProductProjection>> boundSortOptions = boundSortOptionList(messages);
-            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), page, boundFacets, boundSortOptions);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise =
+                    searchProducts(getProductProjectionSearch(category.get()), boundFacets, boundSortOptions, page);
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
@@ -90,6 +91,22 @@ public class ProductOverviewPageController extends SunriseController {
             );
         }
         return F.Promise.pure(notFound("Category not found: " + categorySlug));
+    }
+
+    public F.Promise<Result> search(final String languageTag, final String searchTerm, final int page) {
+        final UserContext userContext = userContext(languageTag);
+        final Messages messages = messages(userContext);
+        final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), categories().getRoots(), messages);
+        final List<SortOption<ProductProjection>> boundSortOptions = boundSortOptionList(messages);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise =
+                    searchProducts(getProductProjectionSearch(userContext.locale(), searchTerm), boundFacets, boundSortOptions, page);
+            final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
+            return searchResultPromise.flatMap(searchResult ->
+                            cmsPromise.map(cms -> {
+                                final ProductOverviewPageContent content = getPopPageData(userContext, messages, searchTerm, searchResult, boundFacets, page);
+                                return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
+                            })
+            );
     }
 
     private List<Facet<ProductProjection>> boundFacetList(final Locale locale, final List<Category> childrenCategories, final Messages messages) {
@@ -127,6 +144,22 @@ public class ProductOverviewPageController extends SunriseController {
         return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, sortingData, paginationData);
     }
 
+    private ProductOverviewPageContent getPopPageData(final UserContext userContext,
+                                                      final Messages messages,
+                                                      final String searchTerm,
+                                                      final PagedSearchResult<ProductProjection> searchResult,
+                                                      final List<Facet<ProductProjection>> boundFacets,
+                                                      final int currentPage) {
+        final String additionalTitle = "";
+        final ProductOverviewPageStaticData staticData = new ProductOverviewPageStaticData(messages(userContext));
+        final List<SelectableLinkData> breadcrumbData = getSearchBreadCrumbData(messages(userContext), userContext.locale().getLanguage(), searchTerm);
+        final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
+        final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
+        final List<SortOption<ProductProjection>> sortingData = boundSortOptionList(messages);
+        final PaginationData paginationData = getPaginationData(searchResult, currentPage);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, sortingData, paginationData);
+    }
+
     /* Maybe move to some common controller class */
 
     private static <T> List<Facet<T>> bindFacetsWithRequest(final List<Facet<T>> facets) {
@@ -148,18 +181,24 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* Move to product service */
 
-    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final int page,
-                                                                           final List<Facet<ProductProjection>> boundFacets,
-                                                                           final List<SortOption<ProductProjection>> sortOptions) {
-        final int offset = (page - 1) * pageSize;
+    private ProductProjectionSearch getProductProjectionSearch(final Category category) {
         final List<String> categoriesId = getCategoriesAsFlatList(categories(), singletonList(category)).stream().map(Category::getId).collect(toList());
-        final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
-                .withQueryFilters(model -> model.categories().id().filtered().by(categoriesId))
-                .withOffset(offset)
-                .withLimit(pageSize);
-        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
+        return ProductProjectionSearch.ofCurrent()
+                .withQueryFilters(model -> model.categories().id().filtered().by(categoriesId));
+    }
+
+    private ProductProjectionSearch getProductProjectionSearch(final Locale locale, final String searchTerm) {
+        return ProductProjectionSearch.ofCurrent().withText(locale, searchTerm);
+    }
+
+    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final ProductProjectionSearch searchRequest,
+                                                                           final List<Facet<ProductProjection>> boundFacets,
+                                                                           final List<SortOption<ProductProjection>> sortOptions,
+                                                                           final int page) {
+        final int offset = (page - 1) * pageSize;
+        final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest.withOffset(offset).withLimit(pageSize), boundFacets);
         final ProductProjectionSearch sortedFacetedSearchRequest = getSortedSearchRequest(facetedSearchRequest, sortOptions);
-        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(sortedFacetedSearchRequest);
+        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
                 result.getTotal(),
@@ -207,6 +246,13 @@ public class ProductOverviewPageController extends SunriseController {
         final BreadcrumbDataFactory breadcrumbDataFactory = BreadcrumbDataFactory.of(reverseRouter(), userContext.locale());
         final List<Category> breadcrumbCategories = categoryService.getBreadCrumbCategories(category);
         return breadcrumbDataFactory.create(breadcrumbCategories);
+    }
+
+    private List<SelectableLinkData> getSearchBreadCrumbData(final Messages messages, final String languageTag, final String searchTerm) {
+        return asList(
+                new SelectableLinkData(messages.at("home.pageName"), reverseRouter().home(languageTag).url(), false),
+                new SelectableLinkData(messages.at("search.resultsForText", searchTerm), reverseRouter().search(languageTag, searchTerm, 1).url(), true)
+        );
     }
 
     private ProductListData getProductListData(final List<ProductProjection> productList, final UserContext userContext) {
