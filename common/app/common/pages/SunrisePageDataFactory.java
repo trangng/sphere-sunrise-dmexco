@@ -16,6 +16,8 @@ import static java.util.stream.Collectors.toList;
 import static play.mvc.Controller.session;
 
 public class SunrisePageDataFactory {
+    private static final String SEARCH_QUERY_PARAM_NAME = "q";
+
     private final Messages messages;
     private final UserContext userContext;
     private final ProjectContext projectContext;
@@ -48,7 +50,7 @@ public class SunrisePageDataFactory {
         final NavMenuData navMenuData = getNavMenuData();
         final MiniCartData miniCartData = getMiniCartData();
         final String searchUrl = reverseRouter.search(userContext.locale().toLanguageTag(), "", 1).url();
-        final String queryParamName = "searchTerm";
+        final String queryParamName = SEARCH_QUERY_PARAM_NAME;
         return new PageHeader(messages, title, countries, navMenuData, miniCartData, searchUrl, queryParamName);
     }
 
