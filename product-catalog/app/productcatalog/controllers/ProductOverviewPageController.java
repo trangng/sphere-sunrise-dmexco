@@ -16,8 +16,11 @@ import io.sphere.sdk.products.search.ProductProjectionSearchModel;
 import io.sphere.sdk.search.*;
 import play.Configuration;
 import play.Logger;
+import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Result;
+import productcatalog.models.SortOption;
+import productcatalog.models.SortOptionImpl;
 import productcatalog.pages.*;
 import productcatalog.services.CategoryService;
 import productcatalog.services.ProductProjectionService;
@@ -28,6 +31,8 @@ import java.util.*;
 
 import static io.sphere.sdk.facets.DefaultFacetType.HIERARCHICAL_SELECT;
 import static io.sphere.sdk.facets.DefaultFacetType.SORTED_SELECT;
+import static io.sphere.sdk.search.SimpleSearchSortDirection.ASC;
+import static io.sphere.sdk.search.SimpleSearchSortDirection.DESC;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -39,6 +44,9 @@ public class ProductOverviewPageController extends SunriseController {
     private static final StringSearchModel<ProductProjection, ?> COLOR_SEARCH_MODEL = ProductProjectionSearchModel.of().allVariants().attribute().ofLocalizableEnum("color").key();
     private static final StringSearchModel<ProductProjection, ?> SIZE_SEARCH_MODEL = ProductProjectionSearchModel.of().allVariants().attribute().ofEnum("commonSize").label();
     private static final StringSearchModel<ProductProjection, ?> CATEGORY_SEARCH_MODEL = ProductProjectionSearchModel.of().categories().id();
+    private static final SearchSort<ProductProjection> MODIFIED_SORT_BY_DESC = ProductProjectionSearchModel.of().lastModifiedAt().sorted(DESC);
+    private static final SearchSort<ProductProjection> PRICE_SORT_BY_DESC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(DESC);
+    private static final SearchSort<ProductProjection> PRICE_SORT_BY_ASC = ProductProjectionSearchModel.of().allVariants().price().centAmount().sorted(ASC);
     private final int pageSize;
     private final int displayedPages;
     private final ProductProjectionService productService;
@@ -56,15 +64,17 @@ public class ProductOverviewPageController extends SunriseController {
 
     public F.Promise<Result> show(final String locale, final String categorySlug, final int page) {
         final UserContext userContext = userContext(locale);
+        final Messages messages = messages(userContext);
         final Optional<Category> category = categories().findBySlug(userContext.locale(), categorySlug);
         if (category.isPresent()) {
             final List<Category> childrenCategories = categories().findChildren(category.get());
-            final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), childrenCategories);
-            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), boundFacets, page);
+            final List<Facet<ProductProjection>> boundFacets = boundFacetList(userContext.locale(), childrenCategories, messages);
+            final List<SortOption<ProductProjection>> boundSortOptions = boundSortOptionList(messages);
+            final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = searchProducts(category.get(), page, boundFacets, boundSortOptions);
             final F.Promise<CmsPage> cmsPromise = cmsService().getPage(userContext.locale(), "pop");
             return searchResultPromise.flatMap(searchResult ->
                             cmsPromise.map(cms -> {
-                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, searchResult, boundFacets, page, category.get().toReference());
+                                final ProductOverviewPageContent content = getPopPageData(cms, userContext, messages, searchResult, boundFacets, page, category.get().toReference());
                                 return ok(templateService().renderToHtml("pop", pageData(userContext, content)));
                             })
             );
@@ -72,20 +82,28 @@ public class ProductOverviewPageController extends SunriseController {
         return F.Promise.pure(notFound("Category not found: " + categorySlug));
     }
 
-    private List<Facet<ProductProjection>> boundFacetList(final Locale locale, final List<Category> childrenCategories) {
+    private List<Facet<ProductProjection>> boundFacetList(final Locale locale, final List<Category> childrenCategories, final Messages messages) {
         final List<Category> subcategories = getCategoriesAsFlatList(categories(), childrenCategories);
         final FacetOptionMapper categoryHierarchyMapper = HierarchicalCategoryFacetOptionMapper.of(subcategories, singletonList(locale));
         final FacetOptionMapper sortedColorFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
         final FacetOptionMapper sortedSizeFacetOptionMapper = SortedFacetOptionMapper.of(emptyList());
         final List<Facet<ProductProjection>> facets = asList(
-                FlexibleSelectFacetBuilder.of("productType", "Product Type", HIERARCHICAL_SELECT, CATEGORY_SEARCH_MODEL, categoryHierarchyMapper).build(),
-                FlexibleSelectFacetBuilder.of("size", "Size", SORTED_SELECT, SIZE_SEARCH_MODEL, sortedSizeFacetOptionMapper).build(),
-                FlexibleSelectFacetBuilder.of("color", "Color", SORTED_SELECT, COLOR_SEARCH_MODEL, sortedColorFacetOptionMapper).build(),
-                SelectFacetBuilder.of("brands", "Brands", BRAND_SEARCH_MODEL).build());
+                FlexibleSelectFacetBuilder.of("productType", messages.at("pop.facetProductType"), HIERARCHICAL_SELECT, CATEGORY_SEARCH_MODEL, categoryHierarchyMapper).build(),
+                FlexibleSelectFacetBuilder.of("size", messages.at("pop.facetSize"), SORTED_SELECT, SIZE_SEARCH_MODEL, sortedSizeFacetOptionMapper).build(),
+                FlexibleSelectFacetBuilder.of("color", messages.at("pop.facetColor"), SORTED_SELECT, COLOR_SEARCH_MODEL, sortedColorFacetOptionMapper).build(),
+                SelectFacetBuilder.of("brands", messages.at("pop.facetBrand"), BRAND_SEARCH_MODEL).build());
         return bindFacetsWithRequest(facets);
     }
 
-    private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext,
+    private List<SortOption<ProductProjection>> boundSortOptionList(final Messages messages) {
+        final List<SortOption<ProductProjection>> sortOptions = asList(
+                SortOptionImpl.of(messages.at("pop.sortNew"), "new", true, MODIFIED_SORT_BY_DESC),
+                SortOptionImpl.of(messages.at("pop.sortPriceAsc"), "price-asc", false, PRICE_SORT_BY_ASC),
+                SortOptionImpl.of(messages.at("pop.sortPriceDesc"), "price-desc", false, PRICE_SORT_BY_DESC));
+        return bindSortOptionsWithRequest(sortOptions);
+    }
+
+    private ProductOverviewPageContent getPopPageData(final CmsPage cms, final UserContext userContext, final Messages messages,
                                                       final PagedSearchResult<ProductProjection> searchResult,
                                                       final List<Facet<ProductProjection>> boundFacets, final int currentPage,
                                                       final Reference<Category> category) {
@@ -95,7 +113,8 @@ public class ProductOverviewPageController extends SunriseController {
         final ProductListData productListData = getProductListData(searchResult.getResults(), userContext);
         final FilterListData filterListData = getFilterListData(searchResult, boundFacets);
         final PaginationData paginationData = getPaginationData(searchResult, currentPage);
-        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, paginationData);
+        final List<SortOption<ProductProjection>> sortingData = boundSortOptionList(messages);
+        return new ProductOverviewPageContent(additionalTitle, staticData, breadcrumbData, productListData, filterListData, sortingData, paginationData);
     }
 
     /* Maybe move to some common controller class */
@@ -107,9 +126,21 @@ public class ProductOverviewPageController extends SunriseController {
         }).collect(toList());
     }
 
+    private static <T> List<SortOption<T>> bindSortOptionsWithRequest(final List<SortOption<T>> sortOptions) {
+        final String sortCriteria = Optional.ofNullable(request().getQueryString("sort")).orElse("");
+        return sortOptions.stream()
+                .map(option -> {
+                    final boolean isSelected = sortCriteria.equals(option.getValue());
+                    return option.withSelected(isSelected);
+                })
+                .collect(toList());
+    }
+
     /* Move to product service */
 
-    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final List<Facet<ProductProjection>> boundFacets, final int page) {
+    private F.Promise<PagedSearchResult<ProductProjection>> searchProducts(final Category category, final int page,
+                                                                           final List<Facet<ProductProjection>> boundFacets,
+                                                                           final List<SortOption<ProductProjection>> sortOptions) {
         final int offset = (page - 1) * pageSize;
         final List<String> categoriesId = getCategoriesAsFlatList(categories(), singletonList(category)).stream().map(Category::getId).collect(toList());
         final ProductProjectionSearch searchRequest = ProductProjectionSearch.ofCurrent()
@@ -117,7 +148,8 @@ public class ProductOverviewPageController extends SunriseController {
                 .withOffset(offset)
                 .withLimit(pageSize);
         final ProductProjectionSearch facetedSearchRequest = getFacetedSearchRequest(searchRequest, boundFacets);
-        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(facetedSearchRequest);
+        final ProductProjectionSearch sortedFacetedSearchRequest = getSortedSearchRequest(facetedSearchRequest, sortOptions);
+        final F.Promise<PagedSearchResult<ProductProjection>> searchResultPromise = sphere().execute(sortedFacetedSearchRequest);
         searchResultPromise.onRedeem(result -> Logger.debug("Fetched {} out of {} products with request {}",
                 result.size(),
                 result.getTotal(),
@@ -137,7 +169,8 @@ public class ProductOverviewPageController extends SunriseController {
 
     /* Maybe export it to generic FacetedSearch class */
 
-    private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest, final List<Facet<T>> facets) {
+    private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getFacetedSearchRequest(final S baseSearchRequest,
+                                                                                                 final List<Facet<T>> facets) {
         S searchRequest = baseSearchRequest;
         for (final Facet<T> facet : facets) {
             final List<FilterExpression<T>> filterExpressions = facet.getFilterExpressions();
@@ -147,6 +180,15 @@ public class ProductOverviewPageController extends SunriseController {
                     .plusResultFilters(filterExpressions);
         }
         return searchRequest;
+    }
+
+    private static <T, S extends MetaModelSearchDsl<T, S, M, E>, M, E> S getSortedSearchRequest(final S searchRequest,
+                                                                                                final List<SortOption<T>> sortOptions) {
+        return sortOptions.stream()
+                .filter(SortOption::isSelected)
+                .findFirst()
+                .map(option -> searchRequest.withSort(option.getSortModel()))
+                .orElse(searchRequest);
     }
 
     /* This will probably be moved to some kind of factory classes */
