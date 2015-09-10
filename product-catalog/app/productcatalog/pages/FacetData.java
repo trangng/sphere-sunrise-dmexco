@@ -7,7 +7,7 @@ import io.sphere.sdk.models.Base;
 import static io.sphere.sdk.facets.DefaultFacetType.*;
 
 public class FacetData extends Base {
-    private Facet facet;
+    private final Facet facet;
 
     public FacetData(final Facet<?> facet) {
         this.facet = facet;
