@@ -1,10 +1,11 @@
 cdp.totalItems = {0,choice,0#kein|1#ein|1<{0}} Artikel im Warenkorb
 
-common.header.title = Sunrise -
-common.header.stores = FILIALEN
-common.header.help = HILFE
-common.header.callUs = KONTAKT +44 123 456 000
-common.header.countries = REGION
+header.stores = FILIALEN
+header.help = HILFE
+header.callUs = KONTAKT +44 123 456 000
+header.countries = REGION
+
+pop.productCountSeparator = von
 
 pdp.writeFirstRatingText = Erste Rezension schreiben
 
@@ -25,8 +26,10 @@ pdp.addToWishlistText = Auf die Wunschliste
 pdp.availableText = Verfügbar
 pdp.productDetailsText = Produkt Details
 pdp.deliveryAndReturnsText = Versand & Retour
-pdp.deliveryText = Versand
-pdp.returnsText = Retour
+pdp.standardDeliveryText = Standardversand - 3 € oder KOSTENLOS ab einem Bestellwert von 29,99 €. Lieferung innerhalb von 4 Werktagen.
+pdp.expressDeliveryText = Expressversand - 6 €. Lieferung innerhalb von 2 Werktagen.
+pdp.freeReturnsText = Kostenlose Rücksendung bei allen Bestellungen.
+pdp.moreDeliveryInfoText = Mehr Infos hier › (link to FAQ Delivery & returns)
 pdp.youMayLikeText = Das könnte Ihnen auch gefallen
 pdp.saleText = Angebot
 pdp.newText = Neu

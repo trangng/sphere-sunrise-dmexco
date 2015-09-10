@@ -40,6 +40,11 @@ public class DefaultTestReverseRouter implements ReverseRouter {
     }
 
     @Override
+    public Call changeLineItemQuantityForm(final String languageTag) {
+        return null;
+    }
+
+    @Override
     public Call cart(final String languageTag) {
         return null;
     }
