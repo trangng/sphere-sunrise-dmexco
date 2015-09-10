@@ -101,7 +101,7 @@ public class ProductDetailPageController extends SunriseController {
                                                                  final ProductVariant productVariant) {
         final String additionalTitle = productProjection.getName().find(userContext.locales()).orElse("");
         final PdpStaticData staticData = getStaticData(cms);
-        final List<LinkData> breadcrumbData = getBreadcrumbData(userContext, productProjection);
+        final List<SelectableLinkData> breadcrumbData = getBreadcrumbData(userContext, productProjection);
         final ProductData productData = getProductData(userContext, productProjection, productVariant);
         final List<ShippingRateData> deliveryData = getDeliveryData(userContext);
         final List<ProductData> suggestionData = getSuggestionData(userContext, suggestions);
@@ -113,12 +113,10 @@ public class ProductDetailPageController extends SunriseController {
         return new PdpStaticData(cms, BagItemDataFactory.of().create(100), RatingDataFactory.of(cms).create());
     }
 
-    private List<LinkData> getBreadcrumbData(final UserContext userContext, final ProductProjection productProjection) {
-        final CategoryLinkDataFactory categoryLinkDataFactory = CategoryLinkDataFactory.of(userContext.locales());
-        final List<Category> breadcrumbs = getBreadcrumbsForProduct(productProjection);
-        return breadcrumbs.stream()
-                .map(categoryLinkDataFactory::create)
-                .collect(toList());
+    private List<SelectableLinkData> getBreadcrumbData(final UserContext userContext, final ProductProjection productProjection) {
+        final BreadcrumbDataFactory breadcrumbDataFactory = BreadcrumbDataFactory.of(reverseRouter(), userContext.locale());
+        final List<Category> breadcrumbCategories = getBreadcrumbsForProduct(productProjection);
+        return breadcrumbDataFactory.create(breadcrumbCategories);
     }
 
     private List<Category> getBreadcrumbsForProduct(final ProductProjection product) {

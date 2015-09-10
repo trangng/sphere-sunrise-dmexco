@@ -36,4 +36,9 @@ public class ReverseRouterImpl extends Base implements ReverseRouter {
     public Call changeLineItemQuantityForm(final String languageTag) {
         return routes.LineItemQuantityChangeController.process(languageTag);
     }
+
+    @Override
+    public Call search(final String languageTag, final String searchTerm, final int page) {
+        return productcatalog.controllers.routes.ProductOverviewPageController.search(languageTag, searchTerm, page);
+    }
 }

@@ -1,5 +1,7 @@
-package common.pages;
+package productcatalog.pages;
 
+import common.pages.LinkData;
+import common.pages.ReverseRouter;
 import io.sphere.sdk.categories.Category;
 
 import java.util.Locale;
@@ -17,11 +19,11 @@ public class CategoryLinkDataFactory {
         return new CategoryLinkDataFactory(reverseRouter, locale);
     }
 
-    public SelectableLinkData create(final Category category) {
+    public LinkData create(final Category category) {
         final String label = getLabel(category);
         final String url = getUrl(category);
 
-        return new SelectableLinkData(label, url, false);
+        return new LinkData(label, url);
     }
 
     private String getLabel(final Category category) {

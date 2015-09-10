@@ -16,7 +16,7 @@ public final class SelectFacetBuilder<T> extends BaseSelectFacetBuilder<SelectFa
 
     @Override
     public SelectFacet<T> build() {
-        return new SelectFacetImpl<>(getKey(), getLabel(), getType(), searchModel, multiSelect, matchingAll, selectedValues,
+        return new SelectFacetImpl<>(getKey(), getLabel(), countHidden, getType(), searchModel, multiSelect, matchingAll, selectedValues,
                 facetResult.orElse(null), threshold.orElse(null), limit.orElse(null));
     }
 
@@ -56,6 +56,7 @@ public final class SelectFacetBuilder<T> extends BaseSelectFacetBuilder<SelectFa
 
     public static <T> SelectFacetBuilder<T> of(final SelectFacetImpl<T> facet) {
         final SelectFacetBuilder<T> builder = new SelectFacetBuilder<>(facet.getKey(), facet.getLabel(), facet.getSearchModel());
+        builder.countHidden = facet.isCountHidden();
         builder.multiSelect = facet.isMultiSelect();
         builder.matchingAll = facet.isMatchingAll();
         builder.threshold = facet.getThreshold();

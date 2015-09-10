@@ -5,7 +5,19 @@ header.help = HELP
 header.callUs = CALL US ON +44 123 456 000
 header.countries = Location
 
+home.pageName = Home
+search.resultsForText = Results for "{0}"
+
 pop.productCountSeparator = of
+
+pop.facetProductType = Product Type
+pop.facetSize = Size
+pop.facetColor = Color
+pop.facetBrand = Brands
+
+pop.sortNew = What''s new
+pop.sortPriceAsc = Price low to high
+pop.sortPriceDesc = Price high to low
 
 pdp.writeFirstRatingText = Write first review
 

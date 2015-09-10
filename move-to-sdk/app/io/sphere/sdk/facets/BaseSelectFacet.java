@@ -18,10 +18,11 @@ abstract class BaseSelectFacet<T> extends BaseFacet<T> implements SelectFacet<T>
     private final Optional<Long> threshold;
     private final Optional<Long> limit;
 
-    protected BaseSelectFacet(final String key, final String label, final FacetType type, final UntypedSearchModel<T> searchModel,
-                              final boolean multiSelect, final boolean matchingAll, final List<String> selectedValues,
-                              @Nullable final TermFacetResult facetResult, @Nullable final Long threshold, @Nullable final Long limit) {
-        super(key, label, type, searchModel);
+    protected BaseSelectFacet(final String key, final String label, final boolean countHidden, final FacetType type,
+                              final UntypedSearchModel<T> searchModel, final boolean multiSelect, final boolean matchingAll,
+                              final List<String> selectedValues, @Nullable final TermFacetResult facetResult,
+                              @Nullable final Long threshold, @Nullable final Long limit) {
+        super(key, label, countHidden, type, searchModel);
         if (threshold != null && limit != null && threshold > limit) {
             throw new InvalidSelectFacetConstraintsException(threshold, limit);
         }
