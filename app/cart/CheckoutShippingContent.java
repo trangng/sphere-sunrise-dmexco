@@ -18,7 +18,7 @@ public class CheckoutShippingContent extends PageContent {
         stepWidget.setShippingStepUrl(shippingStepUrl);
         stepWidget.setShippingStepActive(true);
         this.messages = messages;
-        cartItems = CartItems.of(cart, userContext, messages);
+        cartItems = CartItems.of(cart, userContext, messages, reverseRouter);
         shippingFormContainer = new CheckoutShippingFormContainer(userContext);
         shippingFormContainer.setFormAction(reverseRouter.processCheckoutShipping(userContext.locale().toLanguageTag()).url());
         shippingFormContainer.setForm(new CheckoutShippingFormData(cart));

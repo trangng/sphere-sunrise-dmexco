@@ -16,7 +16,7 @@ public class CartDetailPageContent extends PageContent {
 
     public CartDetailPageContent(final Cart cart, final UserContext userContext, final Messages messages, final ReverseRouter reverseRouter) {
         this.messages = messages;
-        cartItems = CartItems.of(cart, userContext, messages);
+        cartItems = CartItems.of(cart, userContext, messages, reverseRouter);
         final String languageTag = userContext.locale().toLanguageTag();
         editQuantityFormUrl = reverseRouter.changeLineItemQuantityForm(languageTag).url();
         checkoutShippingUrl = reverseRouter.checkoutShipping(languageTag).url();

@@ -5,7 +5,9 @@ import common.controllers.ControllerDependency;
 import common.pages.SunrisePageData;
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
+import io.sphere.sdk.carts.commands.updateactions.SetBillingAddress;
 import io.sphere.sdk.carts.commands.updateactions.SetShippingAddress;
+import io.sphere.sdk.commands.UpdateAction;
 import io.sphere.sdk.models.Address;
 import play.Logger;
 import play.data.Form;
@@ -14,6 +16,9 @@ import play.libs.F;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 public class CheckoutShippingController extends CartController {
 
@@ -43,8 +48,12 @@ public class CheckoutShippingController extends CartController {
             final F.Promise<Cart> cartPromise = getOrCreateCart(userContext, session());
             return cartPromise.flatMap(cart -> {
                 final CheckoutShippingFormData data = filledForm.get();
+                final List<UpdateAction<Cart>> updateActions = new LinkedList<>();
                 final Address shippingAddress = data.getShippingAddress();
-                return sphere().execute(CartUpdateCommand.of(cart, SetShippingAddress.of(shippingAddress)));
+                updateActions.add(SetShippingAddress.of(shippingAddress));
+                Optional.ofNullable(data.getBillingAddress())
+                        .ifPresent(billingAddress -> updateActions.add(SetBillingAddress.of(billingAddress)));
+                return sphere().execute(CartUpdateCommand.of(cart, updateActions));
             })
             .map(updatedCart -> redirect(reverseRouter().processCheckoutShipping(languageTag)));
         }

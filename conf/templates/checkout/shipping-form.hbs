@@ -91,7 +91,7 @@
             <div class="col-sm-12">
                 <div class="different-for-billing">
                           <span>
-                            <input id="different-billing-checkbox" type="checkbox">
+                            <input id="different-billing-checkbox" type="checkbox" {{#if content.shippingFormContainer.form.differentAddressForBilling}}checked{{/if}}>
                           </span>
                     <span>{{content.messages.checkout.billingAddress.isSeparateToShipping}}</span>
                 </div>
@@ -104,32 +104,32 @@
                         <div class="col-sm-12">
                             <div class="address-one-different">
                                 <span class="text-uppercase">{{content.messages.form.addressOne.label}}*</span><br>
-                                <input id="shipping-different-addressone-input" class="checkout-input-field" type="text">
+                                <input id="shipping-different-addressone-input" class="checkout-input-field" type="text" name="billingStreetName" value="{{content.shippingFormContainer.form.billingStreetName}}">
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="address-two-different">
-                                <span class="text-uppercase">{{content.messages.form.addressTwo.label}}*</span><br>
-                                <input id="shipping-different-addresstwo-input" class="checkout-input-field" type="text">
+                                <span class="text-uppercase">{{content.messages.form.addressTwo.label}}</span><br>
+                                <input id="shipping-different-addresstwo-input" class="checkout-input-field" type="text" name="billingAdditionalAddressInfo" value="{{content.shippingFormContainer.form.billingAdditionalAddressInfo}}">
                             </div>
                         </div>
                         <div class="col-sm-8">
                             <div class="city-different">
                                 <span class="text-uppercase">{{content.messages.form.city.label}}*</span><br>
-                                <input id="shipping-different-city-input" class="checkout-input-field" type="text">
+                                <input id="shipping-different-city-input" class="checkout-input-field" type="text" name="billingCity" value="{{content.shippingFormContainer.form.billingCity}}">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="post-code-different">
                                 <span class="text-uppercase">{{content.messages.form.postCode.label}}*</span><br>
-                                <input id="shipping-different-postcode-input" class="checkout-input-field" type="text">
+                                <input id="shipping-different-postcode-input" class="checkout-input-field" type="text" name="billingPostalCode" value="{{content.shippingFormContainer.form.billingPostalCode}}">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="country-different">
                                 <span class="text-uppercase">{{content.messages.form.country.label}}*</span><br>
-                                <select id="shipping-different-country-select" class="checkout-dropdown" name="title-billing" form="title">
-                                    {{#each content.diffChooseCountry.list}}
+                                <select id="billing-country-select" class="checkout-dropdown" name="billingCountry">
+                                    {{#each content.shippingFormContainer.selectableCountries}}
                                         <option value="{{value}}" {{#if selected}}selected{{/if}}>{{text}}</option>
                                     {{/each}}
                                 </select>
@@ -138,7 +138,7 @@
                         <div class="col-sm-6">
                             <div class="region-different">
                                 <span class="text-uppercase">{{content.messages.form.region.label}}*</span><br>
-                                <input id="shipping-different-region-input" class="checkout-input-field" type="text">
+                                <input id="shipping-different-region-input" class="checkout-input-field" type="text" name="billingRegion" value="{{content.shippingFormContainer.form.billingRegion}}">
                             </div>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ checkout.confirmationStep.title = Confirmation
 checkout.secureCheckout.shipping.title = SECURE CHECKOUT - SHIPPING
 checkout.continueCheckout = Continue Checkout
 checkout.orderSummary = Order Summary
+checkout.editMyShippingCart = Edit my shopping cart
 
 cdp.totalItems = {0} {0,choice,0#items|1#item|1<items} in total
 cdp.subtotalTitle = Subtotal

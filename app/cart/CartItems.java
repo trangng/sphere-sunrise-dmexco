@@ -1,6 +1,7 @@
 package cart;
 
 import common.contexts.UserContext;
+import common.pages.ReverseRouter;
 import common.utils.PriceFormatter;
 import io.sphere.sdk.cartdiscounts.DiscountedLineItemPrice;
 import io.sphere.sdk.carts.Cart;
@@ -23,12 +24,14 @@ public class CartItems extends Base {
     private String delivery;
     private String tax;
     private String orderTotal;
+    private String cartDetailPageUrl;
 
     public CartItems() {
     }
 
-    public static CartItems of(final Cart cart, final UserContext userContext, final Messages messages) {
+    public static CartItems of(final Cart cart, final UserContext userContext, final Messages messages, final ReverseRouter reverseRouter) {
         final CartItems cartItems = new CartItems();
+        cartItems.setCartDetailPageUrl(reverseRouter.cart(userContext.locale().getLanguage()).url());
         final long totalItems = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
         cartItems.setItemsTotal(messages.at("cdp.totalItems", totalItems));
         final List<CartItem> cartItemList = cart.getLineItems()
@@ -126,5 +129,13 @@ public class CartItems extends Base {
 
     public void setItemsTotal(final String itemsTotal) {
         this.itemsTotal = itemsTotal;
+    }
+
+    public String getCartDetailPageUrl() {
+        return cartDetailPageUrl;
+    }
+
+    public void setCartDetailPageUrl(final String cartDetailPageUrl) {
+        this.cartDetailPageUrl = cartDetailPageUrl;
     }
 }

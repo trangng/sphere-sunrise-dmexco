@@ -17,8 +17,8 @@
                             <span>{{sku}}</span>
                         </div>
                         <div class="checkout-color-size">
-                            <span class="checkout-color">{{content.static.colorTitle}}:</span><span>{{color}}</span><br>
-                            <span class="checkout-size">{{content.static.sizeTitle}}:</span><span>{{size}}</span>
+                            <span class="checkout-color">{{content.static.colorTitle}}: </span><span>{{color}}</span><br>
+                            <span class="checkout-size">{{content.static.sizeTitle}}: </span><span>{{size}}</span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-right checkout-promo-code">
-                    <span class="text-uppercase promo-code-applied">{{content.static..promoCodeTitle}}</span>
+                    <span class="text-uppercase promo-code-applied">{{content.static.promoCodeTitle}}</span>
                     <span class="text-uppercase">{{content.promoCode}}</span>
                 </div>
             </div>
@@ -77,8 +77,8 @@
     <div class="row">
         <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7">
             <div class="text-right order-tax-total-text">
-                <span>{{content.taxTitle}}</span><br>
-                <span class="total-order-value">{{content.totalTitle}}</span>
+                <span>{{content.static.taxTitle}}</span><br>
+                <span class="total-order-value">{{content.static.orderTotalTitle}}</span>
             </div>
         </div>
         <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5">
@@ -91,7 +91,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div>
-                <span class="text-uppercase pull-right edit-quantity-order"><a href="#">{{content.editMyOrder}}</a></span>
+                <span class="text-uppercase pull-right edit-quantity-order"><a href="{{content.cartItems.cartDetailPageUrl}}">{{content.messages.checkout.editMyShippingCart}}</a></span>
             </div>
         </div>
     </div>
