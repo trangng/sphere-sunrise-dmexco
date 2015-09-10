@@ -27,7 +27,7 @@ public final class PlayCmsService implements CmsService {
 
     @Override
     public F.Promise<CmsPage> getPage(final Locale locale, final String pageKey) {
-        final Lang lang = Lang.forCode(locale.toLanguageTag());
+        final Lang lang = Lang.forCode(locale.getLanguage());
         final Messages messages = new Messages(lang, messagesApi);
         final CmsPage cmsPage = new PlayCmsPage(messages, pageKey);
         return F.Promise.pure(cmsPage);

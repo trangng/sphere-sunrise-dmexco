@@ -73,7 +73,7 @@ public abstract class SunriseController extends ShopController {
     }
 
     protected final Messages messages(final UserContext userContext) {
-        final Lang lang = Lang.forCode(userContext.locale().toLanguageTag());
+        final Lang lang = Lang.forCode(userContext.locale().getLanguage());
         return new Messages(lang, controllerDependency.messagesApi());
     }
 

@@ -105,7 +105,7 @@ public class ProductDetailPageController extends SunriseController {
         final ProductData productData = getProductData(userContext, productProjection, productVariant);
         final List<ShippingRateData> deliveryData = getDeliveryData(userContext);
         final List<ProductData> suggestionData = getSuggestionData(userContext, suggestions);
-        final String formAction = reverseRouter().productVariantToCartForm(userContext.locale().toLanguageTag()).url();
+        final String formAction = reverseRouter().productVariantToCartForm(userContext.locale().getLanguage()).url();
         return new ProductDetailPageContent(additionalTitle, staticData, breadcrumbData, productData, deliveryData, suggestionData, formAction);
     }
 

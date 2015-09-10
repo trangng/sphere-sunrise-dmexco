@@ -18,7 +18,7 @@ public class CartDetailPageContent extends PageContent {
         final long totalItems = cart.getLineItems().stream().mapToLong(LineItem::getQuantity).sum();
         itemsTotal = messages.at("cdp.totalItems", totalItems);
         cartItems = CartItems.of(cart, userContext);
-        editQuantityFormUrl = reverseRouter.changeLineItemQuantityForm(userContext.locale().toLanguageTag()).url();
+        editQuantityFormUrl = reverseRouter.changeLineItemQuantityForm(userContext.locale().getLanguage()).url();
     }
 
     @Override

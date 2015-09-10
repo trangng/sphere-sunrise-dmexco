@@ -26,7 +26,7 @@ public final class HomeController extends SunriseController {
     }
 
     public F.Promise<Result> show() {
-        final String languageTag = request().acceptLanguages().stream().findFirst().map(Lang::code).orElse("en");
+        final String languageTag = request().acceptLanguages().stream().findFirst().map(Lang::language).orElse("en");
         return F.Promise.pure(redirect(reverseRouter().home(languageTag)));
     }
 

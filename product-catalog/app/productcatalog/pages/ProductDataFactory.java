@@ -48,7 +48,7 @@ public class ProductDataFactory {
         final String name = product.getName().find(userContext.locales()).orElse("");
         final String sku = Optional.ofNullable(variant.getSku()).orElse("");
         final String slug = product.getSlug().find(userContext.locales()).orElse("");
-        final String url = reverseRouter.product(userContext.locale().toLanguageTag(), slug, sku).url();
+        final String url = reverseRouter.product(userContext.locale().getLanguage(), slug, sku).url();
         final String description = Optional.ofNullable(product.getDescription()).flatMap(d -> d.find(userContext.locales())).orElse("");
         final String price = getPrice(variant);
         final String priceOld = getOldPrice(variant);

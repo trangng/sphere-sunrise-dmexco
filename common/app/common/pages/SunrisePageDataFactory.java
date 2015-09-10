@@ -49,13 +49,13 @@ public class SunrisePageDataFactory {
         final CollectionData<SelectableData> countries = getCountries();
         final NavMenuData navMenuData = getNavMenuData();
         final MiniCartData miniCartData = getMiniCartData();
-        final String searchUrl = reverseRouter.search(userContext.locale().toLanguageTag(), "", 1).url();
+        final String searchUrl = reverseRouter.search(userContext.locale().getLanguage(), "", 1).url();
         final String queryParamName = SEARCH_QUERY_PARAM_NAME;
         return new PageHeader(messages, title, countries, navMenuData, miniCartData, searchUrl, queryParamName);
     }
 
     private MiniCartData getMiniCartData() {
-        final String url = reverseRouter.cart(userContext.locale().toLanguageTag()).url();
+        final String url = reverseRouter.cart(userContext.locale().getLanguage()).url();
         return new MiniCartData(url, CartSessionUtils.getCartItemCount(session()));
     }
 
@@ -68,7 +68,7 @@ public class SunrisePageDataFactory {
     private CategoryData getCategoryData(final Category category) {
         final String name = category.getName().find(userContext.locales()).orElse("");
         final String slug = category.getSlug().find(userContext.locale()).orElse("");
-        final String language = userContext.locale().toLanguageTag();
+        final String language = userContext.locale().getLanguage();
         final String url = reverseRouter.category(language, slug, 1).url();
         final List<CategoryData> childrenCategoryData = categoryTree.findChildren(category).stream()
                 .map(this::getCategoryData)
