@@ -2,15 +2,18 @@
   "breadcrumbs" : [
     {
       "text":"DAMEN",
-      "url":"de/women"
+      "url":"de/women",
+      "selected": false
     },
     {
       "text":"taschen",
-      "url":"de/women-bags"
+      "url":"de/women-bags",
+      "selected": false
     },
     {
       "text":"handtaschen",
-      "url":"de/women-bags-handtaschen"
+      "url":"de/women-bags-handtaschen",
+      "selected": true
     }
   ]
 }
